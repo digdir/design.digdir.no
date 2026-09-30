@@ -25,6 +25,7 @@ import {
   downloadIllustration,
 } from './download-illustration';
 import classes from './illustration-library.module.css';
+import { preferredSlotValues } from './preferred-color';
 
 const schemes: { scheme: ColorScheme; label: string }[] = [
   { scheme: 'light', label: 'Lys modus' },
@@ -34,6 +35,8 @@ const schemes: { scheme: ColorScheme; label: string }[] = [
 interface IllustrationDialogProps {
   item: IllustrationMeta | null;
   library: IllustrationLibrary;
+  /** Colour chosen in the gallery filter; pre-selects slots that allow it. */
+  preferredColor?: string | null;
   onClose: () => void;
 }
 
@@ -45,6 +48,7 @@ interface IllustrationDialogProps {
 export const IllustrationDialog = ({
   item,
   library,
+  preferredColor = null,
   onClose,
 }: IllustrationDialogProps) => (
   <Dialog
@@ -55,16 +59,25 @@ export const IllustrationDialog = ({
     className={classes.dialog}
   >
     {/* Keyed so all per-illustration state starts fresh for each item. */}
-    {item && <DialogContent key={item.name} item={item} library={library} />}
+    {item && (
+      <DialogContent
+        key={item.name}
+        item={item}
+        library={library}
+        preferredColor={preferredColor}
+      />
+    )}
   </Dialog>
 );
 
 const DialogContent = ({
   item,
   library,
+  preferredColor,
 }: {
   item: IllustrationMeta;
   library: IllustrationLibrary;
+  preferredColor: string | null;
 }) => {
   const [exportError, setExportError] = useState<string | null>(null);
   /** Which preview was just copied, for the "Kopiert" feedback. */
@@ -77,7 +90,7 @@ const DialogContent = ({
   }, [copied]);
   /** Chosen palette colour per slot, keyed by the slot's CSS variable. */
   const [slotValues, setSlotValues] = useState(() =>
-    Object.fromEntries(item.slots.map((slot) => [slot.variable, slot.default])),
+    preferredSlotValues(item, preferredColor),
   );
 
   const svg = library.svgs[item.exportName] ?? '';

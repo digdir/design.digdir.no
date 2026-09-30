@@ -1,6 +1,8 @@
 import {
   Alert,
+  Chip,
   Field,
+  Fieldset,
   Label,
   Paragraph,
   Search,
@@ -20,6 +22,11 @@ import {
 } from '~/_config/illustrations';
 import { IllustrationDialog } from './illustration-dialog';
 import classes from './illustration-library.module.css';
+import {
+  preferredSlotValues,
+  selectableColors,
+  slotStyle,
+} from './preferred-color';
 
 interface IllustrationLibraryProps {
   /**
@@ -79,6 +86,9 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
   const library: IllustrationLibraryData = use(getIllustrationLibrary(profile));
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<IllustrationMeta | null>(null);
+  /** Palette colour to show every recolourable part in; null = as drawn. */
+  const [preferred, setPreferred] = useState<string | null>(null);
+  const colorOptions = selectableColors(library);
 
   const normalized = query.trim().toLowerCase();
   const filtered = normalized
@@ -92,18 +102,52 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
 
   return (
     <>
-      <Field className={classes.search}>
-        <Label>Søk i illustrasjoner</Label>
-        <Search>
-          <Search.Input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder='Tittel eller emne'
-            autoComplete='off'
-          />
-          <Search.Clear onClick={() => setQuery('')} />
-        </Search>
-      </Field>
+      <div className={classes.controls}>
+        <Field className={classes.search}>
+          <Label>Søk i illustrasjoner</Label>
+          <Search>
+            <Search.Input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder='Tittel eller emne'
+              autoComplete='off'
+            />
+            <Search.Clear onClick={() => setQuery('')} />
+          </Search>
+        </Field>
+
+        {colorOptions.length > 0 && (
+          <Fieldset className={classes.colorFilter} data-color='neutral'>
+            <Fieldset.Legend>Farge</Fieldset.Legend>
+            <div className={classes.chips}>
+              <Chip.Radio
+                name='preferred-color'
+                value=''
+                checked={preferred === null}
+                onChange={() => setPreferred(null)}
+              >
+                Som tegnet
+              </Chip.Radio>
+              {colorOptions.map((color) => (
+                <Chip.Radio
+                  key={color.name}
+                  name='preferred-color'
+                  value={color.name}
+                  checked={preferred === color.name}
+                  onChange={() => setPreferred(color.name)}
+                >
+                  {color.label}
+                  <span
+                    className={classes.swatch}
+                    style={{ background: `var(${color.variable})` }}
+                    aria-hidden='true'
+                  />
+                </Chip.Radio>
+              ))}
+            </div>
+          </Fieldset>
+        )}
+      </div>
 
       <Paragraph
         data-size='sm'
@@ -130,6 +174,11 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
               >
                 <span
                   className={classes.tilePreview}
+                  style={slotStyle(
+                    library,
+                    item,
+                    preferredSlotValues(item, preferred),
+                  )}
                   aria-hidden='true'
                   // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG strings are generated from our own repo at build time
                   dangerouslySetInnerHTML={{
@@ -146,6 +195,7 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
       <IllustrationDialog
         item={selected}
         library={library}
+        preferredColor={preferred}
         onClose={() => setSelected(null)}
       />
     </>

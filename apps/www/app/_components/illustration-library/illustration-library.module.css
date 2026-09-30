@@ -12,8 +12,35 @@
   min-height: 12rem;
 }
 
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: var(--ds-size-5) var(--ds-size-8);
+}
+
 .search {
+  flex: 1 1 18rem;
   max-width: 28rem;
+}
+
+.colorFilter {
+  flex: 1 1 20rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-2);
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  margin-left: var(--ds-size-1);
+  border-radius: 50%;
+  vertical-align: -0.05em;
 }
 
 .count {
