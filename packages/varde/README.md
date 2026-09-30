@@ -96,8 +96,8 @@ colour. Designers mark this in Illustrator by adding the allowed palette
 colours in square brackets to the **layer name**:
 
 ```
-Former [brand1,brand2,brand3]   may be shown in any of the three
-Former [brand1,brand2]          only these two
+Former [red,yellow,blue]   may be shown in any of the three
+Former [red,yellow]          only these two
 Former                          fixed – no brackets, never recoloured
 ```
 
