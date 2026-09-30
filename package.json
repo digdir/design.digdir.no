@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tokens": "designsystemet tokens create && designsystemet tokens build",
+    "tokens-midlertidig": "cd _midlertidig && designsystemet tokens create --config './designsystemet.config.midlertidig.json' && designsystemet tokens build",
     "lint": "biome lint",
     "lint:write": "biome check --write",
     "www": "pnpm build:packages && pnpm --filter www dev",
