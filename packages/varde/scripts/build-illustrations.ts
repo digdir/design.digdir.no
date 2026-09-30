@@ -19,7 +19,7 @@
  * render correctly without the CSS and switch to the dark palette when the
  * CSS is loaded and `data-color-scheme="dark"` is set.
  *
- * Colour slots: a layer named `Former [brand1,brand2]` in Illustrator marks
+ * Colour slots: a layer named `Former [red,yellow]` in Illustrator marks
  * the shape(s) as recolourable to the listed palette colours. The build reads
  * the marker from the exported `data-name` attribute (Illustrator flattens the
  * brackets in `id`), gives the slot its own variable that falls back to the
@@ -217,7 +217,7 @@ const findSvgFile = (dir: string) => {
 
 const SLOT_MARKER = /^(.*?)\s*\[([^\]]*)\]\s*$/;
 
-/** Parse `Former [brand1,brand2]` → { label: 'Former', colors: [...] }. */
+/** Parse `Former [red,yellow]` → { label: 'Former', colors: [...] }. */
 const parseSlotMarker = (
   layerName: string,
   colors: IllustrationColor[],
