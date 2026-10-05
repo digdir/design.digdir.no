@@ -182,6 +182,9 @@ importers:
       '@digdir/designsystemet-react':
         specifier: ^1.21.1
         version: 1.22.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@digdir/designsystemet-web':
+        specifier: ^1.22.0
+        version: 1.22.0
       '@digdir/varde':
         specifier: workspace:*
         version: link:../../packages/varde

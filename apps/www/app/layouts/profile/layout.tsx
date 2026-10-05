@@ -5,7 +5,7 @@ import { Sidebar, type SidebarGroups } from '~/_components/sidebar/sidebar';
 import { getProfile } from '~/_config/profiles';
 import {
   getFileFromContentDir,
-  getFilesFromContentDir,
+  getProfileContentFiles,
 } from '~/_utils/files.server';
 import { generateFromMdx } from '~/_utils/generate-from-mdx';
 import type { Route } from './+types/layout';
@@ -17,7 +17,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
     throw new Response('Not Found', { status: 404, statusText: 'Not Found' });
   }
 
-  const mdxFiles = getFilesFromContentDir(profile.slug);
+  const mdxFiles = getProfileContentFiles(profile.slug);
 
   type NavItem = { title: string; url: string; order: number };
   const grouped: Record<string, NavItem[]> = {};
@@ -25,7 +25,7 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
   // Read each file's frontmatter to build the sidebar navigation.
   for (const file of mdxFiles) {
     const fileContent = getFileFromContentDir(
-      join(profile.slug, file.relativePath),
+      join(file.dir, file.relativePath),
     );
     const { frontmatter } = await generateFromMdx(fileContent);
 

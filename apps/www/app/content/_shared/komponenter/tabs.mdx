@@ -1,0 +1,69 @@
+---
+title: Tabs
+sidebar_title: Tabs
+description: Tabs lar brukeren bytte mellom relaterte visninger på samme side, uten å navigere bort.
+category: Komponenter
+order: 20
+published: true
+---
+
+<Alert>
+Vi bruker [Tabs fra Designsystemet](https://designsystemet.no/no/components/docs/tabs/overview).
+Der finner du retningslinjer, tilgjengelighet og all dokumentasjon av komponenten.
+Denne siden beskriver bare det som er annerledes hos oss.
+</Alert>
+
+<ComponentPreview html={`
+  <ds-tabs class="ds-tabs">
+    <ds-tablist>
+      <ds-tab>Oversikt</ds-tab>
+      <ds-tab>Detaljer</ds-tab>
+      <ds-tab>Historikk</ds-tab>
+    </ds-tablist>
+    <ds-tabpanel>Innhold for oversikt</ds-tabpanel>
+    <ds-tabpanel>Innhold for detaljer</ds-tabpanel>
+    <ds-tabpanel>Innhold for historikk</ds-tabpanel>
+  </ds-tabs>
+`} />
+
+## Slik bruker vi Tabs
+
+- Bruk Tabs til å dele opp innhold som hører sammen, men som ikke trenger å vises samtidig.
+- Hold tekstene i fanene korte, helst ett eller to ord.
+- Ikke bruk Tabs som hovednavigasjon mellom sider.
+
+## Variant: envelope
+
+I tillegg til Designsystemet sin standardvariant har Varde en `envelope`-variant.
+Her deler valgt fane og innholdet samme ramme og bakgrunn, slik at innholdet ser innrammet ut av fanen.
+Den passer der innholdet i fanene skal skille seg tydelig fra resten av siden.
+Legg til `data-variant="envelope"` på `.ds-tabs`.
+
+<ComponentPreview html={`
+  <ds-tabs class="ds-tabs" data-variant="envelope">
+    <ds-tablist>
+      <ds-tab>Oversikt</ds-tab>
+      <ds-tab>Detaljer</ds-tab>
+      <ds-tab>Historikk</ds-tab>
+    </ds-tablist>
+    <ds-tabpanel>Innhold for oversikt</ds-tabpanel>
+    <ds-tabpanel>Innhold for detaljer</ds-tabpanel>
+    <ds-tabpanel>Innhold for historikk</ds-tabpanel>
+  </ds-tabs>
+`} />
+
+## Farger
+
+Tabs følger `data-color` fra nærmeste forelder, eller kan få den direkte.
+Disse fargene er tilgjengelige i denne profilen:
+
+<ColorPreview html={`
+  <ds-tabs class="ds-tabs" data-variant="envelope">
+    <ds-tablist>
+      <ds-tab>Oversikt</ds-tab>
+      <ds-tab>Detaljer</ds-tab>
+    </ds-tablist>
+    <ds-tabpanel>Innhold for oversikt</ds-tabpanel>
+    <ds-tabpanel>Innhold for detaljer</ds-tabpanel>
+  </ds-tabs>
+`} />

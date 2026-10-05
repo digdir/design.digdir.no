@@ -1,7 +1,7 @@
 {
   "name": "@digdir/varde",
   "version": "0.0.1",
-  "description": "Illustrations (and later icons and components) for Digdir's visual profiles, with light/dark mode support.",
+  "description": "Illustrations and component styles for Digdir's visual profiles, built on Designsystemet.",
   "type": "module",
   "license": "ISC",
   "author": "digdir",
@@ -42,13 +42,15 @@
       "types": "./dist/illustrations/*/meta.d.ts",
       "default": "./dist/illustrations/*/meta.js"
     },
-    "./illustrations/*.css": "./dist/illustrations/*.css"
+    "./illustrations/*.css": "./dist/illustrations/*.css",
+    "./components.css": "./dist/components/index.css",
+    "./components/*.css": "./dist/components/*.css"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "pnpm clean && node scripts/build-illustrations.ts && tsc -p tsconfig.build.json",
+    "build": "pnpm clean && node scripts/build-illustrations.ts && node scripts/build-components.ts && tsc -p tsconfig.build.json",
     "clean": "rm -rf dist generated",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

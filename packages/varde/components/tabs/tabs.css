@@ -1,0 +1,66 @@
+/*
+ * Varde variants for Designsystemet's Tabs (`.ds-tabs`).
+ *
+ * Usage: add `data-variant="envelope"` to a `.ds-tabs` element. Everything
+ * else (markup, behaviour, colours via `data-color`) comes from Designsystemet.
+ *
+ * Styles live in `varde.components`, ordered after Designsystemet's own
+ * layers, so they override `.ds-tabs` without fighting its specificity.
+ */
+@layer ds.theme, ds.base, ds.components, varde.components;
+
+@layer varde.components {
+  /*
+   * Envelope: the selected tab and its panel share one border and background,
+   * so the content reads as enclosed by the tab.
+   */
+  .ds-tabs[data-variant='envelope'] {
+    --dsc-tabs-list-border-bottom-width: 0;
+    --vardec-tabs-border: var(--ds-border-width-default) solid
+      var(--dsc-tabs-list-border-color);
+    --vardec-tabs-background: var(--ds-color-neutral-background-tinted);
+    --vardec-tabs-border-radius: var(--ds-border-radius-md);
+
+    & :is([role='tablist'], ds-tablist, u-tablist) {
+      /*
+       * Draw the line under the tabs as a background, so the selected tab's
+       * own background covers it and opens into the panel. (A negative margin
+       * would be clipped by the list's `overflow-x: auto`.)
+       */
+      background:
+        linear-gradient(
+          var(--dsc-tabs-list-border-color),
+          var(--dsc-tabs-list-border-color)
+        )
+        bottom / 100% var(--ds-border-width-default) no-repeat;
+    }
+
+    &
+      :is([role='tablist'], ds-tablist, u-tablist)
+      > :is([role='tab'], ds-tab, u-tab) {
+      border: var(--vardec-tabs-border);
+      border-color: transparent;
+      border-bottom: 0;
+      border-radius: var(--vardec-tabs-border-radius)
+        var(--vardec-tabs-border-radius) 0 0;
+
+      /* Drop Designsystemet's underline indicator. */
+      &::after {
+        display: none;
+      }
+
+      &[aria-selected='true'] {
+        border-color: var(--dsc-tabs-list-border-color);
+        background: var(--vardec-tabs-background);
+      }
+    }
+
+    & :is([role='tabpanel'], ds-tabpanel, u-tabpanel) {
+      border: var(--vardec-tabs-border);
+      border-top: 0;
+      border-radius: 0 0 var(--vardec-tabs-border-radius)
+        var(--vardec-tabs-border-radius);
+      background: var(--vardec-tabs-background);
+    }
+  }
+}

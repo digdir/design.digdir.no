@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
+import { SHARED_CONTENT_DIR } from '../files.server';
 
 const APP_ROOT = cwd();
 const CONTENT_BASE_PATH = join(APP_ROOT, './app/content');
@@ -59,17 +60,21 @@ function processMdxFiles(
  * Generates every static path for the app:
  *   `/`                          – the profile chooser
  *   `/<profile>`                 – each profile's docs index
- *   `/<profile>/<...path>`       – each MDX page
+ *   `/<profile>/<...path>`       – each MDX page, plus every shared page
  */
 export function generatePrerenderPaths(): string[] {
   try {
-    const profiles = getDirectories(CONTENT_BASE_PATH);
-    const profileIndexRoutes = profiles.map((profile) => `/${profile}`);
-    const fileRoutes = profiles.flatMap((profile) =>
-      processMdxFiles(join(CONTENT_BASE_PATH, profile), profile),
+    const profiles = getDirectories(CONTENT_BASE_PATH).filter(
+      (dir) => dir !== SHARED_CONTENT_DIR,
     );
+    const profileIndexRoutes = profiles.map((profile) => `/${profile}`);
+    const fileRoutes = profiles.flatMap((profile) => [
+      ...processMdxFiles(join(CONTENT_BASE_PATH, profile), profile),
+      // Shared pages are served under every profile.
+      ...processMdxFiles(join(CONTENT_BASE_PATH, SHARED_CONTENT_DIR), profile),
+    ]);
 
-    return ['/', ...profileIndexRoutes, ...fileRoutes];
+    return ['/', ...profileIndexRoutes, ...new Set(fileRoutes)];
   } catch (error) {
     console.warn(`Error determining prerender paths: ${error}`);
     return ['/'];

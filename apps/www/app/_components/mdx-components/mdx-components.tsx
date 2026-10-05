@@ -29,6 +29,10 @@ import {
 import { getMDXComponent } from 'mdx-bundler/dist/client';
 import { type ComponentType, type JSX, useMemo } from 'react';
 import { Link as RRLink } from 'react-router';
+import {
+  ColorPreview,
+  ComponentPreview,
+} from '../component-preview/component-preview';
 import { DownloadLink } from '../download-link/download-link';
 import { EmailSignatureGenerator } from '../email-signature-generator/email-signatur-generator';
 import ExpandableImage from '../expandable-image/expandable-image';
@@ -49,7 +53,11 @@ const SmartLink = ({ href = '', children, ...props }: LinkProps) => {
       {isExternal ? (
         <a href={href}>{children}</a>
       ) : (
-        <RRLink to={href}>{children}</RRLink>
+        // Resolve `../page` against the URL, not the route tree, so shared
+        // pages can link to siblings under whichever profile they're shown in.
+        <RRLink to={href} relative='path'>
+          {children}
+        </RRLink>
       )}
     </Link>
   );
@@ -60,6 +68,8 @@ const defaultComponents = {
   Badge,
   Card,
   CardBlock,
+  ColorPreview,
+  ComponentPreview,
   Details,
   DetailsContent,
   DetailsSummary,

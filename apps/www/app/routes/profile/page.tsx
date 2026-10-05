@@ -1,11 +1,10 @@
-import { join } from 'node:path';
 import { Heading, Paragraph } from '@digdir/designsystemet-react';
 import cl from 'clsx/lite';
 import { isRouteErrorResponse } from 'react-router';
 import { MDXComponents } from '~/_components/mdx-components/mdx-components';
 import { TableOfContents } from '~/_components/table-of-contents/toc';
 import { getProfile } from '~/_config/profiles';
-import { getFileFromContentDir } from '~/_utils/files.server';
+import { getProfilePage } from '~/_utils/files.server';
 import { generateFromMdx } from '~/_utils/generate-from-mdx';
 import { generateMetadata } from '~/_utils/metadata';
 import type { Route } from './+types/page';
@@ -21,7 +20,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     throw new Response('Not Found', { status: 404, statusText: 'Not Found' });
   }
 
-  const fileContent = getFileFromContentDir(join(profile.slug, `${file}.mdx`));
+  const fileContent = getProfilePage(profile.slug, `${file}.mdx`);
 
   if (!fileContent) {
     throw new Response('Not Found', { status: 404, statusText: 'Not Found' });

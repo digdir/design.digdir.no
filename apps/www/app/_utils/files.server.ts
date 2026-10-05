@@ -1,9 +1,16 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
 
 const dirname = cwd();
 const CONTENT_BASE_PATH = join(dirname, './app/content');
+
+/**
+ * Folder under `app/content/` with pages shown in *every* profile, e.g.
+ * component docs. A profile can override a shared page by adding a file with
+ * the same relative path to its own folder.
+ */
+export const SHARED_CONTENT_DIR = '_shared';
 
 export const safeReadDir = (path: string): string[] => {
   try {
@@ -91,4 +98,39 @@ export const getFoldersInContentDir = (path = ''): string[] => {
     console.error(`Error reading folders from content directory: ${path}`);
     return [];
   }
+};
+
+/**
+ * Every `.mdx` page for a profile: its own files plus the shared ones it does
+ * not override. `dir` is the content folder the file should be read from.
+ */
+export const getProfileContentFiles = (
+  profile: string,
+): Array<{ dir: string; relativePath: string }> => {
+  const own = getFilesFromContentDir(profile).map((file) => ({
+    dir: profile,
+    relativePath: file.relativePath,
+  }));
+  const ownPaths = new Set(own.map((file) => file.relativePath));
+  const shared = getFilesFromContentDir(SHARED_CONTENT_DIR)
+    .filter((file) => !ownPaths.has(file.relativePath))
+    .map((file) => ({
+      dir: SHARED_CONTENT_DIR,
+      relativePath: file.relativePath,
+    }));
+  return [...own, ...shared];
+};
+
+/**
+ * Read a profile's page, falling back to the shared page with the same path.
+ * Returns an empty string when neither exists.
+ */
+export const getProfilePage = (profile: string, relativePath: string) => {
+  for (const dir of [profile, SHARED_CONTENT_DIR]) {
+    const path = join(dir, relativePath);
+    if (existsSync(join(CONTENT_BASE_PATH, path))) {
+      return getFileFromContentDir(path);
+    }
+  }
+  return '';
 };
