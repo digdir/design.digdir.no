@@ -1,0 +1,37 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: var(--ds-size-4);
+  margin-block: var(--ds-size-6);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+  padding: var(--ds-size-4);
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--ds-border-radius-lg);
+  background: var(--ds-color-neutral-background-default);
+}
+
+.swatch {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--ds-border-radius-md);
+  /* Keeps swatches close to the background (white, blåsvart) visible. */
+  box-shadow: inset 0 0 0 1px var(--ds-color-neutral-border-subtle);
+}
+
+.values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-2);
+  margin: 0;
+  color: var(--ds-color-neutral-text-subtle);
+
+  & dt,
+  & dd {
+    display: inline;
+    margin: 0;
+  }
+}

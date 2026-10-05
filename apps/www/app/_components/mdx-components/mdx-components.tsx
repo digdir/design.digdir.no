@@ -29,6 +29,7 @@ import {
 import { getMDXComponent } from 'mdx-bundler/dist/client';
 import { type ComponentType, type JSX, useMemo } from 'react';
 import { Link as RRLink } from 'react-router';
+import { ColorCard, ColorCards } from '../color-card/color-card';
 import {
   ColorPreview,
   ComponentPreview,
@@ -68,6 +69,8 @@ const defaultComponents = {
   Badge,
   Card,
   CardBlock,
+  ColorCard,
+  ColorCards,
   ColorPreview,
   ComponentPreview,
   Details,
