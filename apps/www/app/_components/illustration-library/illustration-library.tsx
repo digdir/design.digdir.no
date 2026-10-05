@@ -87,8 +87,10 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<IllustrationMeta | null>(null);
   /** Palette colour to show every recolourable part in; null = as drawn. */
-  const [preferred, setPreferred] = useState<string | null>(null);
   const colorOptions = selectableColors(library);
+  const [preferred, setPreferred] = useState<string | null>(
+    colorOptions[0]?.name ?? null,
+  );
 
   const normalized = query.trim().toLowerCase();
   const filtered = normalized
@@ -120,14 +122,6 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
           <Fieldset className={classes.colorFilter} data-color='neutral'>
             <Fieldset.Legend>Farge</Fieldset.Legend>
             <div className={classes.chips}>
-              <Chip.Radio
-                name='preferred-color'
-                value=''
-                checked={preferred === null}
-                onChange={() => setPreferred(null)}
-              >
-                Som tegnet
-              </Chip.Radio>
               {colorOptions.map((color) => (
                 <Chip.Radio
                   key={color.name}
