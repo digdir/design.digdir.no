@@ -1,0 +1,75 @@
+.container {
+  container-type: inline-size;
+  margin-block: var(--ds-size-4) var(--ds-size-8);
+}
+
+.scale {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shade {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+  min-width: 0;
+}
+
+.swatch {
+  height: var(--ds-size-18);
+
+  .shade:first-child & {
+    border-start-start-radius: var(--ds-border-radius-md);
+    border-end-start-radius: var(--ds-border-radius-md);
+  }
+
+  .shade:last-child & {
+    border-start-end-radius: var(--ds-border-radius-md);
+    border-end-end-radius: var(--ds-border-radius-md);
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+  padding-inline-end: var(--ds-size-2);
+}
+
+.hex {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+/* Too narrow for side-by-side labels: stack the shades as rows instead. */
+@container (width < 32rem) {
+  .scale {
+    grid-auto-flow: row;
+  }
+
+  .shade {
+    flex-direction: row;
+    gap: var(--ds-size-4);
+  }
+
+  .text {
+    padding-block: var(--ds-size-2);
+  }
+
+  .swatch {
+    flex-shrink: 0;
+    width: var(--ds-size-18);
+    height: auto;
+
+    .shade:first-child & {
+      border-radius: var(--ds-border-radius-md) var(--ds-border-radius-md) 0 0;
+    }
+
+    .shade:last-child & {
+      border-radius: 0 0 var(--ds-border-radius-md) var(--ds-border-radius-md);
+    }
+  }
+}
