@@ -41,6 +41,7 @@ import ExpandableImage from '../expandable-image/expandable-image';
 import { IllustrationLibrary } from '../illustration-library/illustration-library';
 import { ImageGenerator } from '../image-generator/image-generator';
 import SvgEmbed from '../svg-embed/svg-embed';
+import { ThemeColors } from '../theme-colors/theme-colors';
 import classes from './mdx-components.module.css';
 
 /** Use a client-side router link for internal paths, a plain anchor otherwise. */
@@ -85,6 +86,7 @@ const defaultComponents = {
   IllustrationLibrary,
   ImageGenerator,
   SvgEmbed,
+  ThemeColors,
   h1: (props: HeadingProps) => (
     <Heading className={classes.heading} level={1} data-size='xl' {...props} />
   ),
