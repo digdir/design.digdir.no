@@ -16,7 +16,7 @@ const TOKEN_GROUPS: Record<string, string[]> = {
     'surface-hover',
     'surface-active',
   ],
-  Kant: ['border-subtle', 'border-default', 'border-strong'],
+  Border: ['border-subtle', 'border-default', 'border-strong'],
   Tekst: ['text-subtle', 'text-default'],
   Base: [
     'base-default',
