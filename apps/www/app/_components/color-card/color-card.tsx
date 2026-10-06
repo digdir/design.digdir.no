@@ -18,12 +18,11 @@ interface ColorCardProps {
 
 /** Swatch with the colour's name and values in each colour system. */
 export const ColorCard = ({ name, hex, values, className }: ColorCardProps) => {
-  const code = hex.replace(/^#/, '').toUpperCase();
-  const rows = Object.entries({ HEX: code, ...values });
+  const rows = Object.entries({ HEX: hex, ...values });
 
   return (
     <div className={cl(classes.card, className)}>
-      <div className={classes.swatch} style={{ background: `#${code}` }} />
+      <div className={classes.swatch} style={{ background: `${hex}` }} />
       <Heading level={3} data-size='xs'>
         {name}
       </Heading>

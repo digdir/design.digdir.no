@@ -43,6 +43,10 @@ body {
   color: var(--ds-color-neutral-text-default, #1e2b3c);
 }
 
+* {
+  quotes: '«' '»' '‹' '›';
+}
+
 /* Outer content layout used on all pages. */
 .l-content-container {
   width: 100%;

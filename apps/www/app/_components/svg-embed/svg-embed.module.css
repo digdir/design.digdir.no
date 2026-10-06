@@ -1,0 +1,6 @@
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: var(--max-content-width);
+}
