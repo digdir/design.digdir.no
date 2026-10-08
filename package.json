@@ -18,9 +18,9 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "packageManager": "pnpm@12.4.1",
+  "packageManager": "pnpm@12.9.1",
   "devDependencies": {
-    "@biomejs/biome": "2.5.13",
-    "@digdir/designsystemet": "1.21.1"
+    "@biomejs/biome": "2.5.15",
+    "@digdir/designsystemet": "1.23.0"
   }
 }
