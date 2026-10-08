@@ -73,7 +73,7 @@ const matchesQuery = (item: IllustrationMeta, query: string) => {
   const haystack = [
     item.title,
     item.name,
-    item.componentName,
+    item.format === 'svg' ? item.componentName : '',
     item.description ?? '',
     ...item.tags,
   ]
@@ -166,21 +166,35 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
                 aria-haspopup='dialog'
                 onClick={() => setSelected(item)}
               >
-                <span
-                  className={classes.tilePreview}
-                  // Fixed-colour illustrations are drawn for light backgrounds.
-                  data-color-scheme={library.darkMode ? undefined : 'light'}
-                  style={slotStyle(
-                    library,
-                    item,
-                    preferredSlotValues(item, preferred),
-                  )}
-                  aria-hidden='true'
-                  // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG strings are generated from our own repo at build time
-                  dangerouslySetInnerHTML={{
-                    __html: library.svgs[item.exportName] ?? '',
-                  }}
-                />
+                {item.format === 'svg' ? (
+                  <span
+                    className={classes.tilePreview}
+                    // Fixed-colour illustrations are drawn for light backgrounds.
+                    data-color-scheme={library.darkMode ? undefined : 'light'}
+                    style={slotStyle(
+                      library,
+                      item,
+                      preferredSlotValues(item, preferred),
+                    )}
+                    aria-hidden='true'
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG strings are generated from our own repo at build time
+                    dangerouslySetInnerHTML={{
+                      __html: library.svgs[item.exportName] ?? '',
+                    }}
+                  />
+                ) : (
+                  <span
+                    className={classes.tilePreview}
+                    data-color-scheme='light'
+                    aria-hidden='true'
+                  >
+                    <img
+                      src={library.images[item.exportName]}
+                      alt=''
+                      loading='lazy'
+                    />
+                  </span>
+                )}
                 <span className={classes.tileTitle}>{item.title}</span>
               </button>
             </li>

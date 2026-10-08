@@ -42,6 +42,10 @@
       "types": "./dist/illustrations/*/meta.d.ts",
       "default": "./dist/illustrations/*/meta.js"
     },
+    "./illustrations/*/images": {
+      "types": "./dist/illustrations/*/images.d.ts",
+      "default": "./dist/illustrations/*/images.js"
+    },
     "./illustrations/*.css": "./dist/illustrations/*.css",
     "./components.css": "./dist/components/index.css",
     "./components/*.css": "./dist/components/*.css"

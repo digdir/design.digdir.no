@@ -85,6 +85,23 @@ illustrations/
 
 4. Run `pnpm build`.
 
+### Raster illustrations (PNG, WebP, JPEG)
+
+A folder may hold a `.png`, `.webp` or `.jpg` instead of an `.svg`, with the
+same `meta.json`. Raster files are copied as-is (no colour theming, dark mode
+or slots) and exposed as URLs rather than inlined as base64, so they stay
+cacheable and out of your JavaScript bundle:
+
+```tsx
+import { mangeMennesker } from '@digdir/varde/illustrations/uutilsynet/images';
+
+<img src={mangeMennesker} alt="" />
+```
+
+The module imports each file (`import url from './file.png'`), which Vite,
+webpack and Parcel turn into an emitted asset and its URL – on the server as
+well as in the browser. It needs a bundler; plain Node cannot import `.png`.
+
 To add a new profile, create `illustrations/<profile>/` with at least one
 illustration folder (and a `colors.json` if it should support dark mode or
 colour slots). The build picks it up and adds it to

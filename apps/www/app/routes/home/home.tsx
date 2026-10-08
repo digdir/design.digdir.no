@@ -1,7 +1,9 @@
 import { Heading, Link, Paragraph } from '@digdir/designsystemet-react';
+import { PersonSomGarMedSirkel } from '@digdir/varde/illustrations/digdir/react';
 import { LaptopMedBakgrunn } from '@digdir/varde/illustrations/ki-norge/react';
+import { dameHolderNettbrett } from '@digdir/varde/illustrations/uutilsynet/images';
 import cl from 'clsx/lite';
-import type { ComponentType, CSSProperties, SVGProps } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Link as RRLink } from 'react-router';
 import { IdentityIllustration } from '~/_components/identity-illustration/identity-illustration';
 import { profiles } from '~/_config/profiles';
@@ -15,13 +17,21 @@ export const meta = () =>
   });
 
 /**
- * Real artwork for an identity's card, keyed by profile slug. Profiles without
- * one get the placeholder `IdentityIllustration` in their brand colour.
+ * Artwork for an identity's card, keyed by profile slug. Profiles without one
+ * get the placeholder `IdentityIllustration` in their brand colour.
  */
 const cardIllustrations: Partial<
-  Record<string, ComponentType<SVGProps<SVGSVGElement>>>
+  Record<string, (className: string) => ReactNode>
 > = {
-  'ki-norge': LaptopMedBakgrunn,
+  digdir: (className) => (
+    <PersonSomGarMedSirkel sirkel='red' aria-hidden className={className} />
+  ),
+  uutilsynet: (className) => (
+    <img src={dameHolderNettbrett} alt='' className={className} />
+  ),
+  'ki-norge': (className) => (
+    <LaptopMedBakgrunn aria-hidden className={cl(className, classes.rounded)} />
+  ),
 };
 
 const ArrowRight = () => (
@@ -53,7 +63,7 @@ export default function Home() {
       <ul className={classes.grid}>
         {profiles.map((profile) => {
           const randId = Math.random().toString(36).slice(2, 7);
-          const Illustration = cardIllustrations[profile.slug];
+          const illustration = cardIllustrations[profile.slug];
           return (
             <li key={profile.slug}>
               <div
@@ -77,11 +87,8 @@ export default function Home() {
                     <ArrowRight />
                   </span>
                 </div>
-                {Illustration ? (
-                  <Illustration
-                    aria-hidden
-                    className={cl(classes.illustration, classes.artwork)}
-                  />
+                {illustration ? (
+                  illustration(classes.illustration)
                 ) : (
                   <IdentityIllustration
                     color={profile.color}

@@ -100,3 +100,21 @@ export const copySvgAsImage = async (
     }),
   ]);
 };
+
+/**
+ * Put a PNG file on the clipboard, e.g. a raster illustration. Only PNG is
+ * accepted by clipboards, so other formats should be downloaded instead.
+ */
+export const copyImageUrl = async (url: string) => {
+  if (typeof ClipboardItem === 'undefined' || !navigator.clipboard?.write) {
+    throw new Error(
+      'Nettleseren din kan ikke kopiere bilder. Last ned bildet i stedet.',
+    );
+  }
+  // Pass the pending blob, as in `copySvgAsImage`, to keep Safari happy.
+  await navigator.clipboard.write([
+    new ClipboardItem({
+      'image/png': fetch(url).then((response) => response.blob()),
+    }),
+  ]);
+};

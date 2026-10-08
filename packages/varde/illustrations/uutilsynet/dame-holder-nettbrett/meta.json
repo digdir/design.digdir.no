@@ -1,0 +1,11 @@
+{
+  "$schema": "../../meta.schema.json",
+  "title": "Dame som holder et nettbrett",
+  "description": "En smilende kvinne løfter et nettbrett og viser fram skjermen. Brukes om digitale tjenester og nettsider.",
+  "tags": [
+    "nettbrett",
+    "digital",
+    "person",
+    "vise fram"
+  ]
+}

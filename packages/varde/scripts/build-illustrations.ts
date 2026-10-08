@@ -2,7 +2,8 @@
  * Generates the illustration library from `illustrations/<profile>/<name>/`.
  *
  * Each profile folder has one folder per illustration containing exactly one
- * `.svg` file and a `meta.json` (see `meta.schema.json`), and optionally a
+ * image – an `.svg`, or a raster `.png`/`.webp`/`.jpg` – and a `meta.json`
+ * (see `meta.schema.json`), and optionally a
  * `colors.json` (the palette used by its illustrations, with light and dark
  * values). Without `colors.json` the illustrations keep their drawn colours:
  * no dark mode and no colour slots.
@@ -12,7 +13,11 @@
  *   - `svg.ts`                                framework-agnostic SVG strings
  *   - `meta.ts`                               titles, tags, colours, slots
  * and, under `dist/illustrations/`, a `<profile>.css` with the colour
- * variables plus an `index.css` combining every profile. The shared types and
+ * variables plus an `index.css` combining every profile. Raster images are
+ * copied as-is to `dist/illustrations/<profile>/`, and `images.ts` exports
+ * each one's URL through an asset import (`import url from './file.png'`), so
+ * bundlers emit the file and return its URL – also when server rendering –
+ * instead of inlining base64 in the JS. The shared types and
  * helpers in `src/illustrations/index.ts` are copied to
  * `generated/illustrations/index.ts` with the profile list and loaders added.
  *
@@ -38,8 +43,9 @@ import { transform } from '@svgr/core';
 import { type CustomPlugin, optimize, type XastElement } from 'svgo';
 import type {
   IllustrationColor,
-  IllustrationMeta,
   IllustrationSlot,
+  RasterIllustrationMeta,
+  VectorIllustrationMeta,
 } from '../src/illustrations/index.ts';
 
 const packageRoot = path.resolve(
@@ -70,9 +76,11 @@ type Meta = {
   tags: string[];
 };
 
-type Illustration = IllustrationMeta & { svg: string };
+type VectorIllustration = VectorIllustrationMeta & { svg: string };
+type RasterIllustration = RasterIllustrationMeta & { source: string };
 
 const SLUG_PATTERN = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
+const ILLUSTRATION_FILE = /\.(svg|png|webp|jpe?g)$/i;
 const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 const ANY_HEX_COLOR = /#(?:[0-9a-f]{3}|[0-9a-f]{6})\b/gi;
 const COLOR_ATTRIBUTES = [
@@ -197,19 +205,36 @@ const readMeta = (dir: string): Meta => {
   return meta;
 };
 
-const findSvgFile = (dir: string) => {
-  const svgs = fs.readdirSync(dir).filter((file) => file.endsWith('.svg'));
+/** The folder's one image file: an `.svg` or a raster `.png`/`.webp`/`.jpg`. */
+const findIllustrationFile = (dir: string) => {
+  const files = fs
+    .readdirSync(dir)
+    .filter((file) => ILLUSTRATION_FILE.test(file));
   const relative = path.relative(packageRoot, dir);
 
-  if (svgs.length === 0) {
-    throw new Error(`${relative}: no .svg file found.`);
+  if (files.length === 0) {
+    throw new Error(`${relative}: no .svg, .png, .webp or .jpg file found.`);
   }
-  if (svgs.length > 1) {
+  if (files.length > 1) {
     throw new Error(
-      `${relative}: expected exactly one .svg file, found ${svgs.join(', ')}.`,
+      `${relative}: expected exactly one image file, found ${files.join(', ')}.`,
     );
   }
-  return path.join(dir, svgs[0]);
+  return path.join(dir, files[0]);
+};
+
+const rasterFormat = (file: string): RasterIllustrationMeta['format'] => {
+  const extension = path.extname(file).slice(1).toLowerCase();
+  return extension === 'jpeg' ? 'jpg' : (extension as 'png' | 'webp' | 'jpg');
+};
+
+/** Width and height from a PNG's IHDR chunk; 0×0 for other formats. */
+const rasterSize = (file: string) => {
+  const header = fs.readFileSync(file).subarray(0, 24);
+  const isPng = header.readUInt32BE(0) === 0x89504e47;
+  return isPng
+    ? { width: header.readUInt32BE(16), height: header.readUInt32BE(20) }
+    : { width: 0, height: 0 };
 };
 
 // ---------------------------------------------------------------------------
@@ -519,7 +544,8 @@ const buildProfile = async (profile: string) => {
   const palette = readPalette(profile);
   const darkMode = palette !== null;
   const colors = palette ?? [];
-  const illustrations: Illustration[] = [];
+  const illustrations: VectorIllustration[] = [];
+  const rasters: RasterIllustration[] = [];
 
   for (const name of listDirectories(profileDir)) {
     if (!SLUG_PATTERN.test(name)) {
@@ -530,7 +556,26 @@ const buildProfile = async (profile: string) => {
 
     const dir = path.join(profileDir, name);
     const meta = readMeta(dir);
-    const rawSvg = fs.readFileSync(findSvgFile(dir), 'utf8');
+    const file = findIllustrationFile(dir);
+    const exportName = toCamelCase(name);
+
+    if (!file.endsWith('.svg')) {
+      const format = rasterFormat(file);
+      rasters.push({
+        format,
+        name,
+        exportName,
+        title: meta.title,
+        description: meta.description,
+        tags: meta.tags,
+        file: `${name}.${format}`,
+        ...rasterSize(file),
+        source: file,
+      });
+      continue;
+    }
+
+    const rawSvg = fs.readFileSync(file, 'utf8');
     const { svg, slots } = processSvg(rawSvg, profile, name, colors, !darkMode);
     const componentName = toPascalCase(name);
 
@@ -540,9 +585,10 @@ const buildProfile = async (profile: string) => {
     );
 
     illustrations.push({
+      format: 'svg',
       name,
       componentName,
-      exportName: toCamelCase(name),
+      exportName,
       title: meta.title,
       description: meta.description,
       tags: meta.tags,
@@ -552,7 +598,32 @@ const buildProfile = async (profile: string) => {
     });
   }
 
-  if (illustrations.length === 0) {
+  // Raster files sit next to the compiled `images.js` that points at them.
+  fs.mkdirSync(path.join(distDir, profile), { recursive: true });
+  for (const item of rasters) {
+    fs.copyFileSync(item.source, path.join(distDir, profile, item.file));
+  }
+  fs.writeFileSync(
+    path.join(outDir, 'images.ts'),
+    [
+      GENERATED_HEADER,
+      '// URLs of the raster illustrations. Bundlers (Vite, webpack, Parcel)',
+      '// emit each imported file as an asset and give back its URL.',
+      '',
+      ...rasters.map(
+        (item) => `import ${item.exportName}Url from './${item.file}';`,
+      ),
+      '',
+      ...rasters.map(
+        (item) =>
+          `export const ${item.exportName}: string = ${item.exportName}Url;`,
+      ),
+      ...(rasters.length === 0 ? ['export {};'] : []),
+      '',
+    ].join('\n'),
+  );
+
+  if (illustrations.length === 0 && rasters.length === 0) {
     console.warn(`  ⚠ ${profile}: no illustrations found.`);
   }
 
@@ -564,6 +635,7 @@ const buildProfile = async (profile: string) => {
         (item) =>
           `export { default as ${item.componentName} } from './${item.componentName}.js';`,
       ),
+      ...(illustrations.length === 0 ? ['export {};'] : []),
       '',
     ].join('\n'),
   );
@@ -579,11 +651,16 @@ const buildProfile = async (profile: string) => {
         (item) =>
           `export const ${item.exportName} = ${JSON.stringify(item.svg)};`,
       ),
+      // Keep the file a module when the profile has no SVG illustrations.
+      ...(illustrations.length === 0 ? ['export {};'] : []),
       '',
     ].join('\n'),
   );
 
-  const metaEntries = illustrations.map(({ svg: _svg, ...rest }) => rest);
+  const metaEntries = [
+    ...illustrations.map(({ svg: _svg, ...rest }) => rest),
+    ...rasters.map(({ source: _source, ...rest }) => rest),
+  ].sort((a, b) => a.name.localeCompare(b.name));
   fs.writeFileSync(
     path.join(outDir, 'meta.ts'),
     [
@@ -641,7 +718,7 @@ const buildProfile = async (profile: string) => {
     0,
   );
   console.log(
-    `  ✓ ${profile}: ${illustrations.length} illustration(s), ${slotCount} colour slot(s)`,
+    `  ✓ ${profile}: ${illustrations.length} SVG(s), ${slotCount} colour slot(s), ${rasters.length} image(s)`,
   );
   return css;
 };
@@ -657,7 +734,20 @@ const writeIndex = (profiles: string[]) => {
 
   const loaders = profiles.map(
     (profile) =>
-      `  ${JSON.stringify(profile)}: () =>\n    loadIllustrationLibrary(import('./${profile}/meta.js'), import('./${profile}/svg.js')),`,
+      `  ${JSON.stringify(profile)}: () =>\n    loadIllustrationLibrary(import('./${profile}/meta.js'), import('./${profile}/svg.js'), import('./${profile}/images.js')),`,
+  );
+
+  // Lets tsc compile the asset imports in each profile's `images.ts`.
+  fs.writeFileSync(
+    path.join(generatedDir, 'assets.d.ts'),
+    [
+      GENERATED_HEADER,
+      ...['png', 'webp', 'jpg'].map(
+        (extension) =>
+          `declare module '*.${extension}' {\n  const url: string;\n  export default url;\n}`,
+      ),
+      '',
+    ].join('\n'),
   );
 
   fs.writeFileSync(
@@ -670,8 +760,8 @@ const writeIndex = (profiles: string[]) => {
       'export type IllustrationProfile = (typeof illustrationProfiles)[number];',
       '',
       '/**',
-      " * Lazy loader per profile. Each loads that profile's metadata and SVG",
-      ' * strings on demand, so bundlers can split them per profile.',
+      " * Lazy loader per profile. Each loads that profile's metadata, SVG",
+      ' * strings and image URLs on demand, so bundlers can split them per profile.',
       ' */',
       'export const illustrationLoaders: Record<',
       '  IllustrationProfile,',

@@ -1,6 +1,6 @@
 import type {
   IllustrationLibrary,
-  IllustrationMeta,
+  VectorIllustrationMeta,
 } from '@digdir/varde/illustrations';
 import type { CSSProperties } from 'react';
 
@@ -10,7 +10,7 @@ import type { CSSProperties } from 'react';
  * the slot's CSS variable, like the dialog's own slot state.
  */
 export const preferredSlotValues = (
-  item: IllustrationMeta,
+  item: VectorIllustrationMeta,
   color: string | null,
 ): Record<string, string> =>
   Object.fromEntries(
@@ -27,7 +27,7 @@ export const preferredSlotValues = (
  */
 export const slotStyle = (
   library: IllustrationLibrary,
-  item: IllustrationMeta,
+  item: VectorIllustrationMeta,
   values: Record<string, string>,
 ): CSSProperties | undefined => {
   const style: Record<string, string> = {};
@@ -48,7 +48,7 @@ const FILTER_COLORS = ['red', 'yellow', 'blue'];
 export const selectableColors = (library: IllustrationLibrary) => {
   const used = new Set(
     library.illustrations.flatMap((item) =>
-      item.slots.flatMap((slot) => slot.colors),
+      item.format === 'svg' ? item.slots.flatMap((slot) => slot.colors) : [],
     ),
   );
   return library.colors.filter(

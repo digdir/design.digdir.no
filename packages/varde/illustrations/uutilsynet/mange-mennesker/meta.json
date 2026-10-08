@@ -1,0 +1,11 @@
+{
+  "$schema": "../../meta.schema.json",
+  "title": "Mange forskjellige mennesker",
+  "description": "En stor gruppe mennesker i ulike aldre og med ulike behov, blant annet rullestol, krykker og barnevogn. Brukes om universell utforming og mangfold.",
+  "tags": [
+    "mangfold",
+    "universell utforming",
+    "gruppe",
+    "mennesker"
+  ]
+}

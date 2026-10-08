@@ -103,7 +103,7 @@
   align-self: center;
 }
 
-.artwork {
+.rounded {
   border-radius: var(--ds-border-radius-lg);
 }
 

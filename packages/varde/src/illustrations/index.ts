@@ -5,21 +5,41 @@
  * `@digdir/varde/illustrations`.
  */
 
-/** Metadata for one illustration, from its `meta.json` and layer names. */
-export type IllustrationMeta = {
+type IllustrationMetaBase = {
   /** Folder name, kebab-case. Also the file name for downloads. */
   name: string;
-  /** Named export in `@digdir/varde/illustrations/<profile>/react`. */
-  componentName: string;
-  /** Named export in `@digdir/varde/illustrations/<profile>/svg`. */
+  /**
+   * Named export in `@digdir/varde/illustrations/<profile>/svg` (vector) or
+   * `@digdir/varde/illustrations/<profile>/images` (raster).
+   */
   exportName: string;
   title: string;
   description?: string;
   tags: string[];
+};
+
+/** An SVG illustration, from its `meta.json` and layer names. */
+export type VectorIllustrationMeta = IllustrationMetaBase & {
+  format: 'svg';
+  /** Named export in `@digdir/varde/illustrations/<profile>/react`. */
+  componentName: string;
   viewBox?: string;
   /** Recolourable parts, from layers named `Name [colour,…]`. */
   slots: IllustrationSlot[];
 };
+
+/** A raster illustration (PNG, WebP or JPEG), shipped as a file. */
+export type RasterIllustrationMeta = IllustrationMetaBase & {
+  format: 'png' | 'webp' | 'jpg';
+  /** File name next to the `images` module, e.g. `mange-mennesker.png`. */
+  file: string;
+  /** Intrinsic size in pixels (PNG only; 0 when unknown). */
+  width: number;
+  height: number;
+};
+
+/** Metadata for one illustration. Narrow on `format`. */
+export type IllustrationMeta = VectorIllustrationMeta | RasterIllustrationMeta;
 
 /** One colour from a profile palette (`colors.json`). */
 export type IllustrationColor = {
@@ -61,9 +81,13 @@ export type IllustrationProfileMeta = {
   illustrations: IllustrationMeta[];
 };
 
-/** A profile's metadata together with its SVG strings, keyed by `exportName`. */
+/**
+ * A profile's metadata together with its SVG strings and raster image URLs,
+ * both keyed by `exportName`.
+ */
 export type IllustrationLibrary = IllustrationProfileMeta & {
   svgs: Record<string, string>;
+  images: Record<string, string>;
 };
 
 export type ColorScheme = 'light' | 'dark';
@@ -120,11 +144,20 @@ export const resolveColorScheme = (
   return result;
 };
 
-/** Combine a profile's `meta` and `svg` modules into one library object. */
+/** Combine a profile's `meta`, `svg` and `images` modules into one library. */
 export const loadIllustrationLibrary = async (
   meta: Promise<IllustrationProfileMeta>,
   svg: Promise<object>,
+  images: Promise<object>,
 ): Promise<IllustrationLibrary> => {
-  const [profileMeta, svgModule] = await Promise.all([meta, svg]);
-  return { ...profileMeta, svgs: { ...svgModule } as Record<string, string> };
+  const [profileMeta, svgModule, imageModule] = await Promise.all([
+    meta,
+    svg,
+    images,
+  ]);
+  return {
+    ...profileMeta,
+    svgs: { ...svgModule } as Record<string, string>,
+    images: { ...imageModule } as Record<string, string>,
+  };
 };

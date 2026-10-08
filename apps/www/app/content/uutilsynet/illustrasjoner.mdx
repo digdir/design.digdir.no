@@ -1,26 +1,25 @@
 ---
 title: Illustrasjoner
 sidebar_title: Illustrasjoner
-description: Illustrasjonsbiblioteket for uutilsynet. Klikk på en illustrasjon for å kopiere eller laste den ned i lys og mørk modus.
+description: Illustrasjonsbiblioteket for uutilsynet. Klikk på en illustrasjon for å kopiere eller laste den ned.
 category: Identitet
 order: 10
 published: true
 ---
 
-Klikk på en illustrasjon for å se detaljer, kopiere SVG-koden eller laste den ned.
+Klikk på en illustrasjon for å se detaljer, kopiere den eller laste den ned.
 
 <IllustrationLibrary />
 
 ## Bruk i kode
 
+Illustrasjonene er PNG-bilder i pakken `@digdir/varde`.
+Du importerer adressen til bildet og bruker den i et `img`-element:
+
 ```tsx
-import { SkjemaMedLupe } from '@digdir/varde/illustrations/uutilsynet/react';
+import { mangeMennesker } from '@digdir/varde/illustrations/uutilsynet/images';
 
-<SkjemaMedLupe aria-hidden />
+<img src={mangeMennesker} alt="" />
 ```
 
-For mørk modus, last også inn stilarket:
-
-```ts
-import '@digdir/varde/illustrations/uutilsynet.css';
-```
+Bruk `alt=""` når illustrasjonen er dekorativ, og en beskrivende tekst når den gir informasjon.
