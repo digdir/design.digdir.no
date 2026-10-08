@@ -51,6 +51,12 @@ export type IllustrationSlot = {
 /** Shape of `@digdir/varde/illustrations/<profile>/meta`. */
 export type IllustrationProfileMeta = {
   profile: string;
+  /**
+   * Whether the illustrations follow the colour scheme. False for profiles
+   * without a palette (`colors.json`): their colours are fixed, with no dark
+   * mode and no colour slots.
+   */
+  darkMode: boolean;
   colors: IllustrationColor[];
   illustrations: IllustrationMeta[];
 };

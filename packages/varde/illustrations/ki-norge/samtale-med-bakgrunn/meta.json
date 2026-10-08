@@ -1,0 +1,12 @@
+{
+  "$schema": "../../meta.schema.json",
+  "title": "Samtale (med bakgrunn)",
+  "description": "To personer i samtale, den ene tar notater. Brukes om dialog, intervju og veiledning.",
+  "tags": [
+    "samtale",
+    "dialog",
+    "notater",
+    "møte",
+    "bakgrunn"
+  ]
+}

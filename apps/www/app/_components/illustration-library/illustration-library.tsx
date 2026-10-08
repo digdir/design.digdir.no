@@ -168,6 +168,8 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
               >
                 <span
                   className={classes.tilePreview}
+                  // Fixed-colour illustrations are drawn for light backgrounds.
+                  data-color-scheme={library.darkMode ? undefined : 'light'}
                   style={slotStyle(
                     library,
                     item,

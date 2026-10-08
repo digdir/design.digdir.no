@@ -1,0 +1,11 @@
+{
+  "$schema": "../../meta.schema.json",
+  "title": "Person som tenker",
+  "description": "En person sitter ved en laptop med en kaffekopp og tenker. Brukes om refleksjon, læring og nysgjerrighet.",
+  "tags": [
+    "refleksjon",
+    "laptop",
+    "tenke",
+    "læring"
+  ]
+}

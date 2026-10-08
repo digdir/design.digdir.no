@@ -153,6 +153,10 @@
   }
 }
 
+.previewsSingle {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 /* `data-color-scheme` on each preview flips the Designsystemet tokens inside. */
 .preview {
   display: flex;

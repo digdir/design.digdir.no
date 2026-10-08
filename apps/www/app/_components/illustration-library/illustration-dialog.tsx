@@ -16,6 +16,7 @@ import {
   resolveColorScheme,
 } from '@digdir/varde/illustrations';
 import { CheckmarkIcon, DownloadIcon, FilesIcon } from '@navikt/aksel-icons';
+import cl from 'clsx/lite';
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { CopyButton } from '../copy-button/copy-button';
 import {
@@ -43,7 +44,7 @@ interface IllustrationDialogProps {
 /**
  * Details for one illustration: colour choices for its slots, light/dark
  * previews with copy (SVG markup or PNG image) and download, plus the React
- * import snippet.
+ * import snippet. Profiles without dark mode get a single preview.
  */
 export const IllustrationDialog = ({
   item,
@@ -94,6 +95,7 @@ const DialogContent = ({
   );
 
   const svg = library.svgs[item.exportName] ?? '';
+  const shownSchemes = library.darkMode ? schemes : schemes.slice(0, 1);
   const variants = useMemo(
     () => ({
       light: resolveColorScheme(svg, library.colors, 'light', slotValues),
@@ -139,7 +141,7 @@ const DialogContent = ({
       await downloadIllustration({
         svg: variants[scheme],
         viewBox: item.viewBox,
-        fileName: `${item.name}-${scheme}`,
+        fileName: library.darkMode ? `${item.name}-${scheme}` : item.name,
         format,
       });
     } catch (error) {
@@ -204,21 +206,36 @@ const DialogContent = ({
         {copied ? 'Kopiert til utklippstavlen' : ''}
       </span>
 
-      <Dialog.Block className={classes.previews}>
-        {schemes.map(({ scheme, label }) => (
+      <Dialog.Block
+        className={cl(
+          classes.previews,
+          !library.darkMode && classes.previewsSingle,
+        )}
+      >
+        {shownSchemes.map(({ scheme, label }) => (
           <section
             key={scheme}
             className={classes.preview}
             data-color-scheme={scheme}
-            aria-label={label}
+            aria-label={library.darkMode ? label : item.title}
           >
-            <Paragraph data-size='xs' className={classes.previewLabel} asChild>
-              <span>{label}</span>
-            </Paragraph>
+            {library.darkMode && (
+              <Paragraph
+                data-size='xs'
+                className={classes.previewLabel}
+                asChild
+              >
+                <span>{label}</span>
+              </Paragraph>
+            )}
             <div
               className={classes.previewImage}
               role='img'
-              aria-label={`${item.title}, ${label.toLowerCase()}`}
+              aria-label={
+                library.darkMode
+                  ? `${item.title}, ${label.toLowerCase()}`
+                  : item.title
+              }
               // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG strings are generated from our own repo at build time
               dangerouslySetInnerHTML={{ __html: variants[scheme] }}
             />

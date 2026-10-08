@@ -7,6 +7,7 @@
  */
 import altinnTheme from '../../../../design-tokens-build/altinn.css?url';
 import digdirTheme from '../../../../design-tokens-build/digdir.css?url';
+import kiNorgeTheme from '../../../../design-tokens-build/ki-norge.css?url';
 import norgePrivateTheme from '../../../../design-tokens-build/norge-private.css?url';
 import portalTheme from '../../../../design-tokens-build/portal.css?url';
 import uutilsynetTheme from '../../../../design-tokens-build/uutilsynet.css?url';
@@ -18,6 +19,7 @@ export const DEFAULT_THEME = 'digdir';
 const themeStylesheets: Record<string, string> = {
   altinn: altinnTheme,
   digdir: digdirTheme,
+  'ki-norge': kiNorgeTheme,
   norge: norgePrivateTheme,
   portal: portalTheme,
   uutilsynet: uutilsynetTheme,

@@ -49,6 +49,15 @@ export const profiles: Profile[] = [
     mainColor: 'brand1',
     theme: 'uutilsynet',
   },
+  {
+    slug: 'ki-norge',
+    name: 'KI Norge',
+    description:
+      'Visuell identitet for KI Norge – forumet for kunstig intelligens i offentlig sektor.',
+    color: '#A24D83',
+    mainColor: 'brand1',
+    theme: 'ki-norge',
+  },
 ];
 
 export const profileSlugs = profiles.map((profile) => profile.slug);

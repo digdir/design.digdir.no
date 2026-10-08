@@ -85,8 +85,9 @@ illustrations/
 
 4. Run `pnpm build`.
 
-To add a new profile, create `illustrations/<profile>/colors.json` and at least
-one illustration folder. The build picks it up and adds it to
+To add a new profile, create `illustrations/<profile>/` with at least one
+illustration folder (and a `colors.json` if it should support dark mode or
+colour slots). The build picks it up and adds it to
 `illustrationProfiles` and `illustrationLoaders` in `@digdir/varde/illustrations`.
 
 ### Recolourable parts (colour slots)
@@ -146,6 +147,10 @@ variable:
 ```
 
 `label` is optional and is what the documentation shows in colour dropdowns.
+
+`colors.json` is optional. Without it, the profile's illustrations keep the
+colours they were drawn in: there is no dark mode and no colour slots, and
+`meta.ts` exports `darkMode = false`.
 
 ## Development
 
