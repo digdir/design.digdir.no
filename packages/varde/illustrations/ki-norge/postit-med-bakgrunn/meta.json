@@ -2,11 +2,5 @@
   "$schema": "../../meta.schema.json",
   "title": "Idémyldring med lapper (med bakgrunn)",
   "description": "To personer diskuterer foran en vegg med lapper. Brukes om idéutvikling, workshop og dialog.",
-  "tags": [
-    "idémyldring",
-    "workshop",
-    "lapper",
-    "dialog",
-    "bakgrunn"
-  ]
+  "tags": ["idémyldring", "workshop", "lapper", "dialog", "bakgrunn"]
 }

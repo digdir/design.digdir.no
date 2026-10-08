@@ -36,7 +36,7 @@ export default function ProfileIndex() {
               {category}
             </Heading>
           )}
-          <ul className={classes.grid}>
+          <ul className={classes.grid} data-color={profile.mainColor}>
             {links.map((link) => (
               <li key={link.url}>
                 <RRLink to={link.url} className={classes.card}>

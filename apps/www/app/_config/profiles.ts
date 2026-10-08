@@ -37,7 +37,7 @@ export const profiles: Profile[] = [
     name: 'Digdir.no',
     description:
       'Profilbibliotek og dokumentasjon for Digitaliseringsdirektoratet sine tjenester.',
-    color: '#F45F63',
+    color: '#C2132C',
     mainColor: 'brand1',
     theme: 'digdir',
   },
@@ -54,8 +54,8 @@ export const profiles: Profile[] = [
     name: 'KI Norge',
     description:
       'Visuell identitet for KI Norge – forumet for kunstig intelligens i offentlig sektor.',
-    color: '#A24D83',
-    mainColor: 'brand1',
+    color: '#B42946',
+    mainColor: 'accent',
     theme: 'ki-norge',
   },
 ];

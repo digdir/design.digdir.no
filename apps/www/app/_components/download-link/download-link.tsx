@@ -10,6 +10,8 @@ import {
 } from '@navikt/aksel-icons';
 import cl from 'clsx/lite';
 import type { ComponentType, SVGProps } from 'react';
+import { useParams } from 'react-router';
+import { getProfile } from '~/_config/profiles';
 import classes from './download-link.module.css';
 
 /** File icon per extension. Anything unknown falls back to a generic document. */
@@ -61,11 +63,13 @@ export const DownloadLink = ({
   const fileName = fileNameFromHref(href);
   const extension = fileName.split('.').pop()?.toLowerCase() ?? '';
   const FileIcon = iconByExtension[extension] ?? FileTextIcon;
+  const params = useParams();
+  const profile = getProfile(params.profile);
 
   return (
     <a className={cl(classes.link, 'ds-focus', className)} href={href} download>
       <span className='ds-sr-only'>Last ned</span>
-      <span className={classes.fileIcon}>
+      <span className={classes.fileIcon} data-color={profile?.mainColor}>
         <FileIcon aria-hidden />
       </span>
       <span className={classes.body}>

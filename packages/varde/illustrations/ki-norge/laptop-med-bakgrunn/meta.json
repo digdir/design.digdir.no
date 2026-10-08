@@ -2,11 +2,5 @@
   "$schema": "../../meta.schema.json",
   "title": "Tre personer ved en laptop (med bakgrunn)",
   "description": "Tre kolleger samles rundt en laptop og et nettbrett. Brukes om samarbeid og felles arbeid med digitale verktøy.",
-  "tags": [
-    "samarbeid",
-    "laptop",
-    "team",
-    "arbeid",
-    "bakgrunn"
-  ]
+  "tags": ["samarbeid", "laptop", "team", "arbeid", "bakgrunn"]
 }

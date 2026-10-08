@@ -22,8 +22,8 @@
   place-items: center;
   width: var(--ds-size-18);
   padding-block: var(--ds-size-4);
-  background: var(--ds-color-brand1-surface-tinted);
-  color: var(--ds-color-brand1-text-default);
+  background: var(--ds-color-surface-tinted);
+  color: var(--ds-color-text-default);
   font-size: var(--ds-size-8);
 }
 
