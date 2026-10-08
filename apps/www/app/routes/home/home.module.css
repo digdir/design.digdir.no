@@ -103,6 +103,10 @@
   align-self: center;
 }
 
+.artwork {
+  border-radius: var(--ds-border-radius-lg);
+}
+
 @media screen and (max-width: 480px) {
   .illustration {
     display: none;

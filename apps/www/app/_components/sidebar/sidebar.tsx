@@ -48,6 +48,7 @@ export const Sidebar = ({ profile, groups, hideGroupTitle }: SidebarProps) => {
           onOpen={() => setSwitcherOpen(true)}
           onClose={() => setSwitcherOpen(false)}
           placement='bottom-start'
+          data-color='neutral'
         >
           <Dropdown.List>
             {profiles.map((item) => (

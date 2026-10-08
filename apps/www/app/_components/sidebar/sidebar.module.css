@@ -40,6 +40,7 @@
   margin-block-end: var(--ds-size-5);
   font-weight: 500;
   text-align: start;
+  --dsc-button-border-color: var(--ds-color-border-subtle);
 }
 
 .switcherName {

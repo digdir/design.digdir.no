@@ -1,5 +1,7 @@
 import { Heading, Link, Paragraph } from '@digdir/designsystemet-react';
-import type { CSSProperties } from 'react';
+import { LaptopMedBakgrunn } from '@digdir/varde/illustrations/ki-norge/react';
+import cl from 'clsx/lite';
+import type { ComponentType, CSSProperties, SVGProps } from 'react';
 import { Link as RRLink } from 'react-router';
 import { IdentityIllustration } from '~/_components/identity-illustration/identity-illustration';
 import { profiles } from '~/_config/profiles';
@@ -11,6 +13,16 @@ export const meta = () =>
     title: 'Velg identitet',
     description: 'Velg hvilken identitet du vil se dokumentasjonen for.',
   });
+
+/**
+ * Real artwork for an identity's card, keyed by profile slug. Profiles without
+ * one get the placeholder `IdentityIllustration` in their brand colour.
+ */
+const cardIllustrations: Partial<
+  Record<string, ComponentType<SVGProps<SVGSVGElement>>>
+> = {
+  'ki-norge': LaptopMedBakgrunn,
+};
 
 const ArrowRight = () => (
   <svg viewBox='0 0 20 20' width='1.1em' height='1.1em' aria-hidden='true'>
@@ -41,6 +53,7 @@ export default function Home() {
       <ul className={classes.grid}>
         {profiles.map((profile) => {
           const randId = Math.random().toString(36).slice(2, 7);
+          const Illustration = cardIllustrations[profile.slug];
           return (
             <li key={profile.slug}>
               <div
@@ -64,10 +77,17 @@ export default function Home() {
                     <ArrowRight />
                   </span>
                 </div>
-                <IdentityIllustration
-                  color={profile.color}
-                  className={classes.illustration}
-                />
+                {Illustration ? (
+                  <Illustration
+                    aria-hidden
+                    className={cl(classes.illustration, classes.artwork)}
+                  />
+                ) : (
+                  <IdentityIllustration
+                    color={profile.color}
+                    className={classes.illustration}
+                  />
+                )}
               </div>
             </li>
           );
@@ -76,7 +96,7 @@ export default function Home() {
 
       <div className={classes.help}>
         <Link asChild>
-          <RRLink to='/digdir/getting-started'>
+          <RRLink to='#' data-tooltip='Denne lenka funker ikke enda'>
             Usikker på hvilken du skal velge?
           </RRLink>
         </Link>
