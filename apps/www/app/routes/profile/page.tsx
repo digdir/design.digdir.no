@@ -41,6 +41,7 @@ export const meta = ({ loaderData }: Route.MetaArgs) => {
   return generateMetadata({
     title: loaderData.frontmatter.title ?? 'Varde',
     description: loaderData.frontmatter.description,
+    profile: loaderData.profile.name,
   });
 };
 
