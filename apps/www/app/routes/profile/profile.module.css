@@ -30,7 +30,6 @@
   border-radius: var(--ds-border-radius-md);
   background: var(--ds-color-surface-tinted);
   color: var(--ds-color-text-default);
-  color: inherit;
   text-decoration: none;
   transition:
     border-color 0.15s ease,
