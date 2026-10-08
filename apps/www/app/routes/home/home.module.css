@@ -49,7 +49,7 @@
   color: var(--ds-color-neutral-text-default);
   background: color-mix(
     in srgb,
-    var(--identity-color) 12%,
+    var(--identity-color) 28%,
     var(--ds-color-neutral-background-default, #fff)
   );
   transition:
