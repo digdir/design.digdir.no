@@ -70,11 +70,16 @@ export default function Home() {
                 className={classes.card}
                 style={{ '--identity-color': profile.color } as CSSProperties}
                 data-clickdelegatefor={randId}
+                suppressHydrationWarning
               >
                 <div className={classes.cardBody}>
                   <div className={classes.cardText}>
                     <Heading level={2} data-size='sm'>
-                      <RRLink to={`/${profile.slug}`} id={randId}>
+                      <RRLink
+                        to={`/${profile.slug}`}
+                        id={randId}
+                        suppressHydrationWarning
+                      >
                         {profile.name}
                       </RRLink>
                     </Heading>
