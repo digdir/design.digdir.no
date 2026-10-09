@@ -2,15 +2,15 @@
  * Shared types and runtime helpers for the illustration library. The build
  * script copies this file into `generated/illustrations/index.ts` and appends
  * the generated profile list and loaders, so it ships as
- * `@digdir/varde/illustrations`.
+ * `@digdir/design/illustrations`.
  */
 
 type IllustrationMetaBase = {
   /** Folder name, kebab-case. Also the file name for downloads. */
   name: string;
   /**
-   * Named export in `@digdir/varde/illustrations/<profile>/svg` (vector) or
-   * `@digdir/varde/illustrations/<profile>/images` (raster).
+   * Named export in `@digdir/design/illustrations/<profile>/svg` (vector) or
+   * `@digdir/design/illustrations/<profile>/images` (raster).
    */
   exportName: string;
   title: string;
@@ -21,7 +21,7 @@ type IllustrationMetaBase = {
 /** An SVG illustration, from its `meta.json` and layer names. */
 export type VectorIllustrationMeta = IllustrationMetaBase & {
   format: 'svg';
-  /** Named export in `@digdir/varde/illustrations/<profile>/react`. */
+  /** Named export in `@digdir/design/illustrations/<profile>/react`. */
   componentName: string;
   viewBox?: string;
   /** Recolourable parts, from layers named `Name [colour,…]`. */
@@ -46,7 +46,7 @@ export type IllustrationColor = {
   name: string;
   /** Human-readable name, e.g. "Rød". Falls back to `name`. */
   label: string;
-  /** CSS custom property the illustrations reference, e.g. `--varde-illustration-digdir-figure`. */
+  /** CSS custom property the illustrations reference, e.g. `--design-illustration-digdir-figure`. */
   variable: string;
   light: string;
   dark: string;
@@ -60,7 +60,7 @@ export type IllustrationSlot = {
   label: string;
   /** Prop on the React component, e.g. `former`. */
   prop: string;
-  /** CSS custom property to set to a palette colour, e.g. `var(--varde-illustration-digdir-brand1)`. */
+  /** CSS custom property to set to a palette colour, e.g. `var(--design-illustration-digdir-brand1)`. */
   variable: string;
   /** Palette colour the part is drawn in. */
   default: string;
@@ -68,7 +68,7 @@ export type IllustrationSlot = {
   colors: string[];
 };
 
-/** Shape of `@digdir/varde/illustrations/<profile>/meta`. */
+/** Shape of `@digdir/design/illustrations/<profile>/meta`. */
 export type IllustrationProfileMeta = {
   profile: string;
   /**

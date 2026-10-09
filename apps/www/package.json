@@ -15,7 +15,7 @@
     "@digdir/designsystemet-css": "^1.23.0",
     "@digdir/designsystemet-react": "^1.23.0",
     "@digdir/designsystemet-web": "^1.23.0",
-    "@digdir/varde": "workspace:*",
+    "@digdir/design": "workspace:*",
     "@navikt/aksel-icons": "^8.18.0",
     "@react-router/node": "8.4.0",
     "@react-router/serve": "8.4.0",

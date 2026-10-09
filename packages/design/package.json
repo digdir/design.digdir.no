@@ -1,5 +1,5 @@
 {
-  "name": "@digdir/varde",
+  "name": "@digdir/design",
   "version": "0.0.1",
   "description": "Illustrations and component styles for Digdir's visual profiles, built on Designsystemet.",
   "type": "module",
@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/felleslosninger/varde",
-    "directory": "packages/varde"
+    "directory": "packages/design"
   },
   "keywords": [
     "svg",

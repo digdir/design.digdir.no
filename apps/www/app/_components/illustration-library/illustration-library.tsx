@@ -11,7 +11,7 @@ import {
 import type {
   IllustrationMeta,
   IllustrationProfile,
-} from '@digdir/varde/illustrations';
+} from '@digdir/design/illustrations';
 import cl from 'clsx/lite';
 import { Suspense, use, useState } from 'react';
 import { useParams } from 'react-router';

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/felleslosninger/varde/packages/varde/illustrations/meta.schema.json",
+  "$id": "https://github.com/digdir/design.digdir.no/packages/design/illustrations/meta.schema.json",
   "title": "Illustration metadata",
   "description": "Metadata for one illustration. Lives in `meta.json` next to the illustration's `.svg` file.",
   "type": "object",

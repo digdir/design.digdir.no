@@ -1,7 +1,7 @@
 import { Heading, Link, Paragraph } from '@digdir/designsystemet-react';
-import { PersonSomGarMedSirkel } from '@digdir/varde/illustrations/digdir/react';
-import { Laptop } from '@digdir/varde/illustrations/ki-norge/react';
-import { dameHolderNettbrett } from '@digdir/varde/illustrations/uutilsynet/images';
+import { PersonSomGarMedSirkel } from '@digdir/design/illustrations/digdir/react';
+import { Laptop } from '@digdir/design/illustrations/ki-norge/react';
+import { dameHolderNettbrett } from '@digdir/design/illustrations/uutilsynet/images';
 import { ArrowRightIcon } from '@navikt/aksel-icons';
 import cl from 'clsx/lite';
 import type { CSSProperties, ReactNode } from 'react';

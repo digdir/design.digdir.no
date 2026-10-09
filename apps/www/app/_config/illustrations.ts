@@ -1,5 +1,5 @@
 /**
- * Illustration libraries per profile, from the `@digdir/varde` package.
+ * Illustration libraries per profile, from the `@digdir/design` package.
  *
  * The package ships one lazy loader per profile, so the docs bundle does not
  * grow with every illustration added. This module only memoises the promises
@@ -11,7 +11,7 @@ import {
   type IllustrationLibrary,
   type IllustrationProfile,
   illustrationLoaders,
-} from '@digdir/varde/illustrations';
+} from '@digdir/design/illustrations';
 
 export type { IllustrationLibrary };
 

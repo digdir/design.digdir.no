@@ -1,7 +1,7 @@
 import type {
   IllustrationLibrary,
   VectorIllustrationMeta,
-} from '@digdir/varde/illustrations';
+} from '@digdir/design/illustrations';
 import type { CSSProperties } from 'react';
 
 /**

@@ -185,9 +185,9 @@ importers:
       '@digdir/designsystemet-web':
         specifier: ^1.23.0
         version: 1.23.0
-      '@digdir/varde':
+      '@digdir/design':
         specifier: workspace:*
-        version: link:../../packages/varde
+        version: link:../../packages/design
       '@navikt/aksel-icons':
         specifier: ^8.18.0
         version: 8.18.0
@@ -250,7 +250,7 @@ importers:
         specifier: ^8.3.2
         version: 8.3.2(@types/node@24.19.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0)
 
-  packages/varde:
+  packages/design:
     devDependencies:
       '@svgr/core':
         specifier: ^8.1.0

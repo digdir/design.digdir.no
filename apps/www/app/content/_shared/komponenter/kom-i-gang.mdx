@@ -1,19 +1,19 @@
 ---
 title: Kom i gang med komponenter
 sidebar_title: Kom i gang
-description: Slik tar du i bruk komponentene fra Designsystemet og Varde sine varianter.
+description: Slik tar du i bruk komponentene fra Designsystemet og variantene fra design.digdir.no.
 category: Komponenter
 order: 1
 published: true
 ---
 
 Komponentene våre er [Designsystemet](https://designsystemet.no) sine komponenter.
-Varde legger bare til egne varianter i CSS, så de fungerer med vanlig HTML og uansett rammeverk.
+design.digdir.no legger bare til egne varianter i CSS, så de fungerer med vanlig HTML og uansett rammeverk.
 
 ## Installer
 
 ```bash
-pnpm add @digdir/designsystemet-css @digdir/designsystemet-web @digdir/varde
+pnpm add @digdir/designsystemet-css @digdir/designsystemet-web @digdir/design
 ```
 
 ## Importer
@@ -21,13 +21,13 @@ pnpm add @digdir/designsystemet-css @digdir/designsystemet-web @digdir/varde
 ```js
 import '@digdir/designsystemet-css';
 import '@digdir/designsystemet-web';
-import '@digdir/varde/components.css';
+import '@digdir/design/components.css';
 ```
 
 - `@digdir/designsystemet-css` gir stilene til komponentene.
 - `@digdir/designsystemet-web` gir oppførsel til web-komponentene, for eksempel `<ds-tabs>`.
-- `@digdir/varde/components.css` legger til Varde sine varianter.
+- `@digdir/design/components.css` legger til variantene fra design.digdir.no.
 
-Du kan også importere én og én komponent, for eksempel `@digdir/varde/components/tabs.css`.
+Du kan også importere én og én komponent, for eksempel `@digdir/design/components/tabs.css`.
 
 Se [dokumentasjonen til Designsystemet](https://designsystemet.no/no/fundamentals/code/setup) for mer om oppsett, blant annet hvordan du laster inn tema.

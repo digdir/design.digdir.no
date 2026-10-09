@@ -1,4 +1,4 @@
-# `@digdir/varde`
+# `@digdir/design`
 
 Illustrations for Digdir's visual profiles, with light and dark mode support.
 Icons and components will be added to the same package later.
@@ -10,7 +10,7 @@ metadata (title, description, tags) for building galleries.
 ## Installation
 
 ```bash
-npm install @digdir/varde
+npm install @digdir/design
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ npm install @digdir/varde
 React components, one profile at a time:
 
 ```tsx
-import { TelefonMedVarsel } from '@digdir/varde/illustrations/digdir/react';
+import { TelefonMedVarsel } from '@digdir/design/illustrations/digdir/react';
 
 <TelefonMedVarsel aria-hidden />
 ```
@@ -29,7 +29,7 @@ information, or pass `title="…"` when they do.
 Framework-agnostic SVG strings:
 
 ```ts
-import { telefonMedVarsel } from '@digdir/varde/illustrations/digdir/svg';
+import { telefonMedVarsel } from '@digdir/design/illustrations/digdir/svg';
 
 element.innerHTML = telefonMedVarsel;
 ```
@@ -37,22 +37,22 @@ element.innerHTML = telefonMedVarsel;
 Metadata (for galleries, search and filtering):
 
 ```ts
-import { colors, illustrations } from '@digdir/varde/illustrations/digdir/meta';
-import type { IllustrationMeta } from '@digdir/varde/illustrations';
+import { colors, illustrations } from '@digdir/design/illustrations/digdir/meta';
+import type { IllustrationMeta } from '@digdir/design/illustrations';
 ```
 
 ### Dark mode
 
 Colours in the SVGs are written as
-`var(--varde-illustration-<profile>-<colour>, <light hex>)`, so they render
+`var(--design-illustration-<profile>-<colour>, <light hex>)`, so they render
 correctly in light mode without any CSS. To follow `data-color-scheme="dark"`
 (as set by Designsystemet), load the stylesheet for the profile – or one for
 all profiles:
 
 ```ts
-import '@digdir/varde/illustrations/digdir.css';
+import '@digdir/design/illustrations/digdir.css';
 // or
-import '@digdir/varde/illustrations.css';
+import '@digdir/design/illustrations.css';
 ```
 
 ## Adding an illustration
@@ -93,7 +93,7 @@ or slots) and exposed as URLs rather than inlined as base64, so they stay
 cacheable and out of your JavaScript bundle:
 
 ```tsx
-import { mangeMennesker } from '@digdir/varde/illustrations/uutilsynet/images';
+import { mangeMennesker } from '@digdir/design/illustrations/uutilsynet/images';
 
 <img src={mangeMennesker} alt="" />
 ```
@@ -105,7 +105,7 @@ well as in the browser. It needs a bundler; plain Node cannot import `.png`.
 To add a new profile, create `illustrations/<profile>/` with at least one
 illustration folder (and a `colors.json` if it should support dark mode or
 colour slots). The build picks it up and adds it to
-`illustrationProfiles` and `illustrationLoaders` in `@digdir/varde/illustrations`.
+`illustrationProfiles` and `illustrationLoaders` in `@digdir/design/illustrations`.
 
 ### Recolourable parts (colour slots)
 
@@ -131,7 +131,7 @@ Rules:
   A marker on a group applies to every shape in it drawn in the slot's colour.
 - The slot name comes from the text before the brackets: `Former` becomes the
   React prop `former` and the CSS variable
-  `--varde-illustration-<profile>-<illustration>-former`.
+  `--design-illustration-<profile>-<illustration>-former`.
 
 Using a slot:
 
@@ -142,8 +142,8 @@ Using a slot:
 ```css
 /* SVG strings: set the slot variable to a palette variable */
 .hero svg {
-  --varde-illustration-digdir-personer-som-holder-figurer-former:
-    var(--varde-illustration-digdir-brand3);
+  --design-illustration-digdir-personer-som-holder-figurer-former:
+    var(--design-illustration-digdir-brand3);
 }
 ```
 

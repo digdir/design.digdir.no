@@ -1,4 +1,4 @@
-export const SITE_NAME = 'Varde';
+export const SITE_NAME = 'design.digdir.no';
 
 export interface PageMetadata {
   title: string;

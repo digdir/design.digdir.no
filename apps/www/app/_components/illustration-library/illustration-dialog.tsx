@@ -17,7 +17,7 @@ import {
   type RasterIllustrationMeta,
   resolveColorScheme,
   type VectorIllustrationMeta,
-} from '@digdir/varde/illustrations';
+} from '@digdir/design/illustrations';
 import { CheckmarkIcon, DownloadIcon, FilesIcon } from '@navikt/aksel-icons';
 import cl from 'clsx/lite';
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
@@ -130,7 +130,7 @@ const RasterDialogContent = ({
   const url = library.images[item.exportName] ?? '';
 
   const snippet = [
-    `import { ${item.exportName} } from '@digdir/varde/illustrations/${library.profile}/images';`,
+    `import { ${item.exportName} } from '@digdir/design/illustrations/${library.profile}/images';`,
     '',
     `<img src={${item.exportName}} alt="" />`,
   ].join('\n');
@@ -242,7 +242,7 @@ const VectorDialogContent = ({
     .map((slot) => ` ${slot.prop}="${slotValues[slot.variable]}"`)
     .join('');
   const reactSnippet = [
-    `import { ${item.componentName} } from '@digdir/varde/illustrations/${library.profile}/react';`,
+    `import { ${item.componentName} } from '@digdir/design/illustrations/${library.profile}/react';`,
     '',
     `<${item.componentName}${slotProps} aria-hidden />`,
   ].join('\n');

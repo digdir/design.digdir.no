@@ -27,9 +27,12 @@
 }
 
 .logoMark {
-  width: 1.5em;
-  height: 1.5em;
+  /* The logo file is single-colour; use it as a mask so it follows the text colour in dark mode. */
+  width: 159px;
+  height: 23px;
   display: block;
+  background-color: currentColor;
+  mask: url('/digdir-design-logo.svg') no-repeat center / contain;
 }
 
 .actions {

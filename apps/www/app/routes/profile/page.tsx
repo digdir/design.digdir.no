@@ -37,9 +37,9 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 export const meta = ({ loaderData }: Route.MetaArgs) => {
-  if (!loaderData) return [{ title: 'Varde' }];
+  if (!loaderData) return [{ title: 'design.digdir.no' }];
   return generateMetadata({
-    title: loaderData.frontmatter.title ?? 'Varde',
+    title: loaderData.frontmatter.title ?? 'design.digdir.no',
     description: loaderData.frontmatter.description,
     profile: loaderData.profile.name,
   });

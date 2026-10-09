@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "varde",
+  "name": "design",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,7 @@
     "lint:write": "biome check --write",
     "www": "pnpm build:packages && pnpm --filter www dev",
     "build:www": "pnpm build:packages && pnpm --filter www build",
-    "build:packages": "pnpm --filter @digdir/varde build"
+    "build:packages": "pnpm --filter @digdir/design build"
   },
   "keywords": [],
   "author": "",

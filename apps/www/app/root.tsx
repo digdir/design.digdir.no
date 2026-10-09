@@ -17,9 +17,9 @@ import '@digdir/designsystemet-css';
 // be written as plain HTML.
 import '@digdir/designsystemet-web';
 // Colour variables for the illustration library (all profiles; tiny).
-import '@digdir/varde/illustrations.css';
-// Varde's component variants on top of Designsystemet.
-import '@digdir/varde/components.css';
+import '@digdir/design/illustrations.css';
+// design.digdir.no's component variants on top of Designsystemet.
+import '@digdir/design/components.css';
 import './app.css';
 
 export const links: Route.LinksFunction = () => [
