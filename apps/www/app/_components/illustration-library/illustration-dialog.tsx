@@ -1,4 +1,12 @@
 import {
+  type ColorScheme,
+  type IllustrationLibrary,
+  type IllustrationMeta,
+  type RasterIllustrationMeta,
+  resolveColorScheme,
+  type VectorIllustrationMeta,
+} from '@digdir/design/illustrations';
+import {
   Button,
   Dialog,
   Dropdown,
@@ -10,14 +18,6 @@ import {
   Tag,
   ValidationMessage,
 } from '@digdir/designsystemet-react';
-import {
-  type ColorScheme,
-  type IllustrationLibrary,
-  type IllustrationMeta,
-  type RasterIllustrationMeta,
-  resolveColorScheme,
-  type VectorIllustrationMeta,
-} from '@digdir/design/illustrations';
 import { CheckmarkIcon, DownloadIcon, FilesIcon } from '@navikt/aksel-icons';
 import cl from 'clsx/lite';
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
