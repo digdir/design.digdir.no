@@ -6,8 +6,8 @@
 
 :root {
   --font-sans:
-    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    var(--ds-font-family, 'Inter'), ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --header-height: 75px;
   --content-inline-padding: clamp(1rem, 0.27rem + 2.4vw, 1.75rem);
   --page-spacing-top: clamp(2rem, 1rem + 3vw, 3.5rem);
@@ -21,6 +21,61 @@
   @media screen and (max-width: 600px) {
     --header-height: 68px;
   }
+}
+
+/*
+ * Self-hosted fonts from /public/fonts
+ */
+@font-face {
+  font-family: 'Instrument Sans';
+  src: url('/fonts/Instrument_Sans/InstrumentSans-VariableFont_wdth,wght.ttf')
+    format('truetype');
+  font-weight: 400 700;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Instrument Sans';
+  src: url('/fonts/Instrument_Sans/InstrumentSans-Italic-VariableFont_wdth,wght.ttf')
+    format('truetype');
+  font-weight: 400 700;
+  font-stretch: 75% 100%;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  src: url('/fonts/PT_Serif/PTSerif-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  src: url('/fonts/PT_Serif/PTSerif-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  src: url('/fonts/PT_Serif/PTSerif-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  src: url('/fonts/PT_Serif/PTSerif-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
 }
 
 /* Heading weights match designsystemet.no (semibold across the scale). */
@@ -45,6 +100,11 @@ body {
 
 * {
   quotes: '«' '»' '‹' '›';
+}
+
+/* KI Norge: every heading in its profile pages uses PT Serif. */
+[data-profile='ki-norge'] :is(h1, h2, h3, h4, h5, h6, .ds-heading) {
+  font-family: 'PT Serif', ui-serif, Georgia, serif;
 }
 
 /* Outer content layout used on all pages. */
