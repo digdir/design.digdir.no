@@ -96,22 +96,13 @@ export const profiles: Profile[] = [
     theme: 'altinn',
   },
   {
-    slug: 'norge-on-privat',
-    name: 'Norge.no Privat',
-    description: 'Profil og komponenter for Norge.no Privat.',
+    slug: 'norge-no',
+    name: 'Norge.no',
+    description: 'Profil og komponenter for Norge.no.',
     color: '#123123',
     card: { color: '#f9f9f9' },
     mainColor: 'brand1',
-    theme: 'norge-on-privat',
-  },
-  {
-    slug: 'norge-no-business',
-    name: 'Norge.no Business',
-    description: 'Profil og komponenter for Norge.no Business.',
-    color: '#654321',
-    card: { color: '#f5f5f5' },
-    mainColor: 'brand1',
-    theme: 'norge-no-business',
+    theme: 'norge-no-private',
   },
 ];
 
