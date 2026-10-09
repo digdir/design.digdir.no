@@ -47,11 +47,8 @@
   border-radius: 20px;
   text-decoration: none;
   color: var(--ds-color-neutral-text-default);
-  background: color-mix(
-    in srgb,
-    var(--identity-color) 28%,
-    var(--ds-color-neutral-background-default, #fff)
-  );
+  background: var(--card-color);
+  font-family: var(--card-text-font, inherit);
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
@@ -76,6 +73,10 @@
   gap: var(--ds-size-4);
   flex: 1 1 55%;
   min-width: 0;
+}
+
+.cardHeading {
+  font-family: var(--card-heading-font, inherit);
 }
 
 .cardText {

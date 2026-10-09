@@ -1,11 +1,11 @@
 import { Heading, Link, Paragraph } from '@digdir/designsystemet-react';
 import { PersonSomGarMedSirkel } from '@digdir/varde/illustrations/digdir/react';
-import { LaptopMedBakgrunn } from '@digdir/varde/illustrations/ki-norge/react';
+import { Laptop } from '@digdir/varde/illustrations/ki-norge/react';
 import { dameHolderNettbrett } from '@digdir/varde/illustrations/uutilsynet/images';
+import { ArrowRightIcon } from '@navikt/aksel-icons';
 import cl from 'clsx/lite';
 import type { CSSProperties, ReactNode } from 'react';
 import { Link as RRLink } from 'react-router';
-import { IdentityIllustration } from '~/_components/identity-illustration/identity-illustration';
 import { profiles } from '~/_config/profiles';
 import { generateMetadata } from '~/_utils/metadata';
 import classes from './home.module.css';
@@ -30,22 +30,9 @@ const cardIllustrations: Partial<
     <img src={dameHolderNettbrett} alt='' className={className} />
   ),
   'ki-norge': (className) => (
-    <LaptopMedBakgrunn aria-hidden className={cl(className, classes.rounded)} />
+    <Laptop aria-hidden className={cl(className, classes.rounded)} />
   ),
 };
-
-const ArrowRight = () => (
-  <svg viewBox='0 0 20 20' width='1.1em' height='1.1em' aria-hidden='true'>
-    <path
-      d='M4 10h12M11 5l5 5-5 5'
-      stroke='currentColor'
-      strokeWidth='1.8'
-      fill='none'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-    />
-  </svg>
-);
 
 export default function Home() {
   return (
@@ -68,13 +55,24 @@ export default function Home() {
             <li key={profile.slug}>
               <div
                 className={classes.card}
-                style={{ '--identity-color': profile.color } as CSSProperties}
+                style={
+                  {
+                    '--card-color': profile.card.color,
+                    '--card-heading-font': profile.card.headingFont,
+                    '--card-text-font': profile.card.textFont,
+                  } as CSSProperties
+                }
                 data-clickdelegatefor={randId}
+                data-color-scheme='light'
                 suppressHydrationWarning
               >
                 <div className={classes.cardBody}>
                   <div className={classes.cardText}>
-                    <Heading level={2} data-size='sm'>
+                    <Heading
+                      level={2}
+                      data-size='sm'
+                      className={classes.cardHeading}
+                    >
                       <RRLink
                         to={`/${profile.slug}`}
                         id={randId}
@@ -89,17 +87,10 @@ export default function Home() {
                   </div>
                   <span className={classes.cta}>
                     Velg identiteten
-                    <ArrowRight />
+                    <ArrowRightIcon aria-hidden='true' fontSize='1.5em' />
                   </span>
                 </div>
-                {illustration ? (
-                  illustration(classes.illustration)
-                ) : (
-                  <IdentityIllustration
-                    color={profile.color}
-                    className={classes.illustration}
-                  />
-                )}
+                {illustration?.(classes.illustration)}
               </div>
             </li>
           );

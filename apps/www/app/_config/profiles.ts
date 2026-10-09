@@ -7,6 +7,16 @@
  * This module is safe to import on both the client and the server – it must not
  * pull in any Node-only APIs.
  */
+/** How an identity's card on the landing page looks. */
+export type ProfileCard = {
+  /** Card background colour. */
+  color: string;
+  /** CSS `font-family` for the card heading. Defaults to the site font (Inter). */
+  headingFont?: string;
+  /** CSS `font-family` for the card text. Defaults to the site font (Inter). */
+  textFont?: string;
+};
+
 export type Profile = {
   /** Folder name under `app/content/` and the `:profile` route param. */
   slug: string;
@@ -14,8 +24,10 @@ export type Profile = {
   name: string;
   /** Short blurb for the identity card. */
   description: string;
-  /** Brand colour used to tint the landing-page card and its illustration. */
+  /** Brand colour, shown as a dot next to the name in the profile switcher. */
   color: string;
+  /** The identity's card on the landing page. */
+  card: ProfileCard;
   /**
    * The theme's *main* colour, given as a Designsystemet `data-color` value.
    * Setting `data-color={mainColor}` on a subtree lets it use the unnamed
@@ -38,6 +50,7 @@ export const profiles: Profile[] = [
     description:
       'Profilbibliotek og dokumentasjon for Digitaliseringsdirektoratet sine tjenester.',
     color: '#C2132C',
+    card: { color: '#fde2e3' },
     mainColor: 'brand1',
     theme: 'digdir',
   },
@@ -46,6 +59,7 @@ export const profiles: Profile[] = [
     name: 'uutilsynet',
     description: 'Profil og komponenter for uutilsynet.',
     color: '#5B60D1',
+    card: { color: '#e7e7f8' },
     mainColor: 'brand1',
     theme: 'uutilsynet',
   },
@@ -55,7 +69,12 @@ export const profiles: Profile[] = [
     description:
       'Visuell identitet for KI Norge – forumet for kunstig intelligens i offentlig sektor.',
     color: '#B42946',
-    mainColor: 'accent',
+    card: {
+      color: '#f1e5ed',
+      headingFont: "'PT Serif', ui-serif, Georgia, serif",
+      textFont: "'Instrument Sans', ui-sans-serif, system-ui, sans-serif",
+    },
+    mainColor: 'brand1',
     theme: 'ki-norge',
   },
 ];
