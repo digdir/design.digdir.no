@@ -4,6 +4,7 @@ packages:
 allowBuilds:
   "@biomejs/biome": true
   esbuild: false
+  sharp: true
 blockExoticSubdeps: true
 injectWorkspacePackages: true
 minimumReleaseAge: 4320 # Matches renovate

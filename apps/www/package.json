@@ -6,7 +6,8 @@
     "build"
   ],
   "scripts": {
-    "build": "react-router build",
+    "build": "pnpm build:meta-images && react-router build",
+    "build:meta-images": "tsx scripts/build-meta-images.ts",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
@@ -31,6 +32,11 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@fontsource/inter": "^5.2.0",
+    "gray-matter": "^4.0.3",
+    "satori": "^0.16.0",
+    "sharp": "^0.34.0",
+    "tsx": "^4.20.0",
     "@react-router/dev": "8.4.0",
     "@types/hast": "^3.0.5",
     "@types/node": "^24.19.1",

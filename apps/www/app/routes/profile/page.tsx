@@ -36,12 +36,13 @@ export async function loader({ params }: Route.LoaderArgs) {
   };
 }
 
-export const meta = ({ loaderData }: Route.MetaArgs) => {
+export const meta = ({ loaderData, params }: Route.MetaArgs) => {
   if (!loaderData) return [{ title: 'design.digdir.no' }];
   return generateMetadata({
     title: loaderData.frontmatter.title ?? 'design.digdir.no',
     description: loaderData.frontmatter.description,
     profile: loaderData.profile.name,
+    pathname: `/${loaderData.profile.slug}/${params['*']?.replace(/\/+$/, '')}`,
   });
 };
 
