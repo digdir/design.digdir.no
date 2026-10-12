@@ -43,24 +43,6 @@ Create a production build:
 npm run build
 ```
 
-### Social Preview Images
-
-`pnpm build:www` builds the design package, generates a 1200 x 630 PNG for
-each profile and MDX subpage (including shared pages), then builds the website.
-Images are written to `public/images/meta/<profile>/<page>/index.png` and copied
-to `build/client/images/meta/` by Vite. Serving a page never renders an image.
-
-The images use each profile's `card.color` in `app/_config/profiles.ts`,
-profile-specific artwork selected by slug, and the page's frontmatter title.
-Profiles without card artwork get a text-only preview. Generated images are not committed.
-Open Graph and Twitter metadata use absolute URLs on `https://design.digdir.no`.
-
-To regenerate only the images after the design package has been built:
-
-```bash
-pnpm --filter www build:meta-images
-```
-
 ## Deployment
 
 ### Docker Deployment
