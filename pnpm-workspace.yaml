@@ -10,8 +10,6 @@ injectWorkspacePackages: true
 minimumReleaseAge: 4320 # Matches renovate
 minimumReleaseAgeExclude:
   - "@digdir/*"
-  # Renovate security update: sharp@0.35.5
-  - sharp@0.35.5
 nodeVersion: "24.19.0"
 syncInjectedDepsAfterScripts:
   - build
