@@ -1,6 +1,7 @@
 # React Router
 .react-router
 apps/www/build
+apps/www/public/images/meta/
 apps/storybook/debug-storybook.log
 
 

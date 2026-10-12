@@ -11,6 +11,7 @@ export const meta = ({ params }: Route.MetaArgs) => {
   return generateMetadata({
     title: profile?.name ?? 'Profil',
     description: profile?.description,
+    pathname: profile ? `/${profile.slug}` : undefined,
   });
 };
 

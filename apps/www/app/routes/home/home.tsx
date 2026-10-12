@@ -17,8 +17,7 @@ export const meta = () =>
   });
 
 /**
- * Artwork for an identity's card, keyed by profile slug. Profiles without one
- * get the placeholder `IdentityIllustration` in their brand colour.
+ * Artwork for an identity's card, keyed by profile slug.
  */
 const cardIllustrations: Partial<
   Record<string, (className: string) => ReactNode>
