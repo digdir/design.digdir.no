@@ -6,8 +6,8 @@
 
 :root {
   --font-sans:
-    'Inter', ui-sans-serif, system-ui, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --header-height: 75px;
   --content-inline-padding: clamp(1rem, 0.27rem + 2.4vw, 1.75rem);
   --page-spacing-top: clamp(2rem, 1rem + 3vw, 3.5rem);
