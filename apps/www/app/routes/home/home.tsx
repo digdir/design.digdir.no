@@ -1,4 +1,6 @@
+import { ToPersonerVedDatamaskin } from '@digdir/design/illustrations/altinn/react';
 import { PersonSomGarMedSirkel } from '@digdir/design/illustrations/digdir/react';
+import { PersonSomTroster } from '@digdir/design/illustrations/dodsfall-og-arv/react';
 import { Laptop } from '@digdir/design/illustrations/ki-norge/react';
 import { dameHolderNettbrett } from '@digdir/design/illustrations/uutilsynet/images';
 import { Heading, Link, Paragraph } from '@digdir/designsystemet-react';
@@ -30,6 +32,15 @@ const cardIllustrations: Partial<
   ),
   'ki-norge': (className) => (
     <Laptop aria-hidden className={cl(className, classes.rounded)} />
+  ),
+  'dodsfall-og-arv': (className) => (
+    <PersonSomTroster
+      aria-hidden
+      className={cl(className, classes.portrait)}
+    />
+  ),
+  altinn: (className) => (
+    <ToPersonerVedDatamaskin aria-hidden className={className} />
   ),
 };
 

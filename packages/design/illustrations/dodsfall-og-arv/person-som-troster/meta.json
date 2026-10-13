@@ -1,0 +1,6 @@
+{
+  "$schema": "../../meta.schema.json",
+  "title": "Person som trøster",
+  "description": "En person legger hånden på skulderen til en som sørger. Brukes om støtte, omsorg og sorg etter dødsfall.",
+  "tags": ["person", "trøst", "omsorg", "sorg"]
+}

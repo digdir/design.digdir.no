@@ -1,0 +1,6 @@
+{
+  "$schema": "../../meta.schema.json",
+  "title": "To personer ved en datamaskin",
+  "description": "En voksen og et barn sitter sammen foran en datamaskin. Brukes om å få hjelp med eller bruke digitale tjenester sammen.",
+  "tags": ["person", "datamaskin", "teknologi", "hjelp"]
+}

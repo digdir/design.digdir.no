@@ -104,6 +104,10 @@
   align-self: center;
 }
 
+.portrait {
+  width: clamp(70px, 21%, 110px);
+}
+
 .rounded {
   border-radius: var(--ds-border-radius-lg);
 }

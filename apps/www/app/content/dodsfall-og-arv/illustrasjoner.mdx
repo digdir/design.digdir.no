@@ -1,0 +1,30 @@
+---
+title: Illustrasjoner
+sidebar_title: Illustrasjoner
+description: Illustrasjonsbiblioteket for Dødsfall og arv. Klikk på en illustrasjon for å kopiere eller laste den ned.
+category: Identitet
+order: 10
+published: true
+---
+
+Klikk på en illustrasjon for å se detaljer, kopiere den eller laste den ned.
+
+<IllustrationLibrary />
+
+## Bruk i kode
+
+Illustrasjonene finnes i pakken `@digdir/design`, både som React-komponenter og som SVG-tekst.
+
+```tsx
+import { PersonSomTroster } from '@digdir/design/illustrations/dodsfall-og-arv/react';
+
+<PersonSomTroster aria-hidden />
+```
+
+```ts
+import { personSomTroster } from '@digdir/design/illustrations/dodsfall-og-arv/svg';
+
+element.innerHTML = personSomTroster;
+```
+
+Bruk `aria-hidden` når illustrasjonen er dekorativ, og `title="…"` når den gir informasjon.

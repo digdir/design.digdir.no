@@ -1,0 +1,30 @@
+---
+title: Illustrasjoner
+sidebar_title: Illustrasjoner
+description: Illustrasjonsbiblioteket for Altinn. Klikk på en illustrasjon for å kopiere eller laste den ned.
+category: Identitet
+order: 10
+published: true
+---
+
+Klikk på en illustrasjon for å se detaljer, kopiere den eller laste den ned.
+
+<IllustrationLibrary />
+
+## Bruk i kode
+
+Illustrasjonene finnes i pakken `@digdir/design`, både som React-komponenter og som SVG-tekst.
+
+```tsx
+import { ToPersonerVedDatamaskin } from '@digdir/design/illustrations/altinn/react';
+
+<ToPersonerVedDatamaskin aria-hidden />
+```
+
+```ts
+import { toPersonerVedDatamaskin } from '@digdir/design/illustrations/altinn/svg';
+
+element.innerHTML = toPersonerVedDatamaskin;
+```
+
+Bruk `aria-hidden` når illustrasjonen er dekorativ, og `title="…"` når den gir informasjon.
