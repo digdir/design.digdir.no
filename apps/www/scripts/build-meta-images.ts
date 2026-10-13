@@ -20,24 +20,16 @@ import { getMetaImagePath, SITE_NAME } from '../app/_utils/metadata';
 const publicDir = fileURLToPath(new URL('../public/', import.meta.url));
 const outputDir = join(publicDir, 'images/meta');
 const fonts = await Promise.all(
-  [
-    ['Inter', '@fontsource/inter/files/inter-latin-400-normal.woff', 400],
-    ['Inter', '@fontsource/inter/files/inter-latin-700-normal.woff', 700],
-    [
-      'Instrument Sans',
-      'Instrument_Sans/static/InstrumentSans-Regular.ttf',
-      400,
-    ],
-    ['Instrument Sans', 'Instrument_Sans/static/InstrumentSans-Bold.ttf', 700],
-    ['PT Serif', 'PT_Serif/PTSerif-Bold.ttf', 700],
-  ].map(async ([name, file, weight]) => ({
-    name: String(name),
+  ([400, 700] as const).map(async (weight) => ({
+    name: 'Inter',
     data: await readFile(
-      String(file).startsWith('@fontsource/')
-        ? fileURLToPath(import.meta.resolve(String(file)))
-        : join(publicDir, 'fonts', String(file)),
+      fileURLToPath(
+        import.meta.resolve(
+          `@fontsource/inter/files/inter-latin-${weight}-normal.woff`,
+        ),
+      ),
     ),
-    weight: weight as 400 | 700,
+    weight,
     style: 'normal' as const,
   })),
 );
@@ -81,12 +73,6 @@ async function generateImage(
   title: string,
   artwork?: string,
 ) {
-  const textFont = profile.card.textFont?.includes('Instrument Sans')
-    ? 'Instrument Sans'
-    : 'Inter';
-  const headingFont = profile.card.headingFont?.includes('PT Serif')
-    ? 'PT Serif'
-    : 'Inter';
   const svg = await satori(
     createElement(
       'div',
@@ -100,7 +86,7 @@ async function generateImage(
           gap: 40,
           backgroundColor: profile.card.color,
           color: '#1e2b3c',
-          fontFamily: textFont,
+          fontFamily: 'Inter',
         },
       },
       createElement(
@@ -125,7 +111,6 @@ async function generateImage(
               display: 'flex',
               alignItems: 'center',
               flexGrow: 1,
-              fontFamily: headingFont,
               fontSize: title.length > 60 ? 42 : 56,
               fontWeight: 700,
               lineHeight: 1.15,

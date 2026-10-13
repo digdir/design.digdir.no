@@ -11,10 +11,6 @@
 export type ProfileCard = {
   /** Card background colour. */
   color: string;
-  /** CSS `font-family` for the card heading. Defaults to the site font (Inter). */
-  headingFont?: string;
-  /** CSS `font-family` for the card text. Defaults to the site font (Inter). */
-  textFont?: string;
 };
 
 export type Profile = {
@@ -69,11 +65,7 @@ export const profiles: Profile[] = [
     description:
       'Visuell identitet for KI Norge – forumet for kunstig intelligens i offentlig sektor.',
     color: '#B42946',
-    card: {
-      color: '#f1e5ed',
-      headingFont: "'PT Serif', ui-serif, Georgia, serif",
-      textFont: "'Instrument Sans', ui-sans-serif, system-ui, sans-serif",
-    },
+    card: { color: '#f1e5ed' },
     mainColor: 'brand1',
     theme: 'ki-norge',
   },

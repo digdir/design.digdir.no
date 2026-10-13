@@ -34,10 +34,7 @@ const cardIllustrations: Partial<
     <Laptop aria-hidden className={cl(className, classes.rounded)} />
   ),
   'dodsfall-og-arv': (className) => (
-    <PersonSomTroster
-      aria-hidden
-      className={cl(className, classes.portrait)}
-    />
+    <PersonSomTroster aria-hidden className={cl(className, classes.portrait)} />
   ),
   altinn: (className) => (
     <ToPersonerVedDatamaskin aria-hidden className={className} />
@@ -68,8 +65,6 @@ export default function Home() {
                 style={
                   {
                     '--card-color': profile.card.color,
-                    '--card-heading-font': profile.card.headingFont,
-                    '--card-text-font': profile.card.textFont,
                   } as CSSProperties
                 }
                 data-clickdelegatefor={randId}
@@ -78,11 +73,7 @@ export default function Home() {
               >
                 <div className={classes.cardBody}>
                   <div className={classes.cardText}>
-                    <Heading
-                      level={2}
-                      data-size='sm'
-                      className={classes.cardHeading}
-                    >
+                    <Heading level={2} data-size='sm'>
                       <RRLink
                         to={`/${profile.slug}`}
                         id={randId}
