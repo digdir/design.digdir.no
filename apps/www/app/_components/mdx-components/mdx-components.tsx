@@ -40,6 +40,7 @@ import { EmailSignatureGenerator } from '../email-signature-generator/email-sign
 import ExpandableImage from '../expandable-image/expandable-image';
 import { IllustrationLibrary } from '../illustration-library/illustration-library';
 import { ImageGenerator } from '../image-generator/image-generator';
+import { Kitchensink } from '../kitchensink/kitchensink';
 import SvgEmbed from '../svg-embed/svg-embed';
 import { ThemeColors } from '../theme-colors/theme-colors';
 import classes from './mdx-components.module.css';
@@ -85,6 +86,7 @@ const defaultComponents = {
   EmailSignatureGenerator,
   IllustrationLibrary,
   ImageGenerator,
+  Kitchensink,
   SvgEmbed,
   ThemeColors,
   h1: (props: HeadingProps) => (

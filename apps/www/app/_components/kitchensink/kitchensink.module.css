@@ -1,0 +1,58 @@
+.kitchensink {
+  margin-block: var(--ds-size-4) var(--ds-size-8);
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--ds-border-radius-lg);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-size-3);
+  padding: var(--ds-size-3) var(--ds-size-4);
+  border-bottom: 1px solid var(--ds-color-neutral-border-subtle);
+  background: var(--ds-color-neutral-surface-tinted);
+}
+
+.canvas {
+  display: grid;
+  gap: var(--ds-size-8);
+  padding: var(--ds-size-6);
+  background: var(--ds-color-neutral-background-default);
+}
+
+.section {
+  display: grid;
+  gap: var(--ds-size-3);
+}
+
+.sectionTitle {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--ds-size-4);
+}
+
+.stack {
+  display: grid;
+  gap: var(--ds-size-4);
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.card {
+  flex: 1 1 14rem;
+}
+
+.table {
+  width: 100%;
+}
+
+.divider {
+  flex-basis: 100%;
+}
