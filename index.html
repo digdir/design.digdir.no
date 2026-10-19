@@ -1,0 +1,722 @@
+<title>Merkevarereisen mot Norge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Layout: one column; controls row, wide diagram in a scroll container, table view beneath. */
+  :root {
+    --bg: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --hair: #e1e0d9;
+    --border: rgba(11,11,11,0.10);
+    --accent: #2a78d6;
+    --c-norge: #2a78d6;
+    --c-digdir: #eb6834;
+    --c-tilsynet: #1baf7a;
+    --c-dodsbo: #eda100;
+    --c-kinorge: #e87ba4;
+    --c-ds: #008300;
+    --c-altinn: #6250d6;
+    --c-uklar: #a8a69f;
+    --c-aud: #7a7975;
+    --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+      --hair: #2c2c2a; --border: rgba(255,255,255,0.10); --accent: #3987e5;
+      --c-norge: #3987e5; --c-digdir: #d95926; --c-tilsynet: #199e70; --c-dodsbo: #c98500;
+      --c-kinorge: #d55181; --c-ds: #008300; --c-altinn: #9085e9; --c-uklar: #6b6a65; --c-aud: #8a8984;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --hair: #2c2c2a; --border: rgba(255,255,255,0.10); --accent: #3987e5;
+    --c-norge: #3987e5; --c-digdir: #d95926; --c-tilsynet: #199e70; --c-dodsbo: #c98500;
+    --c-kinorge: #d55181; --c-ds: #008300; --c-altinn: #9085e9; --c-uklar: #6b6a65; --c-aud: #8a8984;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font);
+    font-size: 14px; line-height: 1.45;
+    padding-block: 28px 48px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; display: grid; gap: 20px; }
+  header h1 { font-size: 26px; margin: 0 0 6px; font-weight: 650; letter-spacing: -0.01em; text-wrap: balance; }
+  header p { margin: 0; color: var(--ink-2); max-width: 70ch; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; }
+  .group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .group .lbl { font-size: 12px; color: var(--muted); margin-right: 2px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
+    border-radius: 999px; padding: 4px 11px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .chip:focus-visible, .row:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12px; color: var(--ink-2); }
+  .legend .k { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+  .diagram { padding: 12px 8px 4px; overflow-x: auto; position: relative; }
+  .diagram svg { display: block; min-width: 1100px; width: 100%; height: auto; font-family: var(--font); }
+  .colhead { font-size: 13px; font-weight: 650; fill: var(--ink); }
+  .colsub { font-size: 11px; fill: var(--muted); }
+  .nlabel { font-size: 12px; fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+  .nlabel .n { fill: var(--muted); }
+  .nlabel .sub { fill: var(--muted); font-size: 11px; }
+  .nlabel.item { font-size: 11px; fill: var(--ink-2); }
+  .nlabel.item .newname { fill: var(--ink); font-weight: 600; }
+  .colsub.second { font-weight: 600; fill: var(--ink-2); }
+  .link { fill: none; opacity: 0.5; transition: opacity .15s; }
+  .link.dim { opacity: 0.07; }
+  .link.hot { opacity: 0.9; }
+  .node rect { stroke: var(--surface); stroke-width: 1px; }
+  .node.dim rect { opacity: 0.25; }
+  .node.dim text { opacity: 0.35; }
+  .tip {
+    position: absolute; pointer-events: none; z-index: 5; max-width: 320px;
+    background: var(--surface); color: var(--ink); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .tip[hidden] { display: none; }
+  .tip b { font-weight: 650; }
+  .tip ul { margin: 6px 0 0; padding-left: 0; list-style: none; display: grid; gap: 2px; }
+  .note { font-size: 12px; color: var(--muted); padding: 0 8px 10px; }
+
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  th { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; position: sticky; top: 0; background: var(--surface); white-space: nowrap; }
+  tbody tr.row { cursor: pointer; }
+  tbody tr.row:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  tbody tr.row[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  td .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: 0; }
+  td .aud { color: var(--muted); font-size: 12px; }
+  td .url { color: var(--muted); font-size: 12px; display: block; }
+  td.nm { font-weight: 600; min-width: 170px; }
+  td .split { display: block; }
+  .segments { padding: 18px 20px 14px; display: grid; gap: 10px; }
+  .segments h2 { font-size: 17px; margin: 0; font-weight: 650; }
+  .segments h3 { font-size: 13px; margin: 6px 0 0; font-weight: 650; }
+  .segments > p { margin: 0; color: var(--ink-2); max-width: 80ch; }
+  .defs th:first-child, .defs td.nm { white-space: nowrap; }
+  .defs td { color: var(--ink-2); }
+  .defs td.nm { color: var(--ink); }
+  .defs td:nth-child(3) { font-style: italic; }
+  /* Border cases: side by side, divided by vertical hairlines; four per row, two per row when narrow. */
+  .cases { display: grid; grid-template-columns: repeat(4, 1fr); row-gap: 22px; column-gap: 0; margin-top: 4px; }
+  .case { padding: 0 16px; min-width: 0; border-left: 1px solid var(--hair); }
+  .case:nth-child(4n+1) { border-left: 0; padding-left: 0; }
+  @media (max-width: 900px) {
+    .cases { grid-template-columns: repeat(2, 1fr); }
+    .case:nth-child(4n+1) { border-left: 1px solid var(--hair); padding-left: 16px; }
+    .case:nth-child(2n+1) { border-left: 0; padding-left: 0; }
+  }
+  .case h4 { margin: 0 0 4px; font-size: 13px; font-weight: 650; color: var(--ink); }
+  .case p { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .count { color: var(--muted); font-size: 12px; }
+  .foot { font-size: 12px; color: var(--muted); max-width: 80ch; }
+  @media (prefers-reduced-motion: reduce) { .link { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Merkevare og profil · Digdir · arbeidsdokument</div>
+    <h1>Merkevarereisen mot Norge</h1>
+    <p>Hver løsning følges fra merkevareprofilen den har i dag, via målgruppen den betjener, til den nye målgruppen og den nye profilen. Norge blir paraplyen for alt som møter sluttbrukere og kunder, med egen flate for hver av dem. Digdir blir profilen for digdir.no og det interne. Bredden på en strøm er antall løsninger.</p>
+  </header>
+
+  <div class="controls">
+    <div class="group" role="group" aria-label="Visning">
+      <span class="lbl">Vis</span>
+      <button class="chip" id="view-sites" aria-pressed="true" type="button">Løsninger og nettsteder</button>
+      <button class="chip" id="view-libs" aria-pressed="false" type="button">Komponentbibliotek</button>
+    </div>
+    <div class="group" role="group" aria-label="Rettet mot (as-is)" id="audience">
+      <span class="lbl">Rettet mot (as-is)</span>
+      <button class="chip" data-aud="alle" aria-pressed="true" type="button">Alle</button>
+      <button class="chip" data-aud="Sluttbruker" aria-pressed="false" type="button">Sluttbruker</button>
+      <button class="chip" data-aud="Kunde" aria-pressed="false" type="button">Kunde</button>
+      <button class="chip" data-aud="Hybrid" aria-pressed="false" type="button">Hybrid</button>
+      <button class="chip" data-aud="Intern" aria-pressed="false" type="button">Intern</button>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="card diagram" id="diagram">
+    <svg id="sankey" role="img" aria-labelledby="svgtitle"><title id="svgtitle">Flyt fra løsning via dagens profil og målgruppe til ny målgruppe og ny profil</title></svg>
+    <div class="tip" id="tip" hidden></div>
+    <div class="note" id="dnote"></div>
+  </div>
+
+  <section class="card segments">
+    <h2>Hvem er hvem</h2>
+    <p>Segmentene defineres av relasjonen til det Digdir leverer, ikke basert på hvem aktøren er. Dvs., en aktør kan tilhøre flere segmenter samtidig. F.eks., en offentlig aktør kan bygge med Digdirs løsninger (kunde) og samtidig bruke tjenester fra det offentlige via Digdirs løsninger (sluttbruker).</p>
+    <div class="tablewrap">
+      <table class="defs">
+        <thead>
+          <tr><th>Segment</th><th>Relasjon</th><th>Testspørsmål</th><th>Eksempler</th><th>Merkevare</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="nm"><span class="dot" data-fam="norge"></span>Sluttbruker</td>
+            <td>Skal få gjort noe med det offentlige, gjennom en tjeneste staten har bygget på vår infrastruktur. Vet ikke, og trenger ikke vite, at Digdir finnes.</td>
+            <td>«Skal de bruke en tjeneste fra det offentlige?»</td>
+            <td>Innbyggere, alle visumtyper, personer og virksomheter i utlandet med et norsk ærend, næringslivet, frivillig sektor. En regnskapsfører som leverer på vegne av en kunde.</td>
+            <td>Norge · norge.no</td>
+          </tr>
+          <tr>
+            <td class="nm"><span class="dot" data-fam="norge"></span>Kunde</td>
+            <td>Bygger, drifter, integrerer eller kopierer noe på det vi leverer.</td>
+            <td>«Skal de bygge med eller koble seg på løsningene våre?»</td>
+            <td>Tjenesteeiere i Altinn Studio, virksomheter som bruker ID-porten eller tilgangsstyring for egne brukere, regnskapssystem-leverandører som integrerer mot Altinn, andre land som kopierer plattformen (DPG), virksomheter som bygger med Designsystemet.</td>
+            <td>Norge · kunde.norge.no</td>
+          </tr>
+          <tr>
+            <td class="nm"><span class="dot" data-fam="digdir"></span>Interessent</td>
+            <td>Forholder seg til Digdir som institusjon. Vil vite hva vi mener, gjør og anbefaler, ikke bruke plattformen.</td>
+            <td>«Skal de forstå Digdirs ståsted?»</td>
+            <td>Presse, politikere, departement, styrer, internasjonale samarbeid om policy, virksomheter som leser digdir.no for policy og beste praksis, jobbsøkere. Det klassiske nettstedspublikummet for en ledergruppe.</td>
+            <td>Digdir · digdir.no</td>
+          </tr>
+          <tr>
+            <td class="nm"><span class="dot" data-fam="digdir"></span>Interne</td>
+            <td>Digdirs egne folk og de som jobber etter våre prosesser. Ikke et markedssegment, men trenger egne flater. Flatene er åpne så langt sikkerheten tillater, slik at andre kan se hvordan vi jobber. De som bare vil se, er interessenter.</td>
+            <td>«Skal de jobbe etter Digdirs interne prosesser?»</td>
+            <td>Baksia, Intranett, Saman, Profilveilederen, design.digdir.no.</td>
+            <td>Digdir · internt</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Grensetilfeller</h3>
+    <div class="cases">
+      <article class="case">
+        <h4>Regnskapsbransjen.</h4>
+        <p>Regnskapsføreren som leverer for en klient er sluttbruker. Programvareleverandøren som integrerer mot Altinn er kunde. Samme bransje, to hatter.</p>
+      </article>
+      <article class="case">
+        <h4>Andre land.</h4>
+        <p>Kopierer de den åpne plattformen, er de kunde. Samarbeider de om policy, er de interessent.</p>
+      </article>
+      <article class="case">
+        <h4>Beste praksis og policy.</h4>
+        <p>Designsystemet brukes til å bygge, derfor kunde. Retningslinjer og veiledning på digdir.no er vår posisjon, derfor interessent. Prosjektveiviseren er metode og policy og ligger derfor under Digdir.</p>
+      </article>
+      <article class="case">
+        <h4>Bygge med, eller vår posisjon.</h4>
+        <p>Veiledning noen trenger for å bygge riktig (profil, komponenter, mønstre) er kunde og bor på design.norge.no eller designsystemet.no. Veiledning som uttrykker Digdirs standpunkt er interessent og bor på digdir.no. Profilsidene lenker til policy, de huser den ikke.</p>
+      </article>
+      <article class="case">
+        <h4>Produkt og flate.</h4>
+        <p>Designsystemet som produkt er merkevarenøytralt: alle, også privat sektor og andre land, bruker det med eget tema, og ingen profil tvinges på noen. designsystemet.no som nettsted drives av offentlig sektor og bærer Norge-profilen, som alle andre offentlige flater. Norge-profilen selv kan bare brukes av offentlig sektor. I biblioteksvisningen står kjernen derfor utenfor begge merkevarene, i løsningsvisningen ligger nettstedet under Norge.</p>
+      </article>
+      <article class="case">
+        <h4>Livshendelser.</h4>
+        <p>Én underprofil per livshendelse under Norge. Digitalt dødsbo og gravferdsmelding er samme livshendelse (dødsfall og arv) og deler underprofil.</p>
+      </article>
+      <article class="case">
+        <h4>Åpent innenfra.</h4>
+        <p>Interne flater som Saman og design.digdir.no er åpne der sikkerheten tillater det. Å bruke dem i jobben gjør deg intern; å se hvordan Digdir jobber gjør deg interessent.</p>
+      </article>
+      <article class="case">
+        <h4>Hybrid.</h4>
+        <p>Finnes bare as-is. To-be løses hver løsning opp i ett eller flere segmenter.</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="card tablewrap">
+    <table id="table">
+      <thead>
+        <tr>
+          <th>Løsning <span class="count" id="rowcount"></span></th>
+          <th>Profiler (as-is)</th>
+          <th>Rettet mot (as-is)</th>
+          <th>Rettet mot (to-be)</th>
+          <th>Profiler (to-be)</th>
+          <th>Sub-profil (to-be)</th>
+          <th>Nytt navn (forslag)</th>
+          <th>Merknad</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-sankey/0.12.3/d3-sankey.min.js"></script>
+<script>
+/* ===================== DATA (rediger her) ===================== */
+const COLUMNS = [
+  { id: "los", label: "Løsninger", sub: "hver for seg" },
+  { id: "p",   label: "Profiler (as-is)", sub: "merkevareprofil i dag" },
+  { id: "a",   label: "Rettet mot (as-is)", sub: "ingen helhetlig tilnærming" },
+  { id: "na",  label: "Rettet mot (to-be)", sub: "blå = Norge, oransje = Digdir" },
+  { id: "nb",  label: "Profiler (to-be)", sub: "én paraply" },
+  { id: "np",  label: "Sub-profil (to-be)", sub: "flater under profilen" },
+  { id: "end", label: "Løsninger", sub: "i nye par" },
+];
+
+// Profiler. family styrer fargen. sub er en forklarende undertekst i diagrammet.
+const PROFILES = {
+  // i dag
+  altinn:    { label: "Altinn", family: "altinn" },
+  digdir:    { label: "Digdir", family: "digdir" },
+  norgeno:   { label: "Norge.no (dagens)", family: "norge" },
+  dodsbo:    { label: "Dødsfall og arv", family: "dodsbo" },
+  kinorge:   { label: "KI Norge", family: "kinorge" },
+  tilsynet:  { label: "Tilsynet (uu)", family: "tilsynet" },
+  ds:        { label: "Designsystemet", family: "ds" },
+  uklar:     { label: "Ingen / uklar", family: "uklar" },
+  ny:        { label: "Finnes ikke ennå", family: "uklar" },
+  // målbilde, løsninger
+  norge:     { label: "norge.no", sub: "sluttbrukere", family: "norge", brand: "norge" },
+  norgekunde:{ label: "kunde.norge.no", sub: "kunder og tjenesteeiere", family: "norge", brand: "norge" },
+  norgesub:  { label: "x.norge.no", sub: "livshendelser, data, KI, designsystemet.no", family: "norge", brand: "norge" },
+  norgedesign:{ label: "design.norge.no", sub: "profilbiblioteket for Norge", family: "norge", brand: "norge" },
+  digdirmal: { label: "digdir.no og internt", sub: "Digdir-flatene", family: "digdir", brand: "digdir" },
+  tilsynmal: { label: "Tilsynet", sub: "under Digdir", family: "tilsynet", brand: "digdir" },
+  dsmal:     { label: "designsystemet.no", sub: "åpent for alle", family: "ds", brand: "ds" },
+  // målbilde, komponentbibliotek
+  tNorge:    { label: "norge-components", sub: "én pakke med kunde/sluttbruker-toggle · design.norge.no", family: "norge", brand: "norge" },
+  tKunde:    { label: "Norge-tema for kunder", sub: "på Designsystemet", family: "norge", brand: "norge" },
+  tSub:      { label: "norge-components · underprofiler", sub: "dødsfall og arv, KI", family: "norge", brand: "norge" },
+  tDigdir:   { label: "digdir-components", sub: "design.digdir.no · for Digdirs egne løsninger", family: "digdir", brand: "digdir" },
+  tTilsyn:   { label: "digdir-components · underprofil", sub: "uutilsynet", family: "tilsynet", brand: "digdir" },
+  tKjerne:   { label: "designsystemet", sub: "profilnøytral · komponenter og mønstre", family: "ds", brand: "ds" },
+};
+// Paraplymerkevarer. Nye profiler peker hit via brand.
+const BRANDS = {
+  norge:  { label: "Norge", sub: "én paraply for sluttbrukere og kunder", family: "norge" },
+  digdir: { label: "Digdir", sub: "digdir.no, internt og tilsynet", family: "digdir" },
+  ds:     { label: "Designsystemet", sub: "merkevarenøytralt produkt · DPG for privat, offentlig og utland", family: "ds" },
+};
+const BRAND_ORDER = ["norge","digdir","ds"];
+const ORDER = ["norgeno","norge","tNorge","norgekunde","tKunde","norgesub","tSub","norgedesign","altinn","digdir","digdirmal","tDigdir","dodsbo","kinorge","tilsynet","tilsynmal","tTilsyn","ds","dsmal","tKjerne","uklar","ny"];
+// Column order: hybrid sits between the two audiences it splits into. Interessent and Interne only exist in the to-be column.
+const AUDIENCES = ["Sluttbruker","Hybrid","Kunde","Intern","Interessent","Interne"];
+// New audiences carry the colour of the brand family they lead to; today's audiences stay grey (no coherent approach yet).
+const NEW_AUDIENCE = {
+  "Sluttbruker": { family: "norge", sub: "norge.no" },
+  "Kunde":       { family: "norge", sub: "kunde.norge.no" },
+  "Interessent": { family: "digdir", sub: "vil vite hva Digdir mener, gjør og anbefaler" },
+  "Interne":     { family: "digdir", sub: "Digdirs egne ansatte" },
+};
+
+const FAMILY_COLOR = {
+  norge: "--c-norge", altinn: "--c-altinn", digdir: "--c-digdir", dodsbo: "--c-dodsbo",
+  kinorge: "--c-kinorge", tilsynet: "--c-tilsynet", ds: "--c-ds", uklar: "--c-uklar",
+};
+const FAMILY_LABEL = {
+  norge: "Norge", altinn: "Altinn", digdir: "Digdir", dodsbo: "Dødsfall og arv",
+  kinorge: "KI Norge", tilsynet: "Tilsynet", ds: "Designsystemet", uklar: "Ingen / uklar",
+};
+
+// Løsninger. p = profil i dag, a = målgruppe i dag, to = [[ny målgruppe, ny profil], ...]. Flere innslag = løsningen deles.
+const SITES = [
+  // Altinn i dag
+  { n: "Altinn infoportal", u: "info.altinn.no", a: "Sluttbruker", t: "Portaler", p: "altinn", to: [["Sluttbruker", "norge", "norge.no · veiledning"]], m: "Konsolideres inn i beta.norge.no i 2027." },
+  { n: "altinn.no (Altinn 2-portal)", u: "altinn.no", a: "Sluttbruker", t: "Portaler", p: "altinn", to: [["Sluttbruker", "norge", "norge.no · innlogget"]], m: "" },
+  { n: "Altinn innboks (ny) / Arbeidsflate", u: "", a: "Sluttbruker", t: "Arbeidsflate", p: "altinn", to: [["Sluttbruker", "norge", "Innboks"]], m: "Bygger på altinn-components." },
+  { n: "Altinn-apper (Studio-apper)", u: "", a: "Sluttbruker", t: "Altinn Studio", p: "altinn", to: [["Sluttbruker", "norge", "Studio Apps"]], m: "Studio er en sandkasse for å bygge apper på vår infrastruktur og våre API-er. En app kan være hva som helst, ikke bare skjema." },
+  { n: "Tilgangsstyring", u: "", a: "Hybrid", t: "Tilgangsstyring", p: "altinn", to: [["Sluttbruker", "norge", "Autorisasjon", "Tilgangsstyring · sluttbruker"], ["Kunde", "norgekunde", "Autorisasjon", "Tilgangsstyring · tjenesteeier"]], m: "Deles: sluttbrukerflaten går til norge.no, tjenesteeierflaten til kunde.norge.no." },
+  { n: "Altinn Studio (verktøyet)", u: "altinn.studio", a: "Hybrid", t: "Altinn Studio", p: "altinn", to: [["Kunde", "norgekunde", "Studio"]], m: "Bruker Studio-komponentene." },
+  { n: "Altinn docs", u: "docs.altinn.studio", a: "Kunde", t: "Altinn Studio", p: "altinn", to: [["Kunde", "norgekunde", "Dokumentasjon · docs.norge.no"]], m: "" },
+  { n: "Dialogporten (API og dokumentasjon)", u: "", a: "Kunde", t: "Dialogporten", p: "altinn", to: [["Kunde", "norgekunde", "Dialog"]], m: "Dokumenteres under docs.altinn.studio i dag." },
+
+  // Digdir i dag
+  { n: "ID-porten", u: "", a: "Hybrid", t: "Altinn Studio", p: "digdir", to: [["Sluttbruker", "norge", "Autentisering", "ID-porten · innlogging"], ["Kunde", "norgekunde", "Autentisering", "ID-porten · kundedokumentasjon"]], m: "Deles: innloggingsflaten går til norge.no, kundedokumentasjonen til kunde.norge.no." },
+  { n: "minid.no", u: "minid.no", a: "Sluttbruker", t: "Uklart", p: "digdir", to: [["Sluttbruker", "norge", "Autentisering · MinID"]], m: "Konsolideres inn i norge.no." },
+  { n: "eid.difi.no", u: "eid.difi.no", a: "Sluttbruker", t: "Uklart", p: "digdir", to: [["Sluttbruker", "norge", "Autentisering · eID"]], m: "Konsolideres inn i norge.no." },
+  { n: "MinID lommebok / digital lommebok", u: "", a: "Sluttbruker", t: "Uklart", p: "digdir", to: [["Sluttbruker", "norge", "Lommebok"]], m: "" },
+  { n: "eInnsyn", u: "einnsyn.no", a: "Sluttbruker", t: "eInnsyn", p: "digdir", to: [["Sluttbruker", "norge", "Innsyn"]], m: "" },
+  { n: "Samarbeidsportalen", u: "samarbeid.digdir.no", a: "Kunde", t: "Samarbeidsportalen", p: "digdir", to: [["Kunde", "norgekunde", "kunde.norge.no"]], m: "Blir kunde.norge.no. Kan lenke til en Digdir-spesifikk samarbeidsside ved behov." },
+  { n: "Digdir docs", u: "docs.digdir.no", a: "Kunde", t: "Servicedesk", p: "digdir", to: [["Kunde", "norgekunde", "Dokumentasjon · docs.norge.no"]], m: "" },
+  { n: "Digdir status", u: "status.digdir.no", a: "Kunde", t: "Uklart", p: "digdir", to: [["Kunde", "norgekunde", "status.norge.no"]], m: "" },
+  { n: "Maskinporten (dokumentasjon)", u: "", a: "Kunde", t: "Uklart", p: "digdir", to: [["Kunde", "norgekunde", "Autentisering · maskin"]], m: "Ikke i kartleggingen; funnet i tjenestekatalogen." },
+  { n: "Ansattporten (dokumentasjon)", u: "", a: "Kunde", t: "Uklart", p: "digdir", to: [["Kunde", "norgekunde", "Autentisering · ansatt"]], m: "Ikke i kartleggingen." },
+  { n: "eFormidling (dokumentasjon)", u: "", a: "Kunde", t: "eFormidling", p: "digdir", to: [["Kunde", "norgekunde", "Formidling"]], m: "Ikke i kartleggingen." },
+  { n: "KRR (dokumentasjon)", u: "", a: "Kunde", t: "eFormidling", p: "digdir", to: [["Kunde", "norgekunde", "Kontaktregister"]], m: "Ikke i kartleggingen." },
+  { n: "eSignering (dokumentasjon)", u: "", a: "Kunde", t: "Uklart", p: "digdir", to: [["Kunde", "norgekunde", "Signering"]], m: "Ikke i kartleggingen." },
+  { n: "Digital postkasse (dokumentasjon)", u: "", a: "Kunde", t: "Uklart", p: "digdir", to: [["Kunde", "norgekunde", "Digital postkasse"]], m: "Ikke i kartleggingen." },
+  { n: "Prosjektveiviseren", u: "prosjektveiviseren.digdir.no", a: "Kunde", t: "KOM", p: "digdir", to: [["Interessent", "digdirmal", "Prosjektveiviseren · digdir.no"]], m: "Metode og policy, ikke infrastruktur: Digdirs posisjon, derfor under Digdir." },
+  { n: "Designsystemet.no", u: "designsystemet.no", a: "Kunde", t: "Designsystemet", p: "digdir", to: [["Kunde", "norgesub", "designsystemet.no"]], m: "Nettstedet bærer Norge-profilen; produktet er merkevarenøytralt og alle kan bruke det med eget tema." },
+  { n: "design.digdir.no", u: "design.digdir.no", a: "Kunde", t: "Designsystemet", p: "digdir", to: [["Interne", "digdirmal", "design.digdir.no"]], m: "Digdirs profilbibliotek for egne team. Viser dagens rot og setter rekkverk for nye profiler." },
+  { n: "digdir.no", u: "digdir.no", a: "Hybrid", t: "Digdir.no", p: "digdir", to: [["Interessent", "digdirmal", "digdir.no"]], m: "Digdir-merkevaren, ikke Norge. Blir spissere i målgruppe når Norge tar sluttbruker og kunde." },
+  { n: "Baksia", u: "baksia.digdir.no", a: "Intern", t: "Felles dugnad", p: "digdir", to: [["Interne", "digdirmal", "Saman"]], m: "Erstattes av Saman." },
+  { n: "Intranett", u: "", a: "Intern", t: "KOM", p: "digdir", to: [["Interne", "digdirmal", "Intranett"]], m: "Delvis styrt av Microsoft/Teams." },
+  { n: "Profilveilederen", u: "", a: "Intern", t: "KOM", p: "digdir", to: [["Interne", "digdirmal", "design.digdir.no"]], m: "Går opp i design.digdir.no." },
+  { n: "Saman", u: "", a: "Intern", t: "VSU", p: "digdir", to: [["Interne", "digdirmal", "Saman"]], m: "Rammeverk for Digdir 2.0 (prototype)." },
+
+  // Egne profiler i dag
+  { n: "Norge.no", u: "norge.no", a: "Sluttbruker", t: "Portaler (TLP)", p: "norgeno", to: [["Sluttbruker", "norge", "norge.no"]], m: "Beta.norge.no bruker Altinn-design til Norge-profilen er samdesignet." },
+  { n: "Digitalt dødsbo / Dødsfall og arv", u: "", a: "Sluttbruker", t: "Digitalt dødsbo", p: "dodsbo", to: [["Sluttbruker", "norgesub", "Dødsfall og arv · digitalt dødsbo"]], m: "Én underprofil per livshendelse. Digitalt dødsbo og gravferdsmelding hører til samme livshendelse." },
+  { n: "KI Norge", u: "ki.norge.no", a: "Hybrid", t: "Digdir R&D Lab", p: "kinorge", to: [["Kunde", "norgesub", "ki.norge.no"]], m: "Fortsetter som egen tjeneste, som underprofil under Norge." },
+  { n: "UUstatus.no", u: "uustatus.no", a: "Kunde", t: "uustatus", p: "tilsynet", to: [["Kunde", "tilsynmal", "uustatus.no"]], m: "Tilsynet består som egen merkevare." },
+  { n: "UUtilsynet.no", u: "uutilsynet.no", a: "Kunde", t: "Uklart", p: "tilsynet", to: [["Kunde", "tilsynmal", "uutilsynet.no"]], m: "Tilsynet består som egen merkevare." },
+
+  // Ingen / uklar i dag
+  { n: "Digital gravferdsmelding", u: "", a: "Sluttbruker", t: "Digital Gravferdsmelding", p: "uklar", to: [["Sluttbruker", "norgesub", "Dødsfall og arv · gravferdsmelding"]], m: "Samme livshendelse som digitalt dødsbo, derfor samme underprofil." },
+  { n: "Norsk Lysingsblad", u: "", a: "Sluttbruker", t: "Portaler (TLP)", p: "uklar", to: [["Sluttbruker", "norge", "Kunngjøringer"]], m: "Offisiell kunngjøringskanal (konkurs, tvangssalg, foretaksendringer). Eierskap og framtid bør avklares med TLP." },
+  { n: "Selvbetjening", u: "", a: "Kunde", t: "Kundetjenester", p: "uklar", to: [["Kunde", "norgekunde", "kunde.norge.no · innlogget"]], m: "Følger Samarbeidsportalen." },
+  { n: "ELMA", u: "", a: "Kunde", t: "eFormidling", p: "uklar", to: [["Kunde", "norgekunde", "Adresseregister"]], m: "" },
+  { n: "data.norge.no", u: "data.norge.no", a: "Kunde", t: "data.norge.no", p: "uklar", to: [["Kunde", "norgesub", "data.norge.no"]], m: "Fortsetter som egen tjeneste, som underprofil under Norge." },
+  { n: "data.altinn.no", u: "data.altinn.no", a: "Kunde", t: "data.altinn.no", p: "uklar", to: [["Kunde", "norgesub", "Datadeling · data.norge.no"]], m: "Følger data.norge.no." },
+  { n: "Datalandsbyen", u: "", a: "Kunde", t: "data.norge.no", p: "uklar", to: [["Kunde", "norgesub", "Datalandsbyen · data.norge.no"]], m: "Følger data.norge.no." },
+  { n: "Transportportal.no", u: "transportportal.no", a: "Kunde", t: "data.norge.no", p: "uklar", to: [["Kunde", "norgesub", "Transportdata · data.norge.no"]], m: "Følger data.norge.no." },
+
+  // Nytt
+  { n: "design.norge.no (ny)", u: "design.norge.no", a: "Kunde", t: "Designsystemet", p: "ny", to: [["Kunde", "norgedesign", "design.norge.no"]], m: "Profilbiblioteket for Norge-merkevaren, samdesignet på tvers av offentlig sektor." },
+];
+
+// Komponentbibliotek. Samme felt; ny profil = hvilket tema biblioteket bygger på.
+const LIBS = [
+  { n: "@digdir/designsystemet (kjerne)", u: "github.com/digdir/designsystemet", a: "Kunde", t: "Designsystemet", p: "ds", to: [["Kunde", "tKjerne", "designsystemet"]], m: "Profilnøytral. Kommer med komponenter og mønstre som alle profiler bygger videre på." },
+  { n: "altinn-components", u: "github.com/Altinn/altinn-components", a: "Sluttbruker", t: "Arbeidsflate, Tilgangsstyring, Portaler", p: "altinn", to: [["Sluttbruker", "tNorge", "norge-components · sluttbruker"]], m: "Slås sammen med Studio-komponentene til én norge-components med toggle for kunde og sluttbruker, eller to underprofil-bibliotek under Norge." },
+  { n: "Studio-komponenter (app-frontend)", u: "github.com/Altinn/altinn-studio", a: "Kunde", t: "Altinn Studio", p: "altinn", to: [["Kunde", "tNorge", "norge-components · kunde"]], m: "Slås sammen med altinn-components til én norge-components." },
+  { n: "Digdir-komponenter (design.digdir.no)", u: "github.com/digdir/design.digdir.no", a: "Hybrid", t: "Designsystemet", p: "digdir", to: [["Interne", "tDigdir", "digdir-components"]], m: "Egen profil bygget på designsystemet på samme måte som design.norge.no, bare for Digdir-spesifikke løsninger." },
+  { n: "Norge.no-frontend (dagens)", u: "norge.no", a: "Sluttbruker", t: "Portaler (TLP)", p: "norgeno", to: [["Sluttbruker", "tNorge", "norge-components · sluttbruker"]], m: "Beta.norge.no bygger på Altinn-design inntil Norge-tema er samdesignet." },
+  { n: "Dødsfall og arv-komponenter", u: "design.digdir.no/dodsfall-og-arv", a: "Sluttbruker", t: "Digitalt dødsbo", p: "dodsbo", to: [["Sluttbruker", "tSub", "norge-components · dødsfall og arv"]], m: "" },
+  { n: "KI Norge-komponenter", u: "design.digdir.no/ki-norge", a: "Kunde", t: "Digdir R&D Lab", p: "kinorge", to: [["Kunde", "tSub", "norge-components · ki"]], m: "" },
+  { n: "uutilsynet-komponenter", u: "design.digdir.no/uutilsynet", a: "Kunde", t: "uustatus", p: "tilsynet", to: [["Kunde", "tTilsyn", "digdir-components · uutilsynet"]], m: "Underprofil av Digdir, ikke eget tema." },
+];
+/* ===================== SLUTT DATA ===================== */
+
+const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const colorOf = (pid) => cssVar(FAMILY_COLOR[PROFILES[pid].family]);
+const audColor = () => cssVar("--c-aud");
+
+let view = "sites";
+let audience = "alle";
+let selected = null;
+
+const svg = d3.select("#sankey");
+const tip = document.getElementById("tip");
+const diagram = document.getElementById("diagram");
+
+function dataset() { return view === "sites" ? SITES : LIBS; }
+function filtered() { return dataset().filter(d => audience === "alle" || d.a === audience); }
+
+// Every solution carries weight 1 through all five columns; a split shares that weight between its branches.
+function buildGraph(items) {
+  const nodeMap = new Map();
+  const linkMap = new Map();
+  const node = (id, col, props) => { if (!nodeMap.has(id)) nodeMap.set(id, { id, col, items: [], ...props }); return nodeMap.get(id); };
+  const link = (s, t, w, d) => {
+    const k = s + ">" + t;
+    if (!linkMap.has(k)) linkMap.set(k, { source: s, target: t, value: 0, items: [] });
+    const l = linkMap.get(k); l.value += w; if (!l.items.includes(d)) l.items.push(d);
+  };
+
+  items.forEach((d, idx) => {
+    const los = "los:" + idx, p = "p:" + d.p, a = "a:" + d.a;
+    node(los, 0, { item: d, pid: d.p }).items.push(d);
+    node(p, 1, { pid: d.p }).items.push(d);
+    node(a, 2, { aud: d.a }).items.push(d);
+    link(los, p, 1, d);
+    link(p, a, 1, d);
+    const w = 1 / d.to.length;
+    d.to.forEach(([na, np, newName, oldLabel], k) => {
+      const naId = "na:" + na, npId = "np:" + np, endId = "end:" + idx + ":" + k;
+      const nn = node(naId, 3, { aud: na }); if (!nn.items.includes(d)) nn.items.push(d);
+      const nbId = "nb:" + PROFILES[np].brand;
+      const bn = node(nbId, 4, { brand: PROFILES[np].brand }); if (!bn.items.includes(d)) bn.items.push(d);
+      const pn = node(npId, 5, { pid: np }); if (!pn.items.includes(d)) pn.items.push(d);
+      // Column 5: the solution again, grouped under its new profile; a split solution appears once per branch.
+      node(endId, 6, { item: d, pid: np, end: true, label: oldLabel || d.n, nn: newName }).items.push(d);
+      link(a, naId, w, d);
+      link(naId, nbId, w, d);
+      link(nbId, npId, w, d);
+      link(npId, endId, w, d);
+    });
+  });
+
+  // End nodes sort by new name so renamed siblings (norge.no · …, Autentisering · …) sit together.
+  const sortKey = (n) => n.end ? n.nn + " " + n.label : (n.label || n.item.n);
+  const rank = (n) => n.aud ? AUDIENCES.indexOf(n.aud) : n.brand ? BRAND_ORDER.indexOf(n.brand) : ORDER.indexOf(n.pid);
+  const initial = [...nodeMap.values()].sort((x, y) =>
+    x.col - y.col || rank(x) - rank(y) || (x.item && y.item ? sortKey(x).localeCompare(sortKey(y), "nb") : 0));
+  return { nodes: optimiseOrder(initial), links: [...linkMap.values()] };
+}
+
+// Crossing reduction for the two outer columns (barycenter heuristic). Groups stay intact:
+// column 0 keeps items grouped by as-is profile, column 6 keeps them grouped by sub-profile within brand.
+// Groups and the items inside them are ordered by where their counterparts sit on the other side,
+// and the profile columns next to them (1 and 5) follow the same group order so no new crossings appear there.
+function optimiseOrder(nodes) {
+  const LAST = COLUMNS.length - 1;
+  const byCol = (c) => nodes.filter(n => n.col === c);
+  let order0 = byCol(0), orderEnd = byCol(LAST);
+  const pos = new Map();
+  const setPos = (arr) => arr.forEach((n, i) => pos.set(n.id, arr.length > 1 ? i / (arr.length - 1) : 0.5));
+  const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+  const endsOf = new Map(order0.map(n => [n.id, orderEnd.filter(e => e.item === n.item)]));
+  const startOf = new Map(orderEnd.map(e => [e.id, order0.find(n => n.item === e.item)]));
+  setPos(order0); setPos(orderEnd);
+
+  // Sort items by barycenter inside each group, then order the groups by their mean barycenter.
+  // outerKey (optional) is a fixed outer grouping (brand) that is never reordered.
+  const arrange = (arr, bary, groupKey, outerKey, outerOrder) => {
+    const groups = new Map();
+    arr.forEach(n => { const g = groupKey(n); if (!groups.has(g)) groups.set(g, []); groups.get(g).push(n); });
+    const sorted = [...groups.entries()].map(([g, members]) => {
+      members.sort((x, y) => bary.get(x.id) - bary.get(y.id));
+      return { g, members, b: mean(members.map(n => bary.get(n.id))), outer: outerKey ? outerKey(members[0]) : 0 };
+    });
+    sorted.sort((x, y) => (outerOrder ? outerOrder.indexOf(x.outer) - outerOrder.indexOf(y.outer) : 0) || x.b - y.b);
+    return { flat: sorted.flatMap(x => x.members), groupOrder: sorted.map(x => x.g) };
+  };
+
+  let groupOrder0 = [], groupOrderEnd = [];
+  for (let k = 0; k < 4; k++) {
+    const bEnd = new Map(orderEnd.map(e => [e.id, pos.get(startOf.get(e.id).id)]));
+    const rEnd = arrange(orderEnd, bEnd, n => n.pid, n => PROFILES[n.pid].brand, BRAND_ORDER);
+    orderEnd = rEnd.flat; groupOrderEnd = rEnd.groupOrder; setPos(orderEnd);
+
+    const b0 = new Map(order0.map(n => [n.id, mean(endsOf.get(n.id).map(e => pos.get(e.id)))]));
+    const r0 = arrange(order0, b0, n => n.pid);
+    order0 = r0.flat; groupOrder0 = r0.groupOrder; setPos(order0);
+  }
+
+  const col1 = byCol(1).slice().sort((x, y) => groupOrder0.indexOf(x.pid) - groupOrder0.indexOf(y.pid));
+  const colSub = byCol(LAST - 1).slice().sort((x, y) => groupOrderEnd.indexOf(x.pid) - groupOrderEnd.indexOf(y.pid));
+  const middle = nodes.filter(n => n.col > 1 && n.col < LAST - 1);
+  return [...order0, ...col1, ...middle, ...colSub, ...orderEnd];
+}
+
+function render() {
+  const items = filtered();
+  const { nodes, links } = buildGraph(items);
+  svg.selectAll("*:not(title)").remove();
+
+  const W = 2120, H = Math.max(520, 70 + items.length * 22);
+  const NEWNAME_X = 230; // offset of the new-name column right of the end nodes
+  // Left and right margins hold the item labels of the first and last columns.
+  const margin = { top: 46, right: 480, bottom: 16, left: 250 };
+  svg.attr("viewBox", `0 0 ${W} ${H}`);
+
+  const sankey = d3.sankey()
+    .nodeId(d => d.id)
+    .nodeWidth(14)
+    .nodePadding(9)
+    .nodeAlign(d3.sankeyJustify)
+    .nodeSort(null)
+    .linkSort(null)
+    .extent([[margin.left, margin.top], [W - margin.right, H - margin.bottom]]);
+
+  const graph = sankey({ nodes: nodes.map(d => ({ ...d })), links: links.map(d => ({ ...d })) });
+
+  // Pin each node to its column.
+  const colX = (ci) => margin.left + ci * ((W - margin.right - margin.left - 14) / (COLUMNS.length - 1));
+  graph.nodes.forEach(n => { const x = colX(n.col); n.x1 = x + (n.x1 - n.x0); n.x0 = x; });
+  sankey.update(graph);
+
+  const defs = svg.append("defs");
+  const nodeSub = (n) => n.aud ? (n.col === 3 && NEW_AUDIENCE[n.aud] ? NEW_AUDIENCE[n.aud].sub : null) : n.brand ? BRANDS[n.brand].sub : (n.pid && PROFILES[n.pid].sub);
+  const nodeColor = (n) => n.aud
+    ? (n.col === 3 && NEW_AUDIENCE[n.aud] ? cssVar(FAMILY_COLOR[NEW_AUDIENCE[n.aud].family]) : audColor())
+    : n.brand ? cssVar(FAMILY_COLOR[BRANDS[n.brand].family]) : colorOf(n.pid);
+
+  // Column headers with counts.
+  COLUMNS.forEach((c, i) => {
+    const colNodes = graph.nodes.filter(n => n.col === i);
+    const isItems = i === 0 || i === COLUMNS.length - 1;
+    const label = isItems ? (view === "sites" ? "Løsninger" : "Bibliotek") : c.label;
+    const sub = isItems ? `${c.sub} · ${colNodes.length} stk` : `${c.sub} · ${colNodes.length}`;
+    const hx = i === 0 ? colX(i) + 14 : colX(i);
+    const anchor = i === 0 ? "end" : "start";
+    svg.append("text").attr("class", "colhead").attr("x", hx).attr("y", 18).attr("text-anchor", anchor).text(label);
+    svg.append("text").attr("class", "colsub").attr("x", hx).attr("y", 33).attr("text-anchor", anchor).text(i === COLUMNS.length - 1 ? "gammelt navn" : sub);
+    if (i === COLUMNS.length - 1) {
+      svg.append("text").attr("class", "colsub second").attr("x", hx + NEWNAME_X).attr("y", 33).text("nytt navn (forslag)");
+    }
+  });
+
+  // Links, coloured as a gradient from source node to target node.
+  const link = svg.append("g").selectAll("path").data(graph.links).join("path")
+    .attr("class", "link")
+    .attr("d", d3.sankeyLinkHorizontal())
+    .attr("stroke-width", d => Math.max(1.5, d.width))
+    .attr("stroke", (d, i) => {
+      const id = "g" + i;
+      const g = defs.append("linearGradient").attr("id", id).attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", d.source.x1).attr("x2", d.target.x0);
+      g.append("stop").attr("offset", "0%").attr("stop-color", nodeColor(d.source));
+      g.append("stop").attr("offset", "100%").attr("stop-color", nodeColor(d.target));
+      return `url(#${id})`;
+    });
+
+  // Nodes
+  const node = svg.append("g").selectAll("g").data(graph.nodes).join("g").attr("class", "node");
+  node.append("rect")
+    .attr("x", d => d.x0).attr("y", d => d.y0)
+    .attr("width", d => d.x1 - d.x0).attr("height", d => Math.max(2, d.y1 - d.y0))
+    .attr("rx", 3)
+    .attr("fill", nodeColor);
+  node.append("text").attr("class", d => "nlabel" + (d.item ? " item" : ""))
+    .attr("x", d => (d.item && !d.end) ? d.x0 - 8 : d.x1 + 8)
+    .attr("y", d => (d.y0 + d.y1) / 2)
+    .attr("dy", d => (!d.item && nodeSub(d)) ? "-0.2em" : "0.35em")
+    .attr("text-anchor", d => (d.item && !d.end) ? "end" : "start")
+    .each(function (d) {
+      const t = d3.select(this);
+      if (d.end) {
+        t.append("tspan").text(d.label);
+        t.append("tspan").attr("class", "newname").attr("x", d.x1 + 8 + NEWNAME_X).text(d.nn);
+        return;
+      }
+      if (d.item) { t.append("tspan").text(d.label || d.item.n); return; }
+      t.append("tspan").text(d.aud ? d.aud : d.brand ? BRANDS[d.brand].label : PROFILES[d.pid].label);
+      t.append("tspan").attr("class", "n").text(`  ${d.items.length}`);
+      const sub = nodeSub(d);
+      if (sub) t.append("tspan").attr("class", "sub").attr("x", d.x1 + 8).attr("dy", "1.2em").text(sub);
+    });
+
+  // Hover
+  const showTip = (ev, html) => {
+    tip.innerHTML = "";
+    tip.appendChild(html);
+    tip.hidden = false;
+    const r = diagram.getBoundingClientRect();
+    const x = ev.clientX - r.left + diagram.scrollLeft + 14, y = ev.clientY - r.top + 14;
+    tip.style.left = Math.min(x, diagram.scrollWidth - 330) + "px";
+    tip.style.top = y + "px";
+  };
+  const hideTip = () => { tip.hidden = true; };
+  const listEl = (title, arr) => {
+    const frag = document.createElement("div");
+    const b = document.createElement("b"); b.textContent = title; frag.appendChild(b);
+    const ul = document.createElement("ul");
+    arr.forEach(d => { const li = document.createElement("li"); li.textContent = d.n; ul.appendChild(li); });
+    frag.appendChild(ul);
+    return frag;
+  };
+  const nodeTitle = (n) => n.end ? `${n.label} → ${n.nn} (${PROFILES[n.pid].label})`
+    : n.item ? `${n.item.n} · ${n.item.a}${n.item.t ? " · " + n.item.t : ""}`
+    : (n.aud ? n.aud : n.brand ? BRANDS[n.brand].label : PROFILES[n.pid].label);
+
+  link.on("pointermove", (ev, d) => {
+    link.classed("dim", l => l !== d).classed("hot", l => l === d);
+    showTip(ev, listEl(`${nodeTitle(d.source)} → ${nodeTitle(d.target)} · ${d.items.length}`, d.items));
+  }).on("pointerleave", () => { link.classed("dim", false).classed("hot", false); hideTip(); applySelection(); });
+
+  node.on("pointermove", (ev, d) => {
+    link.classed("dim", l => !l.items.some(i => d.items.includes(i))).classed("hot", l => l.source === d || l.target === d);
+    showTip(ev, listEl(`${nodeTitle(d)} · ${d.items.length}`, d.items));
+  }).on("pointerleave", () => { link.classed("dim", false).classed("hot", false); hideTip(); applySelection(); });
+
+  function applySelection() {
+    if (!selected) { link.classed("dim", false).classed("hot", false); node.classed("dim", false); return; }
+    link.classed("dim", l => !l.items.includes(selected)).classed("hot", l => l.items.includes(selected));
+    node.classed("dim", n => !n.items.includes(selected));
+  }
+  render.applySelection = applySelection;
+  applySelection();
+
+  document.getElementById("dnote").textContent =
+    view === "sites"
+      ? "Strømbredde = antall løsninger. En løsning som deles (ID-porten, Tilgangsstyring) sender halvparten av bredden til hver målgruppe. Hold over en strøm eller node for å se hvilke løsninger som ligger i den."
+      : "Strømbredde = antall bibliotek. Bibliotekene forblir egne pakker, men bygger på tema, komponenter og mønstre fra Designsystemet.";
+}
+
+function renderLegend() {
+  const el = document.getElementById("legend");
+  el.innerHTML = "";
+  const fams = ["norge","altinn","digdir","dodsbo","kinorge","tilsynet","ds","uklar"];
+  fams.forEach(f => {
+    const k = document.createElement("span"); k.className = "k";
+    const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = cssVar(FAMILY_COLOR[f]);
+    k.appendChild(sw); k.appendChild(document.createTextNode(FAMILY_LABEL[f])); el.appendChild(k);
+  });
+  const k = document.createElement("span"); k.className = "k";
+  const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = audColor();
+  k.appendChild(sw); k.appendChild(document.createTextNode("Rettet mot (as-is)")); el.appendChild(k);
+}
+
+function renderTable() {
+  const items = filtered();
+  const tb = document.getElementById("tbody");
+  tb.innerHTML = "";
+  document.getElementById("rowcount").textContent = `(${items.length})`;
+  const profCell = (pids) => {
+    const td = document.createElement("td");
+    pids.forEach(pid => {
+      const s = document.createElement("span"); s.className = "split";
+      const dot = document.createElement("span"); dot.className = "dot"; dot.style.background = colorOf(pid);
+      s.appendChild(dot); s.appendChild(document.createTextNode(PROFILES[pid].label));
+      if (PROFILES[pid].sub) { const u = document.createElement("span"); u.className = "aud"; u.textContent = ` · ${PROFILES[pid].sub}`; s.appendChild(u); }
+      td.appendChild(s);
+    });
+    return td;
+  };
+  const brandCell = (brands) => {
+    const td = document.createElement("td");
+    [...new Set(brands)].forEach(b => {
+      const s = document.createElement("span"); s.className = "split";
+      const dot = document.createElement("span"); dot.className = "dot"; dot.style.background = cssVar(FAMILY_COLOR[BRANDS[b].family]);
+      s.appendChild(dot); s.appendChild(document.createTextNode(BRANDS[b].label)); td.appendChild(s);
+    });
+    return td;
+  };
+  const textCell = (vals, cls) => {
+    const td = document.createElement("td");
+    vals.forEach(v => { const s = document.createElement("span"); s.className = "split"; s.textContent = v; td.appendChild(s); });
+    return td;
+  };
+  items.forEach(d => {
+    const tr = document.createElement("tr"); tr.className = "row"; tr.tabIndex = 0;
+    tr.setAttribute("aria-selected", selected === d ? "true" : "false");
+    const nm = document.createElement("td"); nm.className = "nm"; nm.textContent = d.n;
+    if (d.u) { const u = document.createElement("span"); u.className = "url"; u.textContent = d.u; nm.appendChild(u); }
+    tr.appendChild(nm);
+    tr.appendChild(profCell([d.p]));
+    const au = document.createElement("td"); au.textContent = d.a;
+    const tm = document.createElement("span"); tm.className = "aud"; tm.textContent = d.t ? ` · ${d.t}` : ""; au.appendChild(tm);
+    tr.appendChild(au);
+    tr.appendChild(textCell(d.to.map(x => x[0])));
+    tr.appendChild(brandCell(d.to.map(x => PROFILES[x[1]].brand)));
+    tr.appendChild(profCell(d.to.map(x => x[1])));
+    tr.appendChild(textCell(d.to.map(x => x[2])));
+    const m = document.createElement("td"); m.textContent = d.m; m.style.color = "var(--ink-2)"; tr.appendChild(m);
+    const pick = () => { selected = selected === d ? null : d; renderTable(); render.applySelection && render.applySelection(); };
+    tr.addEventListener("click", pick);
+    tr.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+    tb.appendChild(tr);
+  });
+}
+
+function setView(v) {
+  view = v; selected = null;
+  document.getElementById("view-sites").setAttribute("aria-pressed", v === "sites");
+  document.getElementById("view-libs").setAttribute("aria-pressed", v === "libs");
+  render(); renderTable();
+}
+document.getElementById("view-sites").addEventListener("click", () => setView("sites"));
+document.getElementById("view-libs").addEventListener("click", () => setView("libs"));
+document.querySelectorAll("#audience .chip").forEach(b => b.addEventListener("click", () => {
+  audience = b.dataset.aud; selected = null;
+  document.querySelectorAll("#audience .chip").forEach(x => x.setAttribute("aria-pressed", x === b));
+  render(); renderTable();
+}));
+
+const mq = window.matchMedia("(prefers-color-scheme: dark)");
+const paintDefs = () => document.querySelectorAll(".defs .dot[data-fam]").forEach(d => { d.style.background = cssVar(FAMILY_COLOR[d.dataset.fam]); });
+const refresh = () => { renderLegend(); paintDefs(); render(); renderTable(); };
+mq.addEventListener && mq.addEventListener("change", refresh);
+new MutationObserver(refresh).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+refresh();
+</script>
