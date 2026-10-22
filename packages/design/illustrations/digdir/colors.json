@@ -1,6 +1,6 @@
 {
   "white": { "label": "Hvit", "light": "#FFFFFF", "dark": "#FFFFFF" },
-  "figure": { "label": "Mørk blå", "light": "#1E2B3C", "dark": "#384A5E" },
+  "figure": { "label": "Mørk blå", "light": "#1E2B3C", "dark": "#59687b" },
   "outline": { "label": "Omriss", "light": "#FCDFE1", "dark": "#FCDFE1" },
   "red": { "label": "Rød", "light": "#F05F63", "dark": "#F05F63" },
   "yellow": { "label": "Gul", "light": "#E5AA20", "dark": "#E5AA20" },
