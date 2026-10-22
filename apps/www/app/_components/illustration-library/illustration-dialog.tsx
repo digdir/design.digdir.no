@@ -305,7 +305,6 @@ const VectorDialogContent = ({
                 {slot.colors.map((color) => (
                   <Select.Option key={color} value={color}>
                     {colorLabel(color)}
-                    {color === slot.default ? ' (standard)' : ''}
                   </Select.Option>
                 ))}
               </Select>
