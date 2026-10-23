@@ -23,17 +23,13 @@ const raw = (loader: () => Promise<{ default: string }>) => () =>
   loader().then((module) => module.default);
 
 export const imageTemplates = {
-  'test-template': {
-    name: 'Testmal (16:9)',
-    load: raw(() => import('./test-template.svg?raw')),
-  },
   'test-template-bilde': {
     name: 'Testmal med bilde',
     load: raw(() => import('./test-template-bilde.svg?raw')),
   },
-  'presentasjon-av-to-innledere': {
-    name: 'Presentasjon av to innledere',
-    load: raw(() => import('./presentasjon-av-to-innledere.svg?raw')),
+  'brukarraadet-2026/karusell-2.svg': {
+    name: 'Brukarrådet 2026 - Karusell 2',
+    load: raw(() => import('./brukarraadet-2026/karusell-2.svg?raw')),
   },
 } satisfies Record<string, ImageTemplate>;
 
