@@ -26,7 +26,10 @@ export const imageTemplates = {
   'brukarraadet-2026/karusell-1.svg': {
     name: 'Brukarrådet 2026 - Karusell 1',
     load: raw(
-      () => import('./brukarraadet-2026/Brukerrådet_Forsidebilde 2026.svg?raw'),
+      () =>
+        import(
+          './brukarraadet-2026/Brukerrådet 2026_Karusell forsidebilde.svg?raw'
+        ),
     ),
   },
   'brukarraadet-2026/karusell-2.svg': {
@@ -43,7 +46,7 @@ export const imageTemplates = {
     load: raw(
       () =>
         import(
-          './brukarraadet-2026/Brukerrådet 2026_Karusell avslutningsbilde.svg?raw'
+          './brukarraadet-2026/Brukerrådet 2026_Karusell avslutningsbilde.svg?raw'
         ),
     ),
   },
