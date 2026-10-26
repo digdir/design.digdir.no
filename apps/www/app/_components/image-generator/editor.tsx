@@ -1,6 +1,13 @@
 import { Button, Paragraph } from '@digdir/designsystemet-react';
 import { ArrowUndoIcon } from '@navikt/aksel-icons';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import classes from './editor.module.css';
 import type { RenderedImage } from './export';
 import { ExportActions } from './export-controls';
@@ -118,7 +125,17 @@ export const Editor = memo(
         <div className={classes.preview}>
           {/* Rendered until measured even when inactive, as measuring needs it. */}
           {(active || !measurements) && (
-            <Preview ref={previewRef} name={name} svg={svg} />
+            <Preview
+              ref={previewRef}
+              name={name}
+              svg={svg}
+              className={classes.canvas}
+              style={
+                {
+                  '--aspect-ratio': parsed.width / parsed.height,
+                } as CSSProperties
+              }
+            />
           )}
           {exportable && (
             <ExportActions
