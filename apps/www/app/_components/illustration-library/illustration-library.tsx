@@ -55,7 +55,7 @@ export const IllustrationLibrary = ({
   }
 
   return (
-    <div className={cl(classes.library, className)}>
+    <div className={cl(classes.library, 'u-wide', className)}>
       <Suspense
         fallback={
           <div className={classes.loading}>
@@ -82,6 +82,9 @@ const matchesQuery = (item: IllustrationMeta, query: string) => {
   return haystack.includes(query);
 };
 
+/** Chip label for illustrations without a `project`. */
+const STANDARD_LABEL = 'Standard';
+
 const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
   const library: IllustrationLibraryData = use(getIllustrationLibrary(profile));
   const [query, setQuery] = useState('');
@@ -92,26 +95,37 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
     colorOptions[0]?.name ?? null,
   );
 
+  /**
+   * Project illustrations stay hidden until their project is picked;
+   * null = the profile's standard illustrations.
+   */
+  const projects = [
+    ...new Set(library.illustrations.flatMap((item) => item.project ?? [])),
+  ].sort((a, b) => a.localeCompare(b, 'nb'));
+  const [project, setProject] = useState<string | null>(null);
+  const inProject = library.illustrations.filter(
+    (item) => (item.project ?? null) === project,
+  );
+
   const normalized = query.trim().toLowerCase();
   const filtered = normalized
-    ? library.illustrations.filter((item) => matchesQuery(item, normalized))
-    : library.illustrations;
+    ? inProject.filter((item) => matchesQuery(item, normalized))
+    : inProject;
 
-  const total = library.illustrations.length;
+  const total = inProject.length;
   const countText = normalized
     ? `Viser ${filtered.length} av ${total} illustrasjoner`
     : `${total} illustrasjoner`;
 
   return (
     <>
-      <div className={classes.controls}>
-        <Field className={classes.search}>
+      <div className={classes.filters}>
+        <Field>
           <Label>Søk i illustrasjoner</Label>
           <Search>
             <Search.Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder='Tittel eller emne'
               autoComplete='off'
             />
             <Search.Clear onClick={() => setQuery('')} />
@@ -119,7 +133,7 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
         </Field>
 
         {colorOptions.length > 0 && (
-          <Fieldset className={classes.colorFilter} data-color='neutral'>
+          <Fieldset data-color='neutral'>
             <Fieldset.Legend>Farge</Fieldset.Legend>
             <div className={classes.chips}>
               {colorOptions.map((color) => (
@@ -141,66 +155,87 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
             </div>
           </Fieldset>
         )}
+
+        {projects.length > 0 && (
+          <Fieldset data-color='neutral'>
+            <Fieldset.Legend>Prosjekt</Fieldset.Legend>
+            <div className={classes.chips}>
+              {[null, ...projects].map((name) => (
+                <Chip.Radio
+                  key={name ?? STANDARD_LABEL}
+                  name='project'
+                  value={name ?? ''}
+                  checked={project === name}
+                  onChange={() => setProject(name)}
+                >
+                  {name ?? STANDARD_LABEL}
+                </Chip.Radio>
+              ))}
+            </div>
+          </Fieldset>
+        )}
       </div>
 
-      <Paragraph
-        data-size='sm'
-        className={classes.count}
-        aria-live='polite'
-        aria-atomic='true'
-      >
-        {countText}
-      </Paragraph>
-
-      {filtered.length === 0 ? (
-        <Paragraph className={classes.empty}>
-          Ingen illustrasjoner passer til søket. Prøv et annet ord.
+      <section className={classes.results} aria-label='Illustrasjoner'>
+        <Paragraph
+          data-size='sm'
+          className={classes.count}
+          aria-live='polite'
+          aria-atomic='true'
+        >
+          {countText}
         </Paragraph>
-      ) : (
-        <ul className={classes.grid} aria-label='Illustrasjoner'>
-          {filtered.map((item) => (
-            <li key={item.name}>
-              <button
-                type='button'
-                className={cl(classes.tile, 'ds-focus')}
-                aria-haspopup='dialog'
-                onClick={() => setSelected(item)}
-              >
-                {item.format === 'svg' ? (
-                  <span
-                    className={classes.tilePreview}
-                    // Fixed-colour illustrations are drawn for light backgrounds.
-                    data-color-scheme={library.darkMode ? undefined : 'light'}
-                    style={slotStyle(
-                      library,
-                      item,
-                      preferredSlotValues(item, preferred),
-                    )}
-                    aria-hidden='true'
-                    // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG strings are generated from our own repo at build time
-                    dangerouslySetInnerHTML={{
-                      __html: library.svgs[item.exportName] ?? '',
-                    }}
-                  />
-                ) : (
-                  <span
-                    className={classes.tilePreview}
-                    data-color-scheme='light'
-                    aria-hidden='true'
-                  >
-                    <img
-                      src={library.images[item.exportName]}
-                      alt=''
-                      loading='lazy'
+
+        {filtered.length === 0 ? (
+          <Paragraph className={classes.empty}>
+            Ingen illustrasjoner passer til søket. Prøv et annet ord.
+          </Paragraph>
+        ) : (
+          <ul className={classes.grid}>
+            {filtered.map((item) => (
+              <li key={item.name}>
+                <button
+                  type='button'
+                  className={cl(classes.tile, 'ds-focus')}
+                  aria-haspopup='dialog'
+                  onClick={() => setSelected(item)}
+                >
+                  {item.format === 'svg' ? (
+                    <span
+                      className={classes.tilePreview}
+                      // Fixed-colour illustrations are drawn for light backgrounds.
+                      data-color-scheme={library.darkMode ? undefined : 'light'}
+                      style={slotStyle(
+                        library,
+                        item,
+                        preferredSlotValues(item, preferred),
+                      )}
+                      aria-hidden='true'
+                      // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG strings are generated from our own repo at build time
+                      dangerouslySetInnerHTML={{
+                        __html: library.svgs[item.exportName] ?? '',
+                      }}
                     />
-                  </span>
-                )}
-                <span className={classes.tileTitle}>{item.title}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+                  ) : (
+                    <span
+                      className={classes.tilePreview}
+                      data-color-scheme='light'
+                      aria-hidden='true'
+                    >
+                      <img
+                        src={library.images[item.exportName]}
+                        alt=''
+                        loading='lazy'
+                      />
+                    </span>
+                  )}
+                  <span className={classes.tileTitle}>{item.title}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <IllustrationDialog
         item={selected}

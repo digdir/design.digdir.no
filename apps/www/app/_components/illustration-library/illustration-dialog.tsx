@@ -15,6 +15,7 @@ import {
   Label,
   Paragraph,
   Select,
+  Switch,
   Tag,
   ValidationMessage,
 } from '@digdir/designsystemet-react';
@@ -48,7 +49,8 @@ interface IllustrationDialogProps {
 /**
  * Details for one illustration: colour choices for its slots, light/dark
  * previews with copy (SVG markup or PNG image) and download, plus the React
- * import snippet. Profiles without dark mode get a single preview.
+ * import snippet. The dark preview is opt-in, and profiles without dark mode
+ * have no toggle for it.
  */
 export const IllustrationDialog = ({
   item,
@@ -226,8 +228,12 @@ const VectorDialogContent = ({
     preferredSlotValues(item, preferredColor),
   );
 
+  /** Dark mode is secondary – its preview only shows when asked for. */
+  const [showDark, setShowDark] = useState(false);
+
   const svg = library.svgs[item.exportName] ?? '';
-  const shownSchemes = library.darkMode ? schemes : schemes.slice(0, 1);
+  const bothSchemes = library.darkMode && showDark;
+  const shownSchemes = bothSchemes ? schemes : schemes.slice(0, 1);
   const variants = useMemo(
     () => ({
       light: resolveColorScheme(svg, library.colors, 'light', slotValues),
@@ -318,19 +324,25 @@ const VectorDialogContent = ({
       </span>
 
       <Dialog.Block
-        className={cl(
-          classes.previews,
-          !library.darkMode && classes.previewsSingle,
-        )}
+        className={cl(classes.previews, !bothSchemes && classes.previewsSingle)}
       >
+        {library.darkMode && (
+          <Switch
+            label='Vis mørk modus'
+            data-size='sm'
+            checked={showDark}
+            onChange={(event) => setShowDark(event.target.checked)}
+            className={classes.schemeToggle}
+          />
+        )}
         {shownSchemes.map(({ scheme, label }) => (
           <section
             key={scheme}
             className={classes.preview}
             data-color-scheme={scheme}
-            aria-label={library.darkMode ? label : item.title}
+            aria-label={bothSchemes ? label : item.title}
           >
-            {library.darkMode && (
+            {bothSchemes && (
               <Paragraph
                 data-size='xs'
                 className={classes.previewLabel}
@@ -343,7 +355,7 @@ const VectorDialogContent = ({
               className={classes.previewImage}
               role='img'
               aria-label={
-                library.darkMode
+                bothSchemes
                   ? `${item.title}, ${label.toLowerCase()}`
                   : item.title
               }

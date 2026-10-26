@@ -21,6 +21,11 @@
       "description": "Searchable tags used for filtering, e.g. \"person\", \"teknologi\".",
       "items": { "type": "string", "minLength": 1 },
       "uniqueItems": true
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Project the illustration was made for, e.g. \"eIDAS\". Project illustrations are hidden in the documentation until that project is picked. Leave out for the profile's standard illustrations."
     }
   }
 }

@@ -72,7 +72,7 @@ body {
   &:has(.l-sidebar-left) {
     max-width: 1920px;
     grid-template-columns: var(--sidebar-left-width) minmax(0, 1fr);
-    column-gap: clamp(48px, 6vw, 110px);
+    column-gap: clamp(1.5rem, 3vw, 2rem);
 
     @media screen and (max-width: 958px) {
       display: block;
@@ -101,6 +101,11 @@ body {
 
   & > :where(div, figure, table, img, video, pre, iframe) {
     max-width: var(--short-content-width);
+  }
+
+  /* Opt-out for blocks that should use the full content width. */
+  & > .u-wide {
+    max-width: none;
   }
 
   & > p {

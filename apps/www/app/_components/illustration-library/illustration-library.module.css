@@ -1,31 +1,53 @@
 .library {
-  max-width: 100%;
+  --library-height: 80vh;
+
   margin-block: var(--ds-size-8);
-  display: flex;
-  flex-direction: column;
-  gap: var(--ds-size-5);
+  display: grid;
+  grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+  height: var(--library-height);
+  min-height: 28rem;
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--ds-border-radius-lg);
+  background: var(--ds-color-neutral-background-default);
+  overflow: clip;
+
+  @media (max-width: 768px) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 80vh;
+  }
 }
 
 .loading {
+  grid-column: 1 / -1;
   display: grid;
   place-items: center;
-  min-height: 12rem;
 }
 
-.controls {
+.filters {
   display: flex;
-  flex-wrap: wrap;
-  align-items: start;
-  gap: var(--ds-size-5) var(--ds-size-8);
+  flex-direction: column;
+  gap: var(--ds-size-6);
+  padding: var(--ds-size-5);
+  border-inline-end: 1px solid var(--ds-color-neutral-border-subtle);
+  background: var(--ds-color-neutral-background-tinted);
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    border-inline-end: none;
+    border-block-end: 1px solid var(--ds-color-neutral-border-subtle);
+  }
 }
 
-.search {
-  flex: 1 1 18rem;
-  max-width: 28rem;
-}
-
-.colorFilter {
-  flex: 1 1 20rem;
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-4);
+  min-height: 0;
+  padding: var(--ds-size-5);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--ds-color-neutral-border-subtle) transparent;
 }
 
 .chips {
@@ -157,6 +179,10 @@
 
 .previewsSingle {
   grid-template-columns: minmax(0, 1fr);
+}
+
+.schemeToggle {
+  grid-column: 1 / -1;
 }
 
 /* `data-color-scheme` on each preview flips the Designsystemet tokens inside. */

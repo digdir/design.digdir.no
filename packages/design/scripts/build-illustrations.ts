@@ -74,6 +74,7 @@ type Meta = {
   title: string;
   description?: string;
   tags: string[];
+  project?: string;
 };
 
 type VectorIllustration = VectorIllustrationMeta & { svg: string };
@@ -200,6 +201,12 @@ const readMeta = (dir: string): Meta => {
   }
   if (meta.description !== undefined && typeof meta.description !== 'string') {
     throw new Error(`${relative}: "description" must be a string.`);
+  }
+  if (
+    meta.project !== undefined &&
+    (typeof meta.project !== 'string' || meta.project.trim() === '')
+  ) {
+    throw new Error(`${relative}: "project" must be a non-empty string.`);
   }
 
   return meta;
@@ -568,6 +575,7 @@ const buildProfile = async (profile: string) => {
         title: meta.title,
         description: meta.description,
         tags: meta.tags,
+        project: meta.project,
         file: `${name}.${format}`,
         ...rasterSize(file),
         source: file,
@@ -592,6 +600,7 @@ const buildProfile = async (profile: string) => {
       title: meta.title,
       description: meta.description,
       tags: meta.tags,
+      project: meta.project,
       viewBox: svg.match(/viewBox=["']([^"']+)["']/)?.[1],
       slots,
       svg,

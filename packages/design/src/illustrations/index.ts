@@ -16,6 +16,8 @@ type IllustrationMetaBase = {
   title: string;
   description?: string;
   tags: string[];
+  /** Project the illustration belongs to; `undefined` for standard ones. */
+  project?: string;
 };
 
 /** An SVG illustration, from its `meta.json` and layer names. */
