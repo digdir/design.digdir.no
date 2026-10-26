@@ -1,0 +1,11 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ds-size-3);
+}
+
+.size {
+  width: auto;
+  min-width: 12rem;
+}

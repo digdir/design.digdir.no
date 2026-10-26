@@ -9,6 +9,13 @@
   align-items: start;
 }
 
+.wide {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'header'
+    'content';
+}
+
 .header {
   grid-area: header;
   max-width: var(--short-content-width, 700px);

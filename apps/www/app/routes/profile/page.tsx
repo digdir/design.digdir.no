@@ -49,8 +49,12 @@ export const meta = ({ loaderData, params }: Route.MetaArgs) => {
 export default function Page({
   loaderData: { code, frontmatter, toc, profile },
 }: Route.ComponentProps) {
+  // `toc: false` in the frontmatter gives the content the full width, for
+  // pages built around a tool rather than text.
+  const showToc = frontmatter.toc !== false;
+
   return (
-    <div className={classes.page}>
+    <div className={cl(classes.page, !showToc && classes.wide)}>
       <header className={classes.header}>
         <Paragraph className={classes.category} data-color={profile.mainColor}>
           {frontmatter.category}
@@ -64,7 +68,7 @@ export default function Page({
           </Paragraph>
         )}
       </header>
-      <TableOfContents items={toc} className={classes.toc} />
+      {showToc && <TableOfContents items={toc} className={classes.toc} />}
       <div className={cl(classes.article, 'u-rich-text')}>
         <MDXComponents code={code} />
       </div>

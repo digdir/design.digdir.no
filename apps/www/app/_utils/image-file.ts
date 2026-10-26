@@ -1,6 +1,6 @@
 /**
  * Read an image file chosen by the user into a data URL, downscaled so the
- * longest side is at most `maxSide` pixels. Keeps PNG for transparency,
+ * longest side is at most `maxSide` pixels, along with its size after that. Keeps PNG for transparency,
  * otherwise re-encodes as JPEG to keep the SVG and PNG exports small.
  */
 export const readImageFile = async (file: File, maxSide = 2000) => {
@@ -23,7 +23,9 @@ export const readImageFile = async (file: File, maxSide = 2000) => {
   context.drawImage(bitmap, 0, 0, width, height);
   bitmap.close();
 
-  return file.type === 'image/png'
-    ? canvas.toDataURL('image/png')
-    : canvas.toDataURL('image/jpeg', 0.9);
+  const src =
+    file.type === 'image/png'
+      ? canvas.toDataURL('image/png')
+      : canvas.toDataURL('image/jpeg', 0.9);
+  return { src, width, height };
 };

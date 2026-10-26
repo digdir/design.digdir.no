@@ -1,0 +1,41 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-2);
+}
+
+.dropZone {
+  --dsc-file-upload-padding: var(--ds-size-5) var(--ds-size-4);
+}
+
+.chosen {
+  --dsc-card-padding: var(--ds-size-2);
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-size-3);
+}
+
+.thumbnail {
+  flex-shrink: 0;
+  width: var(--ds-size-14);
+  height: var(--ds-size-14);
+  border-radius: var(--ds-border-radius-sm);
+  object-fit: cover;
+}
+
+.fileName {
+  flex: 1 1 8rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-2);
+  margin-block: auto;
+}

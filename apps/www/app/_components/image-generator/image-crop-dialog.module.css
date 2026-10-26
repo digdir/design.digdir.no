@@ -1,0 +1,94 @@
+.dialog {
+  width: min(40rem, 100%);
+}
+
+.subtle {
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-3);
+}
+
+.stage {
+  display: grid;
+  place-items: center;
+  border-radius: var(--ds-border-radius-md);
+  background: var(--ds-color-neutral-background-tinted);
+  overflow: clip;
+
+  &:focus-visible {
+    outline: var(--dsc-focus-outline);
+    box-shadow: var(--dsc-focus-boxShadow);
+  }
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 45dvh;
+  cursor: grab;
+  /* Pointer events drive dragging and pinching instead of scrolling. */
+  touch-action: none;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.dim {
+  fill: rgb(0 0 0 / 0.6);
+}
+
+.maskShape {
+  fill: black;
+}
+
+.outline {
+  fill: none;
+  stroke: white;
+
+  & * {
+    stroke-width: 2px;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
+.zoom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-1);
+}
+
+.zoomControls {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+}
+
+.slider {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--ds-color-accent-base-default);
+}
+
+/* Stays in view when the dialog scrolls, e.g. on a phone. */
+.footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--dsc-dialog-background);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ds-size-3);
+}
+
+.footerEnd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-3);
+}

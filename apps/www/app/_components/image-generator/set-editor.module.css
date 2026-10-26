@@ -1,0 +1,90 @@
+.set {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-6);
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+  min-height: var(--ds-size-12);
+  padding: var(--ds-size-1) var(--ds-size-4) var(--ds-size-1) var(--ds-size-1);
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--ds-border-radius-full);
+  background: var(--ds-color-neutral-background-default);
+  color: var(--ds-color-neutral-text-default);
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ds-color-neutral-surface-hover);
+  }
+
+  &:focus-visible {
+    outline: var(--dsc-focus-outline);
+    box-shadow: var(--dsc-focus-boxShadow);
+  }
+
+  &[aria-current='step'] {
+    border-color: var(--ds-color-accent-base-default);
+    background: var(--ds-color-accent-surface-tinted);
+  }
+}
+
+.stepNumber {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--ds-size-9);
+  height: var(--ds-size-9);
+  border: 1px solid var(--ds-color-neutral-border-default);
+  border-radius: 50%;
+  font-variant-numeric: tabular-nums;
+
+  [aria-current='step'] > & {
+    border-color: var(--ds-color-accent-base-default);
+    background: var(--ds-color-accent-base-default);
+    color: var(--ds-color-accent-base-contrast-default);
+  }
+}
+
+.stepHeading {
+  scroll-margin-top: calc(var(--header-height, 0px) + var(--ds-size-4));
+
+  &:focus-visible {
+    outline: var(--dsc-focus-outline);
+    outline-offset: var(--ds-size-1);
+  }
+}
+
+/* Inactive steps keep their state. They are laid out (so their texts can be
+   measured) but invisible, take no space and are `inert`. */
+.offstage {
+  position: absolute;
+  inset-inline: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.stepNav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ds-size-3);
+}
+
+.next {
+  margin-inline-start: auto;
+}

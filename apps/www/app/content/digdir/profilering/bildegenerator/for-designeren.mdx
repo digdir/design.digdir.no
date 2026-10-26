@@ -1,0 +1,27 @@
+---
+title: Bildegenerator - for designeren
+sidebar: false
+description: Slik lagar du malar til bildegeneratoren i Illustrator.
+category: Profilering
+published: true
+---
+
+Det er eit par reglar å følgje for at malen skal bli redigerbar i [bildegeneratoren](/digdir/profilering/bildegenerator).
+
+## Tekst
+Tekst må være faktisk tekst, av typen `Inter`.
+Dersom teksten ikkje skal være venstrejustert må du markere dette i brackets bakom navnet på layeren.
+Navnet på layeren blir for eksempel: `Navn [center]` eller `Navn [right]`.
+
+## Bilde
+For at brukaren skal kunne last opp bilde må layeren ha `[image]` i navnet.
+Navnet på layeren blir for eksempel: `Profilbilde [image]`.
+
+## Namn og markørar
+Namnet kan stå på sjølve objektet, eller på laget/gruppa som berre inneheld dette eine objektet.
+Namnet blir brukt som ledetekst i redigeringa, så gje alle tekstar eit namn.
+Ein SVG med innebygde bilete (til dømes gradientar) blir fort fleire megabyte – eksporter berre den eine artboarden, og unngå bilete der du kan.
+
+## Malar som høyrer saman
+Bilete som høyrer saman, til dømes ein karusell, kan setjast saman til eitt sett i `imageTemplateSets` i `app/_assets/templates/index.ts`.
+Brukaren fyller då ut eitt bilete per steg, og kan laste ned alle samla som zip til slutt.

@@ -11,10 +11,13 @@
  *   Illustrator does not export text alignment, so a layer name ending in
  *   `[center]` or `[right]` marks the anchor; unmarked text is left-aligned.
  *   Centring needs the original text's rendered width, which only a browser
- *   can measure – pass it to `render` via `widths` (see `data-field`).
+ *   can measure – render `measure` (the template as exported, so Illustrator's
+ *   per-glyph positions and tracking count), measure it and pass the result
+ *   to `render` via `widths` (see `data-field`).
  * - Every shape whose layer name ends in `[image]` becomes an image field.
- *   An uploaded image fills the shape through an SVG pattern sized to the
- *   shape's bounding box, so any shape works without measuring it.
+ *   An uploaded image fills the shape through an SVG pattern whose `viewBox`
+ *   is the part of the image to show – all of it, or the user's crop – so it
+ *   covers any shape without distortion and without measuring the shape.
  *
  * Field labels come from the layer name (`data-name`, falling back to `id`).
  * Illustrator writes the name on the object itself, or on a wrapping `<g>`
@@ -43,18 +46,37 @@ export type TemplateField =
       defaultValue: '';
     };
 
+export type Rect = { x: number; y: number; width: number; height: number };
+
+/**
+ * Pixel size of an uploaded image, and the part of it (in its pixels) the
+ * user chose to show. Without `crop` the image covers the shape, centred.
+ */
+export type ImageFill = { width: number; height: number; crop?: Rect };
+
 export type ParsedTemplate = {
   width: number;
   height: number;
   fields: TemplateField[];
   /**
    * Values in the same order as `fields`. `widths` (same order) are the
-   * rendered widths of each text field's first line in the *template*, used
-   * to anchor centred and right-aligned text; without them text is
-   * left-aligned. Every `<text>` in the output carries `data-field="<index>"`
-   * so they can be measured.
+   * widths of each text field's first line in the template (see `measure`),
+   * used to anchor centred and right-aligned text; without them text is
+   * left-aligned. `images` (same order) describe the uploaded images.
+   * Every field's element carries `data-field="<index>"`.
    */
-  render: (values: string[], widths?: (number | undefined)[]) => string;
+  render: (
+    values: string[],
+    widths?: (number | undefined)[],
+    images?: (ImageFill | undefined)[],
+  ) => string;
+  /**
+   * The template exactly as exported, but with `data-field="<index>"` on
+   * every field's element. Measure a text field's first line in a browser as
+   * the distance from its first character's start to its last one's end, and
+   * an image field's shape with `getBBox()`.
+   */
+  measure: string;
 };
 
 type Node =
@@ -64,6 +86,7 @@ type Node =
       x: number;
       y: number;
       lineHeight: number;
+      original: string;
     }
   | { kind: 'image'; tag: string; attributes: string; original: string };
 
@@ -75,6 +98,10 @@ const alignments: Record<string, TextAlign> = {
   left: 'start',
 };
 const PLACEHOLDER = /<!--field:(\d+)-->/g;
+
+// Several templates can be on the page at once (a set), so ids generated
+// for one must not clash with another's.
+let parseCount = 0;
 
 const attribute = (attributes: string, name: string) =>
   attributes.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1];
@@ -209,6 +236,7 @@ const linesOf = (body: string) => {
 };
 
 export const parseTemplate = (svg: string): ParsedTemplate => {
+  const idPrefix = `template-${++parseCount}`;
   const root = svg.match(/<svg\b[^>]*>/)?.[0] ?? '';
   const [, , width = 0, height = 0] = (attribute(root, 'viewBox') ?? '')
     .split(/[\s,]+/)
@@ -266,6 +294,7 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
             y: lines[0].y,
             lineHeight:
               lines.length > 1 ? lines[1].y - lines[0].y : fontSize * 1.2,
+            original,
           },
           position: positionOf(textAttributes),
         });
@@ -316,24 +345,40 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
     label: labels[fieldIndex],
   }));
 
-  const render = (values: string[], widths?: (number | undefined)[]) => {
-    const fieldIndexOf = new Map(
-      order.map((nodeIndex, fieldIndex) => [nodeIndex, fieldIndex]),
+  const fieldIndexOf = new Map(
+    order.map((nodeIndex, fieldIndex) => [nodeIndex, fieldIndex]),
+  );
+
+  /** Tag the element that starts `markup` with its field index. */
+  const withField = (markup: string, nodeIndex: number) =>
+    markup.replace(
+      /^<(\w+)/,
+      `<$1 data-field="${fieldIndexOf.get(nodeIndex)}"`,
     );
-    return skeleton.replace(PLACEHOLDER, (_, index: string) => {
+
+  const render = (
+    values: string[],
+    widths?: (number | undefined)[],
+    images?: (ImageFill | undefined)[],
+  ) =>
+    skeleton.replace(PLACEHOLDER, (_, index: string) => {
       const nodeIndex = Number(index);
       const fieldIndex = fieldIndexOf.get(nodeIndex) ?? 0;
       const { field, node } = entries[nodeIndex];
       const value = values[fieldIndex] ?? '';
 
       if (node.kind === 'image') {
-        if (!value) return node.original;
-        const id = `template-image-${nodeIndex}`;
+        const fill = images?.[fieldIndex];
+        if (!value || !fill) return withField(node.original, nodeIndex);
+        // The pattern tile is the shape's bounding box, and its `viewBox`
+        // (the crop, or the whole image) is scaled to cover it, centred.
+        const id = `${idPrefix}-image-${nodeIndex}`;
+        const view = fill.crop ?? { x: 0, y: 0, ...fill };
         return (
-          `<pattern id="${id}" width="1" height="1" patternContentUnits="objectBoundingBox">` +
-          `<image href="${escapeXml(value)}" width="1" height="1" preserveAspectRatio="xMidYMid slice"/>` +
+          `<pattern id="${id}" width="1" height="1" viewBox="${view.x} ${view.y} ${view.width} ${view.height}" preserveAspectRatio="xMidYMid slice">` +
+          `<image href="${escapeXml(value)}" width="${fill.width}" height="${fill.height}"/>` +
           `</pattern>` +
-          `<${node.tag}${node.attributes} fill="url(#${id})"/>`
+          `<${node.tag}${node.attributes} fill="url(#${id})" data-field="${fieldIndex}"/>`
         );
       }
 
@@ -352,12 +397,24 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
         .split('\n')
         .map(
           (line, i) =>
-            `<tspan x="${x}" y="${node.y + i * node.lineHeight}">${escapeXml(line)}</tspan>`,
+            // A trailing space would push centred/right-aligned text left.
+            `<tspan x="${x}" y="${node.y + i * node.lineHeight}">${escapeXml(align === 'start' ? line : line.trimEnd())}</tspan>`,
         )
         .join('');
       return `<text${node.attributes}${anchor} data-field="${fieldIndex}" xml:space="preserve">${tspans}</text>`;
     });
-  };
 
-  return { width, height, fields, render };
+  const measure = skeleton.replace(PLACEHOLDER, (_, index: string) => {
+    const nodeIndex = Number(index);
+    const { node } = entries[nodeIndex];
+    if (node.kind === 'image') return withField(node.original, nodeIndex);
+    // Ids dropped, as the template's ids may also be on the page elsewhere.
+    return node.original.replace(
+      /^<text\b([^>]*)>/,
+      (_, attributes: string) =>
+        `<text${stripAttributes(attributes, ['id'])} data-field="${fieldIndexOf.get(nodeIndex)}">`,
+    );
+  });
+
+  return { width, height, fields, render, measure };
 };

@@ -11,6 +11,10 @@
  *
  * Illustrator does not export text alignment, so mark it in the layer name:
  * `Navn [center]` or `Dato [right]`. Text without a marker is left-aligned.
+ *
+ * Templates that belong together (e.g. the slides of a carousel) are grouped
+ * in `imageTemplateSets`. A set is filled in one step per template and can be
+ * downloaded as a zip; its templates are not offered on their own.
  */
 export type ImageTemplate = {
   /** Shown in the template chooser and used as the download file name. */
@@ -50,6 +54,10 @@ export const imageTemplates = {
         ),
     ),
   },
+  'test-template-bilde': {
+    name: 'Testmal med bilde',
+    load: raw(() => import('./test-template-bilde.svg?raw')),
+  },
 } satisfies Record<string, ImageTemplate>;
 
 export type ImageTemplateId = keyof typeof imageTemplates;
@@ -57,3 +65,51 @@ export type ImageTemplateId = keyof typeof imageTemplates;
 export const imageTemplateIds = Object.keys(
   imageTemplates,
 ) as ImageTemplateId[];
+
+export type ImageTemplateSet = {
+  /** Shown in the template chooser and used as the zip file name. */
+  name: string;
+  /** One step per template, in order. `label` names the step. */
+  steps: { template: ImageTemplateId; label: string }[];
+};
+
+export const imageTemplateSets = {
+  'brukarraadet-2026/karusell': {
+    name: 'Brukarrådet 2026 - Karusell',
+    steps: [
+      { template: 'brukarraadet-2026/karusell-1.svg', label: 'Forsidebilde' },
+      { template: 'brukarraadet-2026/karusell-2.svg', label: 'Personbilde' },
+      {
+        template: 'brukarraadet-2026/karusell-3.svg',
+        label: 'Avslutningsbilde',
+      },
+    ],
+  },
+} satisfies Record<string, ImageTemplateSet>;
+
+const templatesInSets = new Set<ImageTemplateId>(
+  Object.values(imageTemplateSets).flatMap((set) =>
+    set.steps.map((step) => step.template),
+  ),
+);
+
+/**
+ * What the template chooser offers: every set, plus each template that is not
+ * part of a set as a set of one.
+ */
+export const imageChoices: Record<string, ImageTemplateSet> = {
+  ...imageTemplateSets,
+  ...Object.fromEntries(
+    imageTemplateIds
+      .filter((id) => !templatesInSets.has(id))
+      .map((id) => [
+        id,
+        {
+          name: imageTemplates[id].name,
+          steps: [{ template: id, label: imageTemplates[id].name }],
+        },
+      ]),
+  ),
+};
+
+export const imageChoiceIds = Object.keys(imageChoices);
