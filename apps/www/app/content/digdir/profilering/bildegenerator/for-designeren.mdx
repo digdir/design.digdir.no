@@ -18,6 +18,14 @@ Du kan avgrense kor mange linjer teksten kan ha med `lines=X` i dei same klammen
 Navnet på layeren blir for eksempel: `Navn [center,lines=1]` eller `Faktatekst [lines=6]`.
 Med `lines=1` får brukaren eit felt på éi linje. Skriv brukaren fleire linjer enn tillate, får dei beskjed om det, og berre dei første linjene kjem med i biletet.
 
+### Tekst som ikkje skal endrast
+Tekst som skal stå slik han er, til dømes ei fast overskrift, markerer du med `[no-edit]`.
+Navnet på layeren blir for eksempel: `Overskrift [no-edit]`.
+Set du `[no-edit]` på ei gruppe, gjeld det alt i gruppa.
+
+### Teksten må vere ekte tekst
+Tekst som er gjort om til omriss (Create Outlines), kan ikkje redigerast og blir ikkje med som felt.
+
 ## Bilde
 For at brukaren skal kunne last opp bilde må layeren ha `[image]` i navnet.
 Navnet på layeren blir for eksempel: `Profilbilde [image]`.
@@ -30,3 +38,4 @@ Ein SVG med innebygde bilete (til dømes gradientar) blir fort fleire megabyte �
 ## Malar som høyrer saman
 Bilete som høyrer saman, til dømes ein karusell, kan setjast saman til eitt sett i `imageTemplateSets` i `app/_assets/templates/index.ts`.
 Brukaren fyller då ut eitt bilete per steg, og kan laste ned alle samla som zip til slutt.
+Eit steg kan merkast med `repeatable: true`, til dømes personbiletet i ein karusell. Då kan brukaren leggje til så mange kopiar dei treng, og kopiane blir alltid liggjande samla på same stad i rekkjefølgja.

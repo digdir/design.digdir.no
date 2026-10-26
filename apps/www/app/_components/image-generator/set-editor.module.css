@@ -59,6 +59,14 @@
   }
 }
 
+.stepHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-size-3);
+}
+
 .stepHeading {
   scroll-margin-top: calc(var(--header-height, 0px) + var(--ds-size-4));
 
@@ -86,5 +94,8 @@
 }
 
 .next {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-size-3);
   margin-inline-start: auto;
 }

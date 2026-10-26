@@ -12,6 +12,8 @@
  *   `[center]` or `[right]` marks the anchor; unmarked text is left-aligned.
  *   `lines=N` in the same brackets (`[center,lines=2]`) limits the number of
  *   lines; extra lines are left out when rendering.
+ * - `[no-edit]` on a layer keeps it as designed. On a group, it covers every
+ *   text and shape inside.
  *   Centring needs the original text's rendered width, which only a browser
  *   can measure – render `measure` (the template as exported, so Illustrator's
  *   per-glyph positions and tracking count), measure it and pass the result
@@ -117,6 +119,7 @@ const parseLayerName = (name: string) => {
   return {
     label: name.replace(MARKERS, '').trim(),
     image: options.includes('image'),
+    noEdit: options.includes('no-edit'),
     align: alignments[options.find((option) => option in alignments) ?? ''],
     maxLines: lines ? Math.max(Number(lines), 1) : undefined,
   };
@@ -180,13 +183,15 @@ const SHAPES = 'circle|rect|ellipse|path|polygon|polyline';
  * For every `<text>` and shape, the `data-name` of the nearest ancestor `<g>`
  * that has one – but only when that group contains exactly one element of
  * that kind, so a layer name applies to the object it wraps and nothing else.
- * Keyed by the element's offset in `svg`.
+ * Also which elements sit inside a `[no-edit]` group. Keyed by the element's
+ * offset in `svg`.
  */
 const inheritedNames = (svg: string) => {
   type Group = { name?: string; texts: number; shapes: number };
   const groups: Group[] = [];
   const owners = new Map<number, Group>();
-  const result = new Map<number, string>();
+  const names = new Map<number, string>();
+  const locked = new Set<number>();
 
   const tag = new RegExp(`<(/?)(g|text|${SHAPES})\\b([^>]*?)(/?)>`, 'g');
   let match = tag.exec(svg);
@@ -202,6 +207,9 @@ const inheritedNames = (svg: string) => {
         });
       }
     } else if (!closing) {
+      if (groups.some((group) => parseLayerName(group.name ?? '').noEdit)) {
+        locked.add(match.index);
+      }
       const named = [...groups].reverse().find((group) => group.name);
       if (named) {
         if (name === 'text') named.texts += 1;
@@ -219,9 +227,9 @@ const inheritedNames = (svg: string) => {
   for (const [offset, group] of owners) {
     const isText = svg.startsWith('<text', offset);
     const sole = isText ? group.texts === 1 : group.shapes === 1;
-    if (sole && group.name) result.set(offset, group.name);
+    if (sole && group.name) names.set(offset, group.name);
   }
-  return result;
+  return { names, locked };
 };
 
 /** Make duplicate labels unique: "Navn", "Navn" → "Navn 1", "Navn 2". */
@@ -275,7 +283,7 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
   const placeholder = () => `<!--field:${entries.length - 1}-->`;
 
   const body = svg.replace(/<\?xml[^>]*\?>\s*/, '');
-  const inherited = inheritedNames(body);
+  const { names: inherited, locked } = inheritedNames(body);
 
   const skeleton = body.replace(
     new RegExp(
@@ -290,6 +298,8 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
       shapeAttributes: string | undefined,
       offset: number,
     ) => {
+      if (locked.has(offset)) return original;
+
       if (textAttributes !== undefined && textBody !== undefined) {
         const lines = linesOf(textBody);
         const fontSize = Number(attribute(textAttributes, 'font-size') ?? 16);
@@ -298,7 +308,8 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
           inherited.get(offset) ??
           attribute(textAttributes, 'id') ??
           `Tekst ${entries.length + 1}`;
-        const { label, align, maxLines } = parseLayerName(layerName);
+        const { label, align, maxLines, noEdit } = parseLayerName(layerName);
+        if (noEdit) return original;
         entries.push({
           field: {
             kind: 'text',
@@ -331,8 +342,8 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
       }
       const layerName =
         attribute(shapeAttributes, 'data-name') ?? inherited.get(offset) ?? '';
-      const { label, image } = parseLayerName(layerName);
-      if (!image) return original;
+      const { label, image, noEdit } = parseLayerName(layerName);
+      if (!image || noEdit) return original;
       entries.push({
         field: {
           kind: 'image',

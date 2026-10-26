@@ -54,8 +54,8 @@ export const StatusMessage = ({ status }: { status: Status }) => (
 );
 
 /**
- * Export size as a multiple of the template's own. Shown in pixels when all
- * images share a size, otherwise as a factor.
+ * Export size as a multiple of the template's own, with the size in pixels
+ * when all images share one.
  */
 export const SizeSelect = ({
   images,
@@ -81,10 +81,8 @@ export const SizeSelect = ({
         {scales.map((factor) => (
           <Select.Option key={factor} value={factor}>
             {first && sameSize
-              ? `${Math.round(first.width * factor)} × ${Math.round(first.height * factor)} px`
-              : factor === 1
-                ? 'Original størrelse'
-                : `${factor} × original størrelse`}
+              ? `${factor}x (${Math.round(first.width * factor)} × ${Math.round(first.height * factor)} px)`
+              : `${factor}x`}
           </Select.Option>
         ))}
       </Select>

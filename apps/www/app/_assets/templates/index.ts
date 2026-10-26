@@ -1,7 +1,8 @@
 /**
  * SVG templates for the image generator. Add a template by dropping the
- * Illustrator export in a folder next to this file and listing it here. Templates are loaded on demand – an export with embedded images can
- * be megabytes, and it should not weigh down the page until chosen.
+ * Illustrator export in a folder next to this file and listing it here.
+ * Templates are loaded on demand – an export with embedded images can be
+ * megabytes, and it should not weigh down the page until chosen.
  *
  * In Illustrator: every text object becomes an editable field, and a shape
  * whose layer name ends in `[image]` (e.g. "Bilde [image]") becomes an image
@@ -14,7 +15,9 @@
  *
  * Templates that belong together (e.g. the slides of a carousel) are grouped
  * in `imageTemplateSets`. A set is filled in one step per template and can be
- * downloaded as a zip; its templates are not offered on their own.
+ * downloaded as a zip; its templates are not offered on their own. A step
+ * marked `repeatable` can be added as many times as the user needs (up to
+ * `max`, if set), next to its other copies.
  */
 export type ImageTemplate = {
   /** Shown in the template chooser and used as the download file name. */
@@ -95,7 +98,13 @@ export type ImageTemplateSet = {
   /** Shown in the template chooser and used as the zip file name. */
   name: string;
   /** One step per template, in order. `label` names the step. */
-  steps: { template: ImageTemplateId; label: string }[];
+  steps: {
+    template: ImageTemplateId;
+    label: string;
+    repeatable?: boolean;
+    /** Most copies of a repeatable step. */
+    max?: number;
+  }[];
 };
 
 export const imageTemplateSets = {
@@ -109,6 +118,8 @@ export const imageTemplateSets = {
       {
         template: 'brukarraadet-2026/karusell/personbilde',
         label: 'Personbilde',
+        repeatable: true,
+        max: 3,
       },
       {
         template: 'brukarraadet-2026/karusell/avslutningsbilde',
