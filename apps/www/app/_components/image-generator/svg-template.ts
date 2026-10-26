@@ -10,6 +10,8 @@
  *   the kerning. All other attributes on `<text>` are kept as exported.
  *   Illustrator does not export text alignment, so a layer name ending in
  *   `[center]` or `[right]` marks the anchor; unmarked text is left-aligned.
+ *   `lines=N` in the same brackets (`[center,lines=2]`) limits the number of
+ *   lines; extra lines are left out when rendering.
  *   Centring needs the original text's rendered width, which only a browser
  *   can measure – render `measure` (the template as exported, so Illustrator's
  *   per-glyph positions and tracking count), measure it and pass the result
@@ -38,6 +40,8 @@ export type TemplateField =
       rows: number;
       /** From a `[center]`/`[right]` marker in the layer name. */
       align: TextAlign;
+      /** From a `[lines=N]` marker in the layer name. */
+      maxLines?: number;
     }
   | {
       kind: 'image';
@@ -90,12 +94,32 @@ type Node =
     }
   | { kind: 'image'; tag: string; attributes: string; original: string };
 
-const IMAGE_MARKER = /\s*\[image\]\s*$/i;
-const ALIGN_MARKER = /\s*\[(center|right|left)\]\s*$/i;
+const MARKERS = /\s*\[([^\]]*)\]\s*$/;
 const alignments: Record<string, TextAlign> = {
   center: 'middle',
   right: 'end',
   left: 'start',
+};
+
+/**
+ * Split a layer name into its label and the comma-separated options in
+ * trailing brackets, e.g. `Navn [center,lines=1]`.
+ */
+const parseLayerName = (name: string) => {
+  const options =
+    name
+      .match(MARKERS)?.[1]
+      .split(',')
+      .map((option) => option.trim().toLowerCase()) ?? [];
+  const lines = options
+    .map((option) => option.match(/^lines\s*=\s*(\d+)$/)?.[1])
+    .find(Boolean);
+  return {
+    label: name.replace(MARKERS, '').trim(),
+    image: options.includes('image'),
+    align: alignments[options.find((option) => option in alignments) ?? ''],
+    maxLines: lines ? Math.max(Number(lines), 1) : undefined,
+  };
 };
 const PLACEHOLDER = /<!--field:(\d+)-->/g;
 
@@ -274,14 +298,15 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
           inherited.get(offset) ??
           attribute(textAttributes, 'id') ??
           `Tekst ${entries.length + 1}`;
-        const marker = layerName.match(ALIGN_MARKER);
+        const { label, align, maxLines } = parseLayerName(layerName);
         entries.push({
           field: {
             kind: 'text',
-            label: layerName.replace(ALIGN_MARKER, '').trim() || layerName,
+            label: label || layerName,
             defaultValue: lines.map((line) => line.text).join('\n'),
             rows: lines.length,
-            align: marker ? alignments[marker[1].toLowerCase()] : 'start',
+            align: align ?? 'start',
+            maxLines,
           },
           node: {
             kind: 'text',
@@ -306,11 +331,12 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
       }
       const layerName =
         attribute(shapeAttributes, 'data-name') ?? inherited.get(offset) ?? '';
-      if (!IMAGE_MARKER.test(layerName)) return original;
+      const { label, image } = parseLayerName(layerName);
+      if (!image) return original;
       entries.push({
         field: {
           kind: 'image',
-          label: layerName.replace(IMAGE_MARKER, '').trim() || 'Bilde',
+          label: label || 'Bilde',
           defaultValue: '',
         },
         node: {
@@ -395,6 +421,7 @@ export const parseTemplate = (svg: string): ParsedTemplate => {
       const anchor = align === 'start' ? '' : ` text-anchor="${align}"`;
       const tspans = value
         .split('\n')
+        .slice(0, field.kind === 'text' ? field.maxLines : undefined)
         .map(
           (line, i) =>
             // A trailing space would push centred/right-aligned text left.

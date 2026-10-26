@@ -1,4 +1,4 @@
-import { Button, Paragraph, Textfield } from '@digdir/designsystemet-react';
+import { Button, Paragraph } from '@digdir/designsystemet-react';
 import { ArrowUndoIcon } from '@navikt/aksel-icons';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import classes from './editor.module.css';
@@ -8,6 +8,7 @@ import { ImageField } from './image-field';
 import { useMeasurements } from './measure';
 import { Preview } from './preview';
 import { type ImageFill, parseTemplate } from './svg-template';
+import { TextField } from './text-field';
 
 interface EditorProps {
   name: string;
@@ -84,16 +85,12 @@ export const Editor = memo(
                 }
               />
             ) : (
-              <Textfield
+              <TextField
                 key={index}
-                multiline
-                label={field.label}
-                rows={Math.max(field.rows, 1)}
+                field={field}
                 value={values[index]}
-                onChange={(event) =>
-                  setValues((current) =>
-                    setAt(current, index, event.target.value),
-                  )
+                onChange={(value) =>
+                  setValues((current) => setAt(current, index, value))
                 }
               />
             ),

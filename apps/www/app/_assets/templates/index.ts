@@ -1,7 +1,6 @@
 /**
  * SVG templates for the image generator. Add a template by dropping the
- * Illustrator export next to this file (kebab-case file name) and listing it
- * here. Templates are loaded on demand – an export with embedded images can
+ * Illustrator export in a folder next to this file and listing it here. Templates are loaded on demand – an export with embedded images can
  * be megabytes, and it should not weigh down the page until chosen.
  *
  * In Illustrator: every text object becomes an editable field, and a shape
@@ -11,6 +10,7 @@
  *
  * Illustrator does not export text alignment, so mark it in the layer name:
  * `Navn [center]` or `Dato [right]`. Text without a marker is left-aligned.
+ * Limit the number of lines in the same brackets: `Navn [center,lines=1]`.
  *
  * Templates that belong together (e.g. the slides of a carousel) are grouped
  * in `imageTemplateSets`. A set is filled in one step per template and can be
@@ -27,30 +27,55 @@ const raw = (loader: () => Promise<{ default: string }>) => () =>
   loader().then((module) => module.default);
 
 export const imageTemplates = {
-  'brukarraadet-2026/karusell-1.svg': {
+  'brukarraadet-2026/karusell/forsidebilde': {
     name: 'Brukarrådet 2026 - Karusell 1',
     load: raw(
       () =>
-        import(
-          './brukarraadet-2026/Brukerrådet 2026_Karusell forsidebilde.svg?raw'
-        ),
+        import('./brukarraadet-2026/karusell/Karusell forsidebilde.svg?raw'),
     ),
   },
-  'brukarraadet-2026/karusell-2.svg': {
+  'brukarraadet-2026/karusell/personbilde': {
     name: 'Brukarrådet 2026 - Karusell 2',
     load: raw(
-      () =>
-        import(
-          './brukarraadet-2026/Brukerrådet 2026_Karusell personbilde.svg?raw'
-        ),
+      () => import('./brukarraadet-2026/karusell/Karusell personbilde.svg?raw'),
     ),
   },
-  'brukarraadet-2026/karusell-3.svg': {
+  'brukarraadet-2026/karusell/avslutningsbilde': {
     name: 'Brukarrådet 2026 - Karusell 3',
     load: raw(
       () =>
         import(
-          './brukarraadet-2026/Brukerrådet 2026_Karusell avslutningsbilde.svg?raw'
+          './brukarraadet-2026/karusell/Karusell avslutningsbilde.svg?raw'
+        ),
+    ),
+  },
+  'brukarraadet-2026/visste-du-at/forsidebilde': {
+    name: 'Brukarrådet 2026 - Visste du at 1',
+    load: raw(
+      () => import('./brukarraadet-2026/visste-du-at/forsidebilde.svg?raw'),
+    ),
+  },
+  'brukarraadet-2026/visste-du-at/avslutningsbilde': {
+    name: 'Brukarrådet 2026 - Visste du at 2',
+    load: raw(
+      () => import('./brukarraadet-2026/visste-du-at/avslutningsbilde.svg?raw'),
+    ),
+  },
+  'brukarraadet-2026/2-innledere': {
+    name: 'Brukarrådet 2026 - Presentasjon av 2 innledere',
+    load: raw(
+      () =>
+        import(
+          './brukarraadet-2026/2-innledere/Presentasjon av 2 innledere.svg?raw'
+        ),
+    ),
+  },
+  'brukarraadet-2026/3-innledere': {
+    name: 'Brukarrådet 2026 - Presentasjon av 3 innledere',
+    load: raw(
+      () =>
+        import(
+          './brukarraadet-2026/2-innledere/Presentasjon av 3 innledere.svg?raw'
         ),
     ),
   },
@@ -77,10 +102,29 @@ export const imageTemplateSets = {
   'brukarraadet-2026/karusell': {
     name: 'Brukarrådet 2026 - Karusell',
     steps: [
-      { template: 'brukarraadet-2026/karusell-1.svg', label: 'Forsidebilde' },
-      { template: 'brukarraadet-2026/karusell-2.svg', label: 'Personbilde' },
       {
-        template: 'brukarraadet-2026/karusell-3.svg',
+        template: 'brukarraadet-2026/karusell/forsidebilde',
+        label: 'Forsidebilde',
+      },
+      {
+        template: 'brukarraadet-2026/karusell/personbilde',
+        label: 'Personbilde',
+      },
+      {
+        template: 'brukarraadet-2026/karusell/avslutningsbilde',
+        label: 'Avslutningsbilde',
+      },
+    ],
+  },
+  'brukarraadet-2026/visste-du-at': {
+    name: 'Brukarrådet 2026 - Visste du at …?',
+    steps: [
+      {
+        template: 'brukarraadet-2026/visste-du-at/forsidebilde',
+        label: 'Forsidebilde',
+      },
+      {
+        template: 'brukarraadet-2026/visste-du-at/avslutningsbilde',
         label: 'Avslutningsbilde',
       },
     ],

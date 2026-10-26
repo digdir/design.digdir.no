@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Lag_1" data-name="Lag 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350">
-  <rect id="Bakgrunn" x="0" width="1080" height="1350" fill="#e5aa20"/>
+<svg id="Karusell_forsidebilde_4:5_" data-name="Karusell forsidebilde (4:5)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350">
+  <rect id="Bakgrunn" width="1080" height="1350" fill="#e5aa20"/>
   <g id="Tid_og_sted" data-name="Tid og sted">
     <g>
       <g>
@@ -79,8 +79,8 @@
     </g>
   </g>
   <g id="Pil">
-    <line x1="77.358" y1="629.15" x2="194.081" y2="629.15" fill="none" stroke="#1e2b3c" stroke-miterlimit="10" stroke-width="6"/>
-    <polyline points="158.512 593.581 194.081 629.15 158.512 664.719" fill="none" stroke="#1e2b3c" stroke-miterlimit="10" stroke-width="6"/>
+    <rect x="77.358" y="626.15" width="116.722" height="6" fill="#1e2b3c"/>
+    <polygon points="160.633 666.841 156.391 662.599 189.838 629.15 156.391 595.702 160.633 591.46 198.323 629.15 160.633 666.841" fill="#1e2b3c"/>
   </g>
   <g id="Digdir_logo" data-name="Digdir logo">
     <path d="M161.312,87.025c0-.197.097-.296.296-.296h15.532c6.128.041,10.799,2.033,14.009,5.983,3.21,3.95,4.816,9.222,4.816,15.814s-1.596,11.728-4.789,15.401c-3.188,3.673-7.868,5.51-14.035,5.51h-15.532c-.199,0-.296-.099-.296-.298v-42.113ZM177.276,91.882h-9.891c-.199,0-.296.109-.296.325v31.778c0,.199.097.296.296.296h9.891c4.105,0,7.286-1.351,9.537-4.057,2.249-2.705,3.375-6.604,3.375-11.699s-1.145-9.139-3.435-12.143c-2.29-2.999-5.449-4.501-9.477-4.501" fill="#1e2b3c"/>
