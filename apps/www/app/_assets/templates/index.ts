@@ -69,7 +69,7 @@ export const imageTemplates = {
     load: raw(
       () =>
         import(
-          './brukarraadet-2026/2-innledere/Presentasjon av 2 innledere.svg?raw'
+          './brukarraadet-2026/Innledere/Presentasjon av 2 innledere.svg?raw'
         ),
     ),
   },
@@ -78,7 +78,7 @@ export const imageTemplates = {
     load: raw(
       () =>
         import(
-          './brukarraadet-2026/2-innledere/Presentasjon av 3 innledere.svg?raw'
+          './brukarraadet-2026/Innledere/Presentasjon av 3 innledere.svg?raw'
         ),
     ),
   },
