@@ -30,13 +30,6 @@ const raw = (loader: () => Promise<{ default: string }>) => () =>
   loader().then((module) => module.default);
 
 export const imageTemplates = {
-  'brukarraadet-2026/karusell/forsidebilde': {
-    name: 'Brukarrådet 2026 - Karusell 1',
-    load: raw(
-      () =>
-        import('./brukarraadet-2026/karusell/Karusell forsidebilde.svg?raw'),
-    ),
-  },
   'brukarraadet-2026/karusell/personbilde': {
     name: 'Brukarrådet 2026 - Karusell 2',
     load: raw(
@@ -82,10 +75,6 @@ export const imageTemplates = {
         ),
     ),
   },
-  'test-template-bilde': {
-    name: 'Testmal med bilde',
-    load: raw(() => import('./test-template-bilde.svg?raw')),
-  },
 } satisfies Record<string, ImageTemplate>;
 
 export type ImageTemplateId = keyof typeof imageTemplates;
@@ -112,14 +101,8 @@ export const imageTemplateSets = {
     name: 'Brukarrådet 2026 - Karusell',
     steps: [
       {
-        template: 'brukarraadet-2026/karusell/forsidebilde',
-        label: 'Forsidebilde',
-      },
-      {
         template: 'brukarraadet-2026/karusell/personbilde',
         label: 'Personbilde',
-        repeatable: true,
-        max: 3,
       },
       {
         template: 'brukarraadet-2026/karusell/avslutningsbilde',
