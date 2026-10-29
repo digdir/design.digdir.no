@@ -34,7 +34,7 @@
   "devDependencies": {
     "@fontsource/inter": "^5.2.0",
     "gray-matter": "^4.0.3",
-    "satori": "^0.16.0",
+    "satori": "^0.33.0",
     "sharp": "^0.35.0",
     "tsx": "^4.20.0",
     "@react-router/dev": "8.4.0",
