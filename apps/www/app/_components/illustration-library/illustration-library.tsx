@@ -176,7 +176,11 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
         )}
       </div>
 
-      <section className={classes.results} aria-label='Illustrasjoner'>
+      <section
+        className={classes.results}
+        aria-label='Illustrasjoner'
+        data-color-scheme='light'
+      >
         <Paragraph
           data-size='sm'
           className={classes.count}

@@ -33,6 +33,10 @@
  * drawn colour, adds a typed prop to the React component and lists the slot
  * in `meta.ts`. Layers without a `[...]` list are never recoloured.
  *
+ * Fixed parts: a layer named `Bilde [no-edit]` keeps its drawn colours in
+ * both light and dark mode – palette colours in it are not swapped for
+ * variables. On a group it applies to everything in the group.
+ *
  * Run with `node scripts/build-illustrations.ts` (Node ≥ 22.18 strips types),
  * then compile `generated/` with `tsc -p tsconfig.build.json`.
  */
@@ -249,6 +253,7 @@ const rasterSize = (file: string) => {
 // ---------------------------------------------------------------------------
 
 const SLOT_MARKER = /^(.*?)\s*\[([^\]]*)\]\s*$/;
+const NO_EDIT_MARKER = /\[\s*no-edit\s*\]\s*$/i;
 
 /** Parse `Former [red,yellow]` → { label: 'Former', colors: [...] }. */
 const parseSlotMarker = (
@@ -340,23 +345,40 @@ const registerSlot = (
  * svgo plugin that swaps palette colours for CSS variables and registers
  * colour slots from `data-name` markers. Inside a slotted element, shapes
  * drawn in the slot's colour get the slot variable (falling back to the
- * palette variable); everything else gets the palette variable.
+ * palette variable); everything else gets the palette variable. Inside a
+ * `[no-edit]` element nothing is swapped, and the colours met are added to
+ * `fixedHexes` so they are not reported as missing from the palette.
  */
 const themeColorsPlugin = (
   byHex: Map<string, IllustrationColor>,
   colors: IllustrationColor[],
   slots: Map<string, IllustrationSlot>,
+  fixedHexes: Set<string>,
   profile: string,
   name: string,
 ): CustomPlugin => ({
   name: 'designThemeColors',
   fn: () => {
     const stack: { node: XastElement; slot: IllustrationSlot }[] = [];
+    let fixedRoot: XastElement | undefined;
 
     return {
       element: {
         enter: (node: XastElement) => {
           const layerName = node.attributes['data-name'];
+          if (!fixedRoot && layerName && NO_EDIT_MARKER.test(layerName)) {
+            fixedRoot = node;
+          }
+          if (fixedRoot) {
+            for (const attribute of COLOR_ATTRIBUTES) {
+              const value = node.attributes[attribute];
+              if (value && HEX_COLOR.test(value)) {
+                fixedHexes.add(normalizeHex(value));
+              }
+            }
+            return;
+          }
+
           const slot =
             layerName && registerSlot(layerName, slots, colors, profile, name);
           if (slot) stack.push({ node, slot });
@@ -380,6 +402,7 @@ const themeColorsPlugin = (
           }
         },
         exit: (node: XastElement) => {
+          if (fixedRoot === node) fixedRoot = undefined;
           if (stack.at(-1)?.node === node) stack.pop();
         },
       },
@@ -402,6 +425,7 @@ const processSvg = (
   const context = `${profile}/${name}`;
   const byHex = new Map(colors.map((color) => [color.light, color]));
   const slots = new Map<string, IllustrationSlot>();
+  const fixedHexes = new Set<string>();
 
   // Pass 1: get every colour onto an attribute and swap it for a variable,
   // before preset-default merges paths, hoists attributes or drops data-name.
@@ -412,7 +436,7 @@ const processSvg = (
       { name: 'inlineStyles', params: { onlyMatchedOnce: false } },
       'convertStyleToAttrs',
       { name: 'convertColors', params: CONVERT_COLORS },
-      themeColorsPlugin(byHex, colors, slots, profile, name),
+      themeColorsPlugin(byHex, colors, slots, fixedHexes, profile, name),
     ],
   }).data;
 
@@ -436,10 +460,12 @@ const processSvg = (
     ],
   }).data;
 
-  // Anything still hard-coded was not in the palette (or sat in a style).
+  // Anything still hard-coded was not in the palette (or sat in a style),
+  // unless it was kept on purpose in a `[no-edit]` layer.
   const unknown = new Set(
     (optimized.match(ANY_HEX_COLOR) ?? []).filter(
-      (hex) => !byHex.has(normalizeHex(hex)),
+      (hex) =>
+        !byHex.has(normalizeHex(hex)) && !fixedHexes.has(normalizeHex(hex)),
     ),
   );
   if (unknown.size > 0 && !fixedColors) {

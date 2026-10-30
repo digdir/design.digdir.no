@@ -150,6 +150,20 @@ Using a slot:
 `meta.ts` lists every slot (`slots[]`) with its variable, default and allowed
 colours, which is what the documentation site uses for its colour dropdowns.
 
+### Fixed parts (`[no-edit]`)
+
+Some illustrations, such as `forerkort`, must look the same in light and dark
+mode. Add `[no-edit]` to the layer name in Illustrator to keep its drawn
+colours:
+
+```
+Førerkort [no-edit]
+```
+
+Palette colours inside the layer are not swapped for CSS variables, and other
+colours in it are not reported as missing from `colors.json`. On a group it
+applies to everything in the group, including any slot markers inside it.
+
 ### `colors.json`
 
 Each entry maps a colour name to its light and dark value. Any `fill`/`stroke`
