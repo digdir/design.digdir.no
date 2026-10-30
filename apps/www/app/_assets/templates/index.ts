@@ -75,6 +75,13 @@ export const imageTemplates = {
         ),
     ),
   },
+  'brukarraadet-2026/konferanseplakat': {
+    name: 'Brukarrådet 2026 - Konferanseplakat',
+    load: raw(
+      () =>
+        import('./brukarraadet-2026/Konferanseplakat/Konferanseplakat.svg?raw'),
+    ),
+  },
 } satisfies Record<string, ImageTemplate>;
 
 export type ImageTemplateId = keyof typeof imageTemplates;
