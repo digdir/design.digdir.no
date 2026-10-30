@@ -3,5 +3,5 @@
   "title": "Pass",
   "description": "Et Norsk pass som kan brukes i innhold om reise, identitet og dokumentasjon.",
   "tags": ["pass", "reise", "identitet", "dokumentasjon", "legitimasjon"],
-  "project": "eIDAS"
+  "project": ["eIDAS"]
 }

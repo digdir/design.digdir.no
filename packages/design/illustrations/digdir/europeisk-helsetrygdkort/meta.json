@@ -3,5 +3,5 @@
   "title": "Europeisk helsetrygdkort",
   "description": "Et europeisk helsetrygdkort som kan brukes i innhold om identitet og dokumentasjon.",
   "tags": ["helsetrygdkort", "identitet", "dokumentasjon", "legitimasjon"],
-  "project": "eIDAS"
+  "project": ["eIDAS"]
 }

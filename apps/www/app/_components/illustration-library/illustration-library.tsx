@@ -103,8 +103,8 @@ const Gallery = ({ profile }: { profile: IllustrationProfile }) => {
     ...new Set(library.illustrations.flatMap((item) => item.project ?? [])),
   ].sort((a, b) => a.localeCompare(b, 'nb'));
   const [project, setProject] = useState<string | null>(null);
-  const inProject = library.illustrations.filter(
-    (item) => (item.project ?? null) === project,
+  const inProject = library.illustrations.filter((item) =>
+    project === null ? !item.project : item.project?.includes(project),
   );
 
   const normalized = query.trim().toLowerCase();

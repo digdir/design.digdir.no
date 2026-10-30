@@ -3,5 +3,5 @@
   "title": "Nasjonalt ID-kort",
   "description": "Et nasjonalt ID-kort som kan brukes i innhold om identitet og dokumentasjon.",
   "tags": ["id-kort", "identitet", "dokumentasjon"],
-  "project": "eIDAS"
+  "project": ["eIDAS"]
 }

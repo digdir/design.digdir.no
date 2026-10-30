@@ -3,5 +3,5 @@
   "title": "Førerkort",
   "description": "Et førerkort som kan brukes i innhold om identitet og dokumentasjon.",
   "tags": ["førerkort", "identitet", "dokumentasjon"],
-  "project": "eIDAS"
+  "project": ["eIDAS"]
 }

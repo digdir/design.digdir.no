@@ -3,5 +3,5 @@
   "title": "Bankkort",
   "description": "Et bankkort som kan brukes i innhold om betaling og finansielle tjenester.",
   "tags": ["bankkort", "betaling", "finansielle tjenester", "økonomi"],
-  "project": "eIDAS"
+  "project": ["eIDAS"]
 }

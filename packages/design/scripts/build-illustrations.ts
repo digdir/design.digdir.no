@@ -78,7 +78,7 @@ type Meta = {
   title: string;
   description?: string;
   tags: string[];
-  project?: string;
+  project?: string[];
 };
 
 type VectorIllustration = VectorIllustrationMeta & { svg: string };
@@ -208,9 +208,15 @@ const readMeta = (dir: string): Meta => {
   }
   if (
     meta.project !== undefined &&
-    (typeof meta.project !== 'string' || meta.project.trim() === '')
+    (!Array.isArray(meta.project) ||
+      meta.project.length === 0 ||
+      meta.project.some(
+        (project) => typeof project !== 'string' || project.trim() === '',
+      ))
   ) {
-    throw new Error(`${relative}: "project" must be a non-empty string.`);
+    throw new Error(
+      `${relative}: "project" must be a non-empty array of strings, e.g. ["eIDAS"].`,
+    );
   }
 
   return meta;
