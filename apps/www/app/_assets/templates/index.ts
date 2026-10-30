@@ -79,7 +79,7 @@ export const imageTemplates = {
     name: 'Brukarrådet 2026 - Konferanseplakat',
     load: raw(
       () =>
-        import('./brukarraadet-2026/Konferanseplakat/Konferanseplakat.svg?raw'),
+        import('./brukarraadet-2026/konferanseplakat/Konferanseplakat.svg?raw'),
     ),
   },
 } satisfies Record<string, ImageTemplate>;
