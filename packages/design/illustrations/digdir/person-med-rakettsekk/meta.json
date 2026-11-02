@@ -1,0 +1,14 @@
+{
+  "$schema": "../../meta.schema.json",
+  "title": "Person med rakettsekk",
+  "description": "En person letter med rakettsekk og koffert. Passer til innhold om innovasjon, nye muligheter og utvikling.",
+  "tags": [
+    "person",
+    "rakettsekk",
+    "jetpack",
+    "koffert",
+    "innovasjon",
+    "muligheter",
+    "utvikling"
+  ]
+}
