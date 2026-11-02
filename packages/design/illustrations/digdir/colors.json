@@ -6,6 +6,15 @@
   "yellow": { "label": "Gul", "light": "#E5AA20", "dark": "#E5AA20" },
   "blue": { "label": "Blå", "light": "#1E98F5", "dark": "#1E98F5" },
   "red-20": { "label": "Lys rød", "light": "#FCDFE1", "dark": "#FCDFE1" },
+  "red-40": { "label": "40 % Rød", "light": "#FABFC1", "dark": "#FABFC1" },
+  "red-60": { "label": "60 % Rød", "light": "#F59FA0", "dark": "#F59FA0" },
+  "red-80": { "label": "80 % Rød", "light": "#F67F82", "dark": "#F67F82" },
   "yellow-20": { "label": "Lys gul", "light": "#F9EED2", "dark": "#F9EED2" },
-  "blue-20": { "label": "Lys blå", "light": "#D1EAFE", "dark": "#D1EAFE" }
+  "yellow-40": { "label": "40 % Gul", "light": "#F4DDA7", "dark": "#F4DDA7" },
+  "yellow-60": { "label": "60 % Gul", "light": "#EFCC7A", "dark": "#EFCC7A" },
+  "yellow-80": { "label": "80 % Gul", "light": "#E9BB4C", "dark": "#E9BB4C" },
+  "blue-20": { "label": "Lys blå", "light": "#D1EAFE", "dark": "#D1EAFE" },
+  "blue-40": { "label": "40 % Blå", "light": "#A5D7FC", "dark": "#A5D7FC" },
+  "blue-60": { "label": "60 % Blå", "light": "#79C2F9", "dark": "#79C2F9" },
+  "blue-80": { "label": "80 % Blå", "light": "#4BADF8", "dark": "#4BADF8" }
 }
