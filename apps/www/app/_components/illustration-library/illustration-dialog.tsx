@@ -1,9 +1,11 @@
 import {
   type ColorScheme,
+  colorFamily,
   type IllustrationLibrary,
   type IllustrationMeta,
   type RasterIllustrationMeta,
   resolveColorScheme,
+  slotColorInFamily,
   type VectorIllustrationMeta,
 } from '@digdir/design/illustrations';
 import {
@@ -242,10 +244,63 @@ const VectorDialogContent = ({
     [svg, library.colors, slotValues],
   );
 
-  // Slots set to something other than the drawn colour become props.
-  const slotProps = item.slots
-    .filter((slot) => slotValues[slot.variable] !== slot.default)
-    .map((slot) => ` ${slot.prop}="${slotValues[slot.variable]}"`)
+  /**
+   * One colour control per ungrouped slot and per group, in layer order. A
+   * group's value is its family, read from its first slot; changing it sets
+   * every slot in the group to its own colour in that family.
+   */
+  const controls = item.slots.flatMap((slot) => {
+    const group = item.groups.find(
+      (candidate) => candidate.name === slot.group,
+    );
+    if (!group) {
+      return [
+        {
+          key: slot.name,
+          label: `Farge på ${slot.label.toLowerCase()}`,
+          prop: slot.prop,
+          default: slot.default,
+          colors: slot.colors,
+          value: slotValues[slot.variable],
+          onChange: (color: string) =>
+            setSlotValues((current) => ({
+              ...current,
+              [slot.variable]: color,
+            })),
+        },
+      ];
+    }
+    // The group's control sits where its first slot is.
+    if (item.slots.find((first) => first.group === group.name) !== slot) {
+      return [];
+    }
+    const members = item.slots.filter((member) => member.group === group.name);
+    return [
+      {
+        key: `group-${group.name}`,
+        label: group.label,
+        prop: group.prop,
+        default: group.default,
+        colors: group.colors,
+        value: colorFamily(slotValues[slot.variable] ?? slot.default),
+        onChange: (family: string) =>
+          setSlotValues((current) => ({
+            ...current,
+            ...Object.fromEntries(
+              members.map((member) => [
+                member.variable,
+                slotColorInFamily(member, family) ?? member.default,
+              ]),
+            ),
+          })),
+      },
+    ];
+  });
+
+  // Controls set to something other than the drawn colour become props.
+  const slotProps = controls
+    .filter((control) => control.value !== control.default)
+    .map((control) => ` ${control.prop}="${control.value}"`)
     .join('');
   const reactSnippet = [
     `import { ${item.componentName} } from '@digdir/design/illustrations/${library.profile}/react';`,
@@ -293,22 +348,17 @@ const VectorDialogContent = ({
     <>
       <DialogHeader item={item} />
 
-      {item.slots.length > 0 && (
+      {controls.length > 0 && (
         <Dialog.Block className={classes.slots}>
-          {item.slots.map((slot) => (
-            <Field key={slot.name} className={classes.slot}>
-              <Label>Farge på {slot.label.toLowerCase()}</Label>
+          {controls.map((control) => (
+            <Field key={control.key} className={classes.slot}>
+              <Label>{control.label}</Label>
               <Select
                 data-size='sm'
-                value={slotValues[slot.variable]}
-                onChange={(event) =>
-                  setSlotValues((current) => ({
-                    ...current,
-                    [slot.variable]: event.target.value,
-                  }))
-                }
+                value={control.value}
+                onChange={(event) => control.onChange(event.target.value)}
               >
-                {slot.colors.map((color) => (
+                {control.colors.map((color) => (
                   <Select.Option key={color} value={color}>
                     {colorLabel(color)}
                   </Select.Option>

@@ -150,6 +150,35 @@ Using a slot:
 `meta.ts` lists every slot (`slots[]`) with its variable, default and allowed
 colours, which is what the documentation site uses for its colour dropdowns.
 
+### Slot groups (`{Group}`)
+
+Parts that should change colour together, but not to the same colour, share
+a group. Add `{Group}` after the colour list:
+
+```
+Flammer [yellow-40,red-40,blue-40] {Farger}
+Rakettsekk og koffert [red,yellow,blue] {Farger}
+```
+
+The group gets one prop, set to a colour **family** – the colour name without
+its `-NN` step. Each slot takes its own colour in that family, so
+`farger="red"` makes the flames `red-40` and the backpack `red`. The order of
+the lists does not matter. Rules:
+
+- Every slot in a group must cover the same families, with one colour per
+  family, and be drawn in the same family. Anything else fails the build.
+- Grouped slots have no prop of their own; the group name becomes the prop
+  (`Farger` → `farger`) and must not clash with an ungrouped slot.
+- Slots without `{…}` work as before.
+
+```tsx
+<PersonMedRakettsekk farger="red" aria-hidden />
+```
+
+`meta.ts` lists groups in `groups[]`, and each grouped slot names its group in
+`slot.group`. `slotColorInFamily(slot, family)` gives a slot's colour for a
+family, for setting the slot variables yourself.
+
 ### Fixed parts (`[no-edit]`)
 
 Some illustrations, such as `forerkort`, must look the same in light and dark

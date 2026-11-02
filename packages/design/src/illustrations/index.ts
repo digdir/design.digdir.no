@@ -28,6 +28,8 @@ export type VectorIllustrationMeta = IllustrationMetaBase & {
   viewBox?: string;
   /** Recolourable parts, from layers named `Name [colour,…]`. */
   slots: IllustrationSlot[];
+  /** Slots recoloured together, from layers marked `Name [colour,…] {Group}`. */
+  groups: IllustrationSlotGroup[];
 };
 
 /** A raster illustration (PNG, WebP or JPEG), shipped as a file. */
@@ -68,7 +70,37 @@ export type IllustrationSlot = {
   default: string;
   /** Palette colours the part may be changed to. */
   colors: string[];
+  /**
+   * The group the slot belongs to (`IllustrationSlotGroup.name`). Grouped
+   * slots have no prop of their own – they follow their group.
+   */
+  group?: string;
 };
+
+/**
+ * Slots that change colour together. Picking a colour family for the group
+ * gives each slot its own colour in that family, e.g. `red` for one part and
+ * `red-40` for another.
+ */
+export type IllustrationSlotGroup = {
+  /** kebab-case id, unique within the illustration. */
+  name: string;
+  /** Group name as written by the designer, e.g. "Farger". */
+  label: string;
+  /** Prop on the React component, e.g. `farger`. */
+  prop: string;
+  /** Colour family the slots are drawn in. */
+  default: string;
+  /** Colour families the group may be changed to, e.g. `red`. */
+  colors: string[];
+};
+
+/** A palette colour's family: its name without the step, `red-40` → `red`. */
+export const colorFamily = (color: string) => color.replace(/-\d+$/, '');
+
+/** The colour a grouped slot takes when its group is set to `family`. */
+export const slotColorInFamily = (slot: IllustrationSlot, family: string) =>
+  slot.colors.find((color) => colorFamily(color) === family);
 
 /** Shape of `@digdir/design/illustrations/<profile>/meta`. */
 export type IllustrationProfileMeta = {

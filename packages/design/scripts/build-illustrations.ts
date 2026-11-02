@@ -33,6 +33,13 @@
  * drawn colour, adds a typed prop to the React component and lists the slot
  * in `meta.ts`. Layers without a `[...]` list are never recoloured.
  *
+ * Slot groups: slots marked `Flammer [red-40,yellow-40] {Farger}` and
+ * `Sekk [red,yellow] {Farger}` change colour together. The group gets one
+ * prop (`farger`), set to a colour family (`red`), and each slot takes its
+ * own colour in that family (`red-40`, `red`). A family is the colour name
+ * without its `-NN` step. Every slot in a group must cover the same families
+ * and be drawn in the same one.
+ *
  * Fixed parts: a layer named `Bilde [no-edit]` keeps its drawn colours in
  * both light and dark mode – palette colours in it are not swapped for
  * variables. On a group it applies to everything in the group.
@@ -45,11 +52,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { transform } from '@svgr/core';
 import { type CustomPlugin, optimize, type XastElement } from 'svgo';
-import type {
-  IllustrationColor,
-  IllustrationSlot,
-  RasterIllustrationMeta,
-  VectorIllustrationMeta,
+import {
+  colorFamily,
+  type IllustrationColor,
+  type IllustrationSlot,
+  type IllustrationSlotGroup,
+  type RasterIllustrationMeta,
+  slotColorInFamily,
+  type VectorIllustrationMeta,
 } from '../src/illustrations/index.ts';
 
 const packageRoot = path.resolve(
@@ -258,19 +268,31 @@ const rasterSize = (file: string) => {
 // Colours and slots
 // ---------------------------------------------------------------------------
 
-const SLOT_MARKER = /^(.*?)\s*\[([^\]]*)\]\s*$/;
+const SLOT_MARKER = /^(.*?)\s*\[([^\]]*)\]\s*(?:\{([^}]*)\})?\s*$/;
+const GROUP_MARKER = /\{[^}]*\}\s*$/;
 const NO_EDIT_MARKER = /\[\s*no-edit\s*\]\s*$/i;
 
-/** Parse `Former [red,yellow]` → { label: 'Former', colors: [...] }. */
+/**
+ * Parse `Former [red,yellow] {Farger}` →
+ * { label: 'Former', colors: [...], group: 'Farger' }.
+ */
 const parseSlotMarker = (
   layerName: string,
   colors: IllustrationColor[],
   context: string,
 ) => {
   const match = layerName.match(SLOT_MARKER);
-  if (!match) return null;
+  if (!match) {
+    if (GROUP_MARKER.test(layerName)) {
+      throw new Error(
+        `${context}: layer "${layerName}" has a {group} but no [colour,…] list before it.`,
+      );
+    }
+    return null;
+  }
 
   const label = match[1].trim();
+  const group = match[3]?.trim();
   const list = match[2]
     .split(',')
     .map((item) => item.trim().toLowerCase())
@@ -279,6 +301,11 @@ const parseSlotMarker = (
   if (!label) {
     throw new Error(
       `${context}: layer "${layerName}" has no name before [...].`,
+    );
+  }
+  if (group === '') {
+    throw new Error(
+      `${context}: layer "${layerName}" has an empty {group}. Name it, e.g. {Farger}, or remove the braces.`,
     );
   }
   if (list.length === 0) {
@@ -294,16 +321,35 @@ const parseSlotMarker = (
       );
     }
   }
-  return { label, colors: [...new Set(list)] };
+  return { label, colors: [...new Set(list)], group };
+};
+
+/** Slug and React prop for a slot or group name, checked for clashes. */
+const toPropName = (label: string, layerName: string, context: string) => {
+  const name = slugify(label);
+  if (!SLUG_PATTERN.test(name)) {
+    throw new Error(
+      `${context}: layer "${layerName}" needs a name starting with a letter.`,
+    );
+  }
+  const prop = toCamelCase(name);
+  if (RESERVED_PROPS.has(prop)) {
+    throw new Error(
+      `${context}: name "${label}" clashes with the "${prop}" prop – pick another name.`,
+    );
+  }
+  return { name, prop };
 };
 
 /**
  * Register the slot for a layer marked `Name [colour,…]`, or return undefined
- * for ordinary layers. Layers sharing a name share one slot.
+ * for ordinary layers. Layers sharing a name share one slot. A `{Group}`
+ * marker is recorded in `groupLabels` (slug → label).
  */
 const registerSlot = (
   layerName: string,
   slots: Map<string, IllustrationSlot>,
+  groupLabels: Map<string, string>,
   colors: IllustrationColor[],
   profile: string,
   name: string,
@@ -312,24 +358,19 @@ const registerSlot = (
   const marker = parseSlotMarker(layerName, colors, context);
   if (!marker) return undefined;
 
-  const slotName = slugify(marker.label);
-  if (!SLUG_PATTERN.test(slotName)) {
-    throw new Error(
-      `${context}: layer "${layerName}" needs a name starting with a letter.`,
-    );
-  }
-  const prop = toCamelCase(slotName);
-  if (RESERVED_PROPS.has(prop)) {
-    throw new Error(
-      `${context}: layer name "${marker.label}" clashes with the "${prop}" prop – pick another name.`,
-    );
-  }
+  const { name: slotName, prop } = toPropName(marker.label, layerName, context);
+  const group =
+    marker.group && toPropName(marker.group, layerName, context).name;
+  if (group && marker.group) groupLabels.set(group, marker.group);
 
   const existing = slots.get(slotName);
   if (existing) {
-    if (existing.colors.join() !== marker.colors.join()) {
+    if (
+      existing.colors.join() !== marker.colors.join() ||
+      existing.group !== group
+    ) {
       throw new Error(
-        `${context}: layers named "${marker.label}" list different colours. Layers with the same name share one slot and must agree.`,
+        `${context}: layers named "${marker.label}" list different colours or groups. Layers with the same name share one slot and must agree.`,
       );
     }
     return existing;
@@ -342,6 +383,7 @@ const registerSlot = (
     variable: `${VARIABLE_PREFIX}-${profile}-${name}-${slotName}`,
     default: '',
     colors: marker.colors,
+    ...(group && { group }),
   };
   slots.set(slotName, slot);
   return slot;
@@ -359,6 +401,7 @@ const themeColorsPlugin = (
   byHex: Map<string, IllustrationColor>,
   colors: IllustrationColor[],
   slots: Map<string, IllustrationSlot>,
+  groupLabels: Map<string, string>,
   fixedHexes: Set<string>,
   profile: string,
   name: string,
@@ -386,7 +429,8 @@ const themeColorsPlugin = (
           }
 
           const slot =
-            layerName && registerSlot(layerName, slots, colors, profile, name);
+            layerName &&
+            registerSlot(layerName, slots, groupLabels, colors, profile, name);
           if (slot) stack.push({ node, slot });
           const active = stack.at(-1)?.slot;
 
@@ -431,6 +475,7 @@ const processSvg = (
   const context = `${profile}/${name}`;
   const byHex = new Map(colors.map((color) => [color.light, color]));
   const slots = new Map<string, IllustrationSlot>();
+  const groupLabels = new Map<string, string>();
   const fixedHexes = new Set<string>();
 
   // Pass 1: get every colour onto an attribute and swap it for a variable,
@@ -442,7 +487,15 @@ const processSvg = (
       { name: 'inlineStyles', params: { onlyMatchedOnce: false } },
       'convertStyleToAttrs',
       { name: 'convertColors', params: CONVERT_COLORS },
-      themeColorsPlugin(byHex, colors, slots, fixedHexes, profile, name),
+      themeColorsPlugin(
+        byHex,
+        colors,
+        slots,
+        groupLabels,
+        fixedHexes,
+        profile,
+        name,
+      ),
     ],
   }).data;
 
@@ -494,7 +547,80 @@ const processSvg = (
     }
   }
 
-  return { svg: optimized, slots: [...slots.values()] };
+  const slotList = [...slots.values()];
+  return {
+    svg: optimized,
+    slots: slotList,
+    groups: buildGroups(slotList, groupLabels, colors, context),
+  };
+};
+
+/**
+ * Groups from the slots' `{Group}` markers. Each slot in a group must have
+ * one colour per family, cover the same families as the others and be drawn
+ * in the same family, so picking a family always has one answer per slot.
+ */
+const buildGroups = (
+  slots: IllustrationSlot[],
+  groupLabels: Map<string, string>,
+  colors: IllustrationColor[],
+  context: string,
+): IllustrationSlotGroup[] => {
+  // Families in palette order, so every group lists them the same way.
+  const paletteOrder = [
+    ...new Set(colors.map((color) => colorFamily(color.name))),
+  ];
+
+  const ungroupedProps = new Set(
+    slots.filter((slot) => !slot.group).map((slot) => slot.prop),
+  );
+
+  return [...groupLabels].map(([name, label]) => {
+    const members = slots.filter((slot) => slot.group === name);
+    const familiesOf = (slot: IllustrationSlot) => {
+      const families = slot.colors.map(colorFamily);
+      if (new Set(families).size !== families.length) {
+        throw new Error(
+          `${context}: layer "${slot.label}" in group "${label}" lists more than one colour from the same family (${slot.colors.join(', ')}).`,
+        );
+      }
+      return families;
+    };
+
+    const [first, ...rest] = members;
+    const families = familiesOf(first);
+    const defaultFamily = colorFamily(first.default);
+    for (const slot of rest) {
+      const own = familiesOf(slot);
+      if (
+        own.length !== families.length ||
+        own.some((family) => !families.includes(family))
+      ) {
+        throw new Error(
+          `${context}: layers "${first.label}" (${families.join(', ')}) and "${slot.label}" (${own.join(', ')}) in group "${label}" must cover the same colour families.`,
+        );
+      }
+      if (colorFamily(slot.default) !== defaultFamily) {
+        throw new Error(
+          `${context}: layers "${first.label}" and "${slot.label}" in group "${label}" are drawn in different colour families (${first.default}, ${slot.default}).`,
+        );
+      }
+    }
+
+    const prop = toCamelCase(name);
+    if (ungroupedProps.has(prop)) {
+      throw new Error(
+        `${context}: group "${label}" has the same name as a layer – pick another name.`,
+      );
+    }
+    return {
+      name,
+      label,
+      prop,
+      default: defaultFamily,
+      colors: paletteOrder.filter((family) => families.includes(family)),
+    };
+  });
 };
 
 // ---------------------------------------------------------------------------
@@ -511,6 +637,7 @@ const buildReactComponent = async (
   componentName: string,
   profile: string,
   slots: IllustrationSlot[],
+  groups: IllustrationSlotGroup[],
 ) => {
   const inner = await transform(
     svg,
@@ -543,16 +670,39 @@ const buildReactComponent = async (
     ].join('\n');
   }
 
-  const slotProps = slots
-    .map(
+  const ungrouped = slots.filter((slot) => !slot.group);
+  const union = (values: string[]) =>
+    values.map((value) => `'${value}'`).join(' | ');
+  const slotProps = [
+    ...ungrouped.map(
       (slot) =>
-        `  /** Colour of "${slot.label}". Defaults to "${slot.default}". */\n  ${slot.prop}?: ${slot.colors.map((color) => `'${color}'`).join(' | ')};`,
-    )
-    .join('\n');
+        `  /** Colour of "${slot.label}". Defaults to "${slot.default}". */\n  ${slot.prop}?: ${union(slot.colors)};`,
+    ),
+    ...groups.map(
+      (group) =>
+        `  /** Colour family of "${group.label}" (${slots
+          .filter((slot) => slot.group === group.name)
+          .map((slot) => slot.label)
+          .join(
+            ', ',
+          )}). Defaults to "${group.default}". */\n  ${group.prop}?: ${union(group.colors)};`,
+    ),
+  ].join('\n');
+  // A grouped slot maps its group's family to its own colour in that family.
+  const slotValue = (slot: IllustrationSlot) => {
+    const group = groups.find((candidate) => candidate.name === slot.group);
+    if (!group) return slot.prop;
+    const byFamily = group.colors
+      .map((family) => `'${family}': '${slotColorInFamily(slot, family)}'`)
+      .join(', ');
+    return `${group.prop} && { ${byFamily} }[${group.prop}]`;
+  };
   const slotVariables = slots
-    .map((slot) => `'${slot.variable}': ${slot.prop}`)
+    .map((slot) => `'${slot.variable}': ${slotValue(slot)}`)
     .join(', ');
-  const destructured = slots.map((slot) => slot.prop).join(', ');
+  const destructured = [...ungrouped, ...groups]
+    .map((entry) => entry.prop)
+    .join(', ');
 
   return [
     GENERATED_HEADER,
@@ -616,12 +766,18 @@ const buildProfile = async (profile: string) => {
     }
 
     const rawSvg = fs.readFileSync(file, 'utf8');
-    const { svg, slots } = processSvg(rawSvg, profile, name, colors, !darkMode);
+    const { svg, slots, groups } = processSvg(
+      rawSvg,
+      profile,
+      name,
+      colors,
+      !darkMode,
+    );
     const componentName = toPascalCase(name);
 
     fs.writeFileSync(
       path.join(reactDir, `${componentName}.tsx`),
-      await buildReactComponent(svg, componentName, profile, slots),
+      await buildReactComponent(svg, componentName, profile, slots, groups),
     );
 
     illustrations.push({
@@ -635,6 +791,7 @@ const buildProfile = async (profile: string) => {
       project: meta.project,
       viewBox: svg.match(/viewBox=["']([^"']+)["']/)?.[1],
       slots,
+      groups,
       svg,
     });
   }

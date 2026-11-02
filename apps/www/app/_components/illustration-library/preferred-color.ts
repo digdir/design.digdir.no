@@ -1,23 +1,31 @@
-import type {
-  IllustrationLibrary,
-  VectorIllustrationMeta,
+import {
+  colorFamily,
+  type IllustrationLibrary,
+  slotColorInFamily,
+  type VectorIllustrationMeta,
 } from '@digdir/design/illustrations';
 import type { CSSProperties } from 'react';
 
 /**
  * Slot values for showing `item` in the user's preferred colour: every slot
- * that allows the colour gets it, the rest keep their drawn colour. Keyed by
- * the slot's CSS variable, like the dialog's own slot state.
+ * that allows the colour gets it, the rest keep their drawn colour. A grouped
+ * slot follows its group: it takes its own colour in the preferred colour's
+ * family. Keyed by the slot's CSS variable, like the dialog's own slot state.
  */
 export const preferredSlotValues = (
   item: VectorIllustrationMeta,
   color: string | null,
 ): Record<string, string> =>
   Object.fromEntries(
-    item.slots.map((slot) => [
-      slot.variable,
-      color && slot.colors.includes(color) ? color : slot.default,
-    ]),
+    item.slots.map((slot) => {
+      const preferred =
+        color && slot.group
+          ? slotColorInFamily(slot, colorFamily(color))
+          : color && slot.colors.includes(color)
+            ? color
+            : undefined;
+      return [slot.variable, preferred ?? slot.default];
+    }),
   );
 
 /**
@@ -48,7 +56,12 @@ const FILTER_COLORS = ['red', 'yellow', 'blue'];
 export const selectableColors = (library: IllustrationLibrary) => {
   const used = new Set(
     library.illustrations.flatMap((item) =>
-      item.format === 'svg' ? item.slots.flatMap((slot) => slot.colors) : [],
+      item.format === 'svg'
+        ? [
+            ...item.slots.flatMap((slot) => slot.colors),
+            ...item.groups.flatMap((group) => group.colors),
+          ]
+        : [],
     ),
   );
   return library.colors.filter(
