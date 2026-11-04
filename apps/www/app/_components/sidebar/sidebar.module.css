@@ -43,6 +43,10 @@
 .groupToggle {
   justify-content: flex-start;
   width: 100%;
+
+  &:focus-visible {
+    outline-offset: calc(-1 * var(--ds-border-width-focus));
+  }
 }
 
 .groupChevron {
