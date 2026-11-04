@@ -1,0 +1,41 @@
+.switcher {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--ds-size-2);
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 14rem;
+  font-weight: 500;
+  text-align: start;
+  --dsc-button-border-color: var(--ds-color-border-subtle);
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-size-2);
+
+  &[aria-current='true'] {
+    font-weight: 500;
+  }
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--ds-border-radius-full);
+}

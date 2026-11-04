@@ -14,6 +14,10 @@
   display: flex;
   align-items: center;
   gap: var(--ds-size-4);
+
+  @media (max-width: 600px) {
+    gap: var(--ds-size-2);
+  }
 }
 
 .logo {
@@ -33,6 +37,15 @@
   display: block;
   background-color: currentColor;
   mask: url('/digdir-design-logo.svg') no-repeat center / contain;
+
+  @media (max-width: 600px) {
+    height: 20px;
+  }
+}
+
+.logo,
+.actions {
+  flex-shrink: 0;
 }
 
 .actions {

@@ -1,4 +1,4 @@
-import { Button } from '@digdir/designsystemet-react';
+import { Button, Tooltip } from '@digdir/designsystemet-react';
 import { MoonIcon, SunIcon } from '@navikt/aksel-icons';
 import { useEffect, useState } from 'react';
 
@@ -37,13 +37,14 @@ export function ThemeToggle() {
   const isDark = mounted && scheme === 'dark';
 
   return (
-    <Button type='button' variant='tertiary' data-size='sm' onClick={toggle}>
-      {isDark ? (
-        <MoonIcon aria-hidden='true' />
-      ) : (
-        <SunIcon aria-hidden='true' />
-      )}
-      Bytt fargemodus
-    </Button>
+    <Tooltip content='Bytt fargemodus'>
+      <Button type='button' variant='tertiary' icon onClick={toggle}>
+        {isDark ? (
+          <MoonIcon aria-hidden='true' />
+        ) : (
+          <SunIcon aria-hidden='true' />
+        )}
+      </Button>
+    </Tooltip>
   );
 }

@@ -1,100 +1,97 @@
-import { Dropdown, Heading, Link } from '@digdir/designsystemet-react';
+import { Button, Link } from '@digdir/designsystemet-react';
 import { ChevronDownIcon } from '@navikt/aksel-icons';
 import cl from 'clsx/lite';
-import { useEffect, useState } from 'react';
-import { NavLink, Link as RRLink, useLocation } from 'react-router';
-import { type Profile, profiles } from '~/_config/profiles';
+import { useEffect, useId, useState } from 'react';
+import { NavLink, useLocation } from 'react-router';
+import type { Profile } from '~/_config/profiles';
 import classes from './sidebar.module.css';
 
 export type SidebarLink = { title: string; url: string };
 export type SidebarGroups = Record<string, SidebarLink[]>;
 
 export type SidebarProps = {
-  /** The currently active profile, used for the theme switcher trigger. */
+  /** The currently active profile. */
   profile: Profile;
   groups: SidebarGroups;
   /** Hide category headings when content isn't grouped into named categories. */
   hideGroupTitle?: boolean;
 };
 
-export const Sidebar = ({ profile, groups, hideGroupTitle }: SidebarProps) => {
-  const [switcherOpen, setSwitcherOpen] = useState(false);
-  const { pathname } = useLocation();
+export const Sidebar = ({ profile, groups, hideGroupTitle }: SidebarProps) => (
+  <aside className={cl(classes.sidebar, 'l-sidebar-left')}>
+    <nav aria-label={profile.name} data-color='neutral'>
+      {Object.entries(groups).map(([category, links]) =>
+        !hideGroupTitle && category ? (
+          <CollapsibleGroup key={category} title={category} links={links} />
+        ) : (
+          <div key={category} className={classes.group}>
+            <LinkList links={links} />
+          </div>
+        ),
+      )}
+    </nav>
+  </aside>
+);
 
-  useEffect(() => setSwitcherOpen(false), [pathname]);
+const CollapsibleGroup = ({
+  title,
+  links,
+}: {
+  title: string;
+  links: SidebarLink[];
+}) => {
+  const [open, setOpen] = useState(true);
+  const { pathname } = useLocation();
+  const listId = useId();
+  const containsActive = links.some((link) => link.url === pathname);
+
+  // Make sure the group with the current page is visible after navigating.
+  useEffect(() => {
+    if (containsActive) setOpen(true);
+  }, [containsActive]);
 
   return (
-    <aside className={cl(classes.sidebar, 'l-sidebar-left')}>
-      <Dropdown.TriggerContext>
-        <Dropdown.Trigger
-          variant='secondary'
-          data-color='neutral'
-          className={classes.switcher}
+    <div className={classes.group}>
+      <h3 className={classes.groupHeading}>
+        <Button
+          className={classes.groupToggle}
+          data-size='sm'
+          data-variant='tertiary'
+          aria-expanded={open}
+          aria-controls={listId}
+          onClick={() => setOpen((value) => !value)}
         >
-          <span
-            className={classes.dot}
-            style={{ background: profile.color }}
-            aria-hidden
-          />
-          <span className={classes.switcherName}>{profile.name}</span>
           <ChevronDownIcon
-            className={classes.chevron}
+            className={classes.groupChevron}
             fontSize='1.25rem'
             aria-hidden
           />
-        </Dropdown.Trigger>
-        <Dropdown
-          open={switcherOpen}
-          onOpen={() => setSwitcherOpen(true)}
-          onClose={() => setSwitcherOpen(false)}
-          placement='bottom-start'
-          data-color='neutral'
-        >
-          <Dropdown.List>
-            {profiles.map((item) => (
-              <Dropdown.Item key={item.slug}>
-                <Dropdown.Button asChild>
-                  <RRLink
-                    to={`/${item.slug}`}
-                    className={classes.switcherOption}
-                    onClick={() => setSwitcherOpen(false)}
-                  >
-                    <span
-                      className={classes.dot}
-                      style={{ background: item.color }}
-                      aria-hidden
-                    />
-                    {item.name}
-                  </RRLink>
-                </Dropdown.Button>
-              </Dropdown.Item>
-            ))}
-          </Dropdown.List>
-        </Dropdown>
-      </Dropdown.TriggerContext>
-
-      <nav aria-label={profile.name} data-color={profile.mainColor}>
-        {Object.entries(groups).map(([category, links]) => (
-          <div key={category} className={classes.group}>
-            {!hideGroupTitle && category && (
-              <Heading level={3} data-size='2xs' className={classes.groupTitle}>
-                {category}
-              </Heading>
-            )}
-            <ul>
-              {links.map((link) => (
-                <li key={link.url}>
-                  <Link asChild>
-                    <NavLink to={link.url} end className={classes.link}>
-                      {link.title}
-                    </NavLink>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </nav>
-    </aside>
+          {title}
+        </Button>
+      </h3>
+      <LinkList id={listId} links={links} hidden={!open} />
+    </div>
   );
 };
+
+const LinkList = ({
+  links,
+  id,
+  hidden,
+}: {
+  links: SidebarLink[];
+  id?: string;
+  hidden?: boolean;
+}) => (
+  <ul id={id} hidden={hidden}>
+    {links.map((link) => (
+      <li key={link.url}>
+        <Link asChild>
+          <NavLink to={link.url} end className={classes.link}>
+            {link.title}
+          </NavLink>
+        </Link>
+      </li>
+    ))}
+  </ul>
+);
