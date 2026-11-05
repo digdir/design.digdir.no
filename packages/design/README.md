@@ -20,7 +20,7 @@ React components, one profile at a time:
 ```tsx
 import { TelefonMedVarsel } from '@digdir/design/illustrations/digdir/react';
 
-<TelefonMedVarsel aria-hidden />
+<TelefonMedVarsel aria-hidden />;
 ```
 
 Illustrations are decorative by default – add `aria-hidden` when they carry no
@@ -37,7 +37,10 @@ element.innerHTML = telefonMedVarsel;
 Metadata (for galleries, search and filtering):
 
 ```ts
-import { colors, illustrations } from '@digdir/design/illustrations/digdir/meta';
+import {
+  colors,
+  illustrations,
+} from '@digdir/design/illustrations/digdir/meta';
 import type { IllustrationMeta } from '@digdir/design/illustrations';
 ```
 
@@ -95,7 +98,7 @@ cacheable and out of your JavaScript bundle:
 ```tsx
 import { mangeMennesker } from '@digdir/design/illustrations/uutilsynet/images';
 
-<img src={mangeMennesker} alt="" />
+<img src={mangeMennesker} alt='' />;
 ```
 
 The module imports each file (`import url from './file.png'`), which Vite,
@@ -120,8 +123,8 @@ Former                          fixed – no brackets, never recoloured
 ```
 
 The build reads the marker from the exported `data-name` attribute, which
-Illustrator only writes with *File → Export → Export As → SVG* and
-*Object IDs: Layer Names* (the `id` has the brackets flattened and is ignored).
+Illustrator only writes with _File → Export → Export As → SVG_ and
+_Object IDs: Layer Names_ (the `id` has the brackets flattened and is ignored).
 Rules:
 
 - Colour names are the keys in `colors.json`. Unknown names fail the build.
@@ -136,14 +139,15 @@ Rules:
 Using a slot:
 
 ```tsx
-<PersonerSomHolderFigurer former="brand1" aria-hidden />
+<PersonerSomHolderFigurer former='brand1' aria-hidden />;
 ```
 
 ```css
 /* SVG strings: set the slot variable to a palette variable */
 .hero svg {
-  --design-illustration-digdir-personer-som-holder-figurer-former:
-    var(--design-illustration-digdir-brand3);
+  --design-illustration-digdir-personer-som-holder-figurer-former: var(
+    --design-illustration-digdir-brand3
+  );
 }
 ```
 
@@ -172,7 +176,7 @@ the lists does not matter. Rules:
 - Slots without `{…}` work as before.
 
 ```tsx
-<PersonMedRakettsekk farger="red" aria-hidden />
+<PersonMedRakettsekk farger='red' aria-hidden />;
 ```
 
 `meta.ts` lists groups in `groups[]`, and each grouped slot names its group in
