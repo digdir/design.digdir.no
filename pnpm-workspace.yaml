@@ -12,6 +12,8 @@ minimumReleaseAgeExclude:
   - "@digdir/*"
   # Renovate security update: satori@0.33.5
   - satori@0.33.5
+  # Renovate security update: vite@8.3.3
+  - vite@8.3.3
 nodeVersion: "24.19.0"
 syncInjectedDepsAfterScripts:
   - build
