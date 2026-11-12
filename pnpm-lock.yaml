@@ -176,9 +176,6 @@ importers:
 
   apps/www:
     dependencies:
-      '@digdir/design':
-        specifier: workspace:*
-        version: link:../../packages/design
       '@digdir/designsystemet-css':
         specifier: ^1.23.0
         version: 1.23.0
@@ -188,6 +185,9 @@ importers:
       '@digdir/designsystemet-web':
         specifier: ^1.23.0
         version: 1.23.0
+      '@digdir/digdir-design':
+        specifier: workspace:*
+        version: link:../../packages/design
       '@navikt/aksel-icons':
         specifier: ^8.22.1
         version: 8.22.1
@@ -206,6 +206,9 @@ importers:
       mdx-bundler:
         specifier: ^10.1.1
         version: 10.1.1(esbuild@0.28.2)
+      microlighter:
+        specifier: ^2.2.0
+        version: 2.2.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -266,7 +269,17 @@ importers:
         version: 8.3.6(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0)
 
   packages/design:
+    dependencies:
+      '@digdir/designsystemet-react':
+        specifier: 1.23.0
+        version: 1.23.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@digdir/designsystemet-web':
+        specifier: 1.23.0
+        version: 1.23.0
     devDependencies:
+      '@digdir/designsystemet-css':
+        specifier: 1.23.0
+        version: 1.23.0
       '@svgr/core':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.3)
@@ -282,6 +295,9 @@ importers:
       react:
         specifier: ^19.3.1
         version: 19.3.1
+      react-dom:
+        specifier: ^19.3.1
+        version: 19.3.1(react@19.3.1)
       svgo:
         specifier: ^4.1.0
         version: 4.1.0
@@ -2293,6 +2309,10 @@ packages:
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
+
+  microlighter@2.2.0:
+    resolution: {integrity: sha512-XFUHmKclX4taKWVpYkqJ/GlfUS27FzQTCph1u3v9OwkmQJGXry3Pk1e7SivLz6xGOCxRVyi3DSrztF3e460jrg==}
+    engines: {node: '>=18'}
 
   micromark-core-commonmark@2.0.3:
     resolution: {integrity: sha512-RDBrHEMSxVFLg6xvnXmb1Ayr2WzLAWjeSATAoxwKYJV94TeNavgoIdA0a9ytzDSVzBy2YKFK+emCPOEibLeCrg==}
@@ -5118,6 +5138,8 @@ snapshots:
   merge-descriptors@2.0.0: {}
 
   merge2@1.4.1: {}
+
+  microlighter@2.2.0: {}
 
   micromark-core-commonmark@2.0.3:
     dependencies:

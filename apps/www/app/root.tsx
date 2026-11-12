@@ -7,19 +7,23 @@ import {
   ScrollRestoration,
   useLocation,
 } from 'react-router';
+import { getComponentStylesheet } from '~/_config/component-styles';
 import { getProfile } from '~/_config/profiles';
 import { getThemeStylesheet } from '~/_config/themes';
+import { useSyntaxHighlight } from '~/_utils/use-syntax-highlight';
 import type { Route } from './+types/root';
-// Designsystemet base styles. The active theme's design tokens are loaded
-// per-profile in `Layout` below (see `_config/themes`).
+// Designsystemet base styles. The active theme's design tokens and the
+// profile's own component styles are loaded per-profile in `Layout` below
+// (see `_config/themes` and `_config/component-styles`).
 import '@digdir/designsystemet-css';
 // Designsystemet web components (`<ds-tabs>` etc.), so component previews can
 // be written as plain HTML.
 import '@digdir/designsystemet-web';
 // Colour variables for the illustration library (all profiles; tiny).
-import '@digdir/design/illustrations.css';
-// design.digdir.no's component variants on top of Designsystemet.
-import '@digdir/design/components.css';
+import '@digdir/digdir-design/illustrations.css';
+// MicroLighter's github theme for code blocks, switched on with
+// `data-syntax-theme` on `<body>` below.
+import 'microlighter/themes/github.css';
 import './app.css';
 
 export const links: Route.LinksFunction = () => [
@@ -39,11 +43,13 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  // Pick the design-token theme from the first path segment (the profile slug),
-  // so navigating between profiles swaps the whole site's theme.
+  // Pick the design-token theme and component styles from the first path
+  // segment (the profile slug), so navigating between profiles swaps both.
   const { pathname } = useLocation();
   const slug = pathname.split('/').filter(Boolean)[0];
-  const themeHref = getThemeStylesheet(getProfile(slug)?.theme);
+  const profile = getProfile(slug);
+  const themeHref = getThemeStylesheet(profile?.theme);
+  const componentsHref = getComponentStylesheet(profile?.slug);
 
   return (
     <html lang='no' data-color-scheme='auto' suppressHydrationWarning>
@@ -53,9 +59,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
         <link rel='stylesheet' href={themeHref} />
+        {componentsHref && <link rel='stylesheet' href={componentsHref} />}
         {/* Apply the saved colour scheme before paint to avoid a flash. */}
       </head>
-      <body lang='no'>
+      <body lang='no' data-syntax-theme='github'>
         <div className='dev-warning'>Denne nettsiden er under utvikling.</div>
         {children}
         <ScrollRestoration />
@@ -66,6 +73,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  useSyntaxHighlight();
   return <Outlet />;
 }
 

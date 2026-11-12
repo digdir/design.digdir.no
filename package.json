@@ -12,7 +12,7 @@
     "lint:write": "biome check --write",
     "www": "pnpm build:packages && pnpm --filter www dev",
     "build:www": "pnpm build:packages && pnpm --filter www build",
-    "build:packages": "pnpm --filter @digdir/design build"
+    "build:packages": "pnpm --filter @digdir/digdir-design build"
   },
   "keywords": [],
   "author": "",

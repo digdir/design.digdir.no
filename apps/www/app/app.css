@@ -213,3 +213,13 @@ body {
   background-color: var(--ds-color-warning-surface-tinted);
   color: var(--ds-color-warning-text-default);
 }
+
+/*
+ * Code blocks are coloured by MicroLighter's github theme (see `root.tsx`).
+ * The theme sets `color-scheme: light dark` where it is switched on, which
+ * would make it follow the operating system. Inherit instead, so it follows
+ * the site's own `data-color-scheme`.
+ */
+[data-syntax-theme] {
+  color-scheme: inherit;
+}

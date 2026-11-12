@@ -11,6 +11,12 @@ import { generateFromMdx } from '~/_utils/generate-from-mdx';
 import type { Route } from './+types/layout';
 import classes from './layout.module.css';
 
+/**
+ * Sidebar categories for developers. They are listed after the profile's own
+ * categories, and start closed.
+ */
+const COLLAPSED_CATEGORIES = ['Komponenter'];
+
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const profile = getProfile(params.profile);
   if (!profile) {
@@ -51,7 +57,19 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
     grouped[category].sort((a, b) => a.order - b.order);
   }
 
-  return { profile, groups: grouped as SidebarGroups };
+  // Categories come in the order their files are read – move the collapsed
+  // ones last.
+  const groups: SidebarGroups = {};
+  const isCollapsed = (category: string) =>
+    COLLAPSED_CATEGORIES.includes(category);
+  for (const category of [
+    ...Object.keys(grouped).filter((category) => !isCollapsed(category)),
+    ...Object.keys(grouped).filter(isCollapsed),
+  ]) {
+    groups[category] = grouped[category];
+  }
+
+  return { profile, groups };
 };
 
 export default function ProfileLayout({
@@ -65,6 +83,7 @@ export default function ProfileLayout({
         profile={profile}
         groups={groups}
         hideGroupTitle={!hasCategories}
+        collapsed={COLLAPSED_CATEGORIES}
       />
       <div className={classes.content} id='content'>
         <Outlet />

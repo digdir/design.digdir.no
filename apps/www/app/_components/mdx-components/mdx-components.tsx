@@ -25,7 +25,12 @@ import {
   TableHeaderCell,
   type TableProps,
   TableRow,
+  Tabs,
+  TabsList,
+  TabsPanel,
+  TabsTab,
 } from '@digdir/designsystemet-react';
+import { Search } from '@digdir/digdir-design/digdir/react';
 import { getMDXComponent } from 'mdx-bundler/dist/client';
 import { type ComponentType, type JSX, useMemo } from 'react';
 import { Link as RRLink } from 'react-router';
@@ -87,6 +92,12 @@ const defaultComponents = {
   IllustrationLibrary,
   ImageGenerator,
   Kitchensink,
+  // digdir's own Search, for live React examples in its docs.
+  Search,
+  Tabs,
+  TabsList,
+  TabsTab,
+  TabsPanel,
   SvgEmbed,
   ThemeColors,
   h1: (props: HeadingProps) => (

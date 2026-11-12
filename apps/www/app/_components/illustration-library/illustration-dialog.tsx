@@ -1,14 +1,4 @@
 import {
-  type ColorScheme,
-  colorFamily,
-  type IllustrationLibrary,
-  type IllustrationMeta,
-  type RasterIllustrationMeta,
-  resolveColorScheme,
-  slotColorInFamily,
-  type VectorIllustrationMeta,
-} from '@digdir/design/illustrations';
-import {
   Button,
   Dialog,
   Dropdown,
@@ -21,6 +11,16 @@ import {
   Tag,
   ValidationMessage,
 } from '@digdir/designsystemet-react';
+import {
+  type ColorScheme,
+  colorFamily,
+  type IllustrationLibrary,
+  type IllustrationMeta,
+  type RasterIllustrationMeta,
+  resolveColorScheme,
+  slotColorInFamily,
+  type VectorIllustrationMeta,
+} from '@digdir/digdir-design/illustrations';
 import { CheckmarkIcon, DownloadIcon, FilesIcon } from '@navikt/aksel-icons';
 import cl from 'clsx/lite';
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
@@ -134,7 +134,7 @@ const RasterDialogContent = ({
   const url = library.images[item.exportName] ?? '';
 
   const snippet = [
-    `import { ${item.exportName} } from '@digdir/design/illustrations/${library.profile}/images';`,
+    `import { ${item.exportName} } from '@digdir/digdir-design/${library.profile}/illustrations/images';`,
     '',
     `<img src={${item.exportName}} alt="" />`,
   ].join('\n');
@@ -206,7 +206,7 @@ const RasterDialogContent = ({
           </CopyButton>
         </div>
         <pre className={classes.code}>
-          <code>{snippet}</code>
+          <code className='language-tsx'>{snippet}</code>
         </pre>
       </Dialog.Block>
     </>
@@ -303,7 +303,7 @@ const VectorDialogContent = ({
     .map((control) => ` ${control.prop}="${control.value}"`)
     .join('');
   const reactSnippet = [
-    `import { ${item.componentName} } from '@digdir/design/illustrations/${library.profile}/react';`,
+    `import { ${item.componentName} } from '@digdir/digdir-design/${library.profile}/illustrations/react';`,
     '',
     `<${item.componentName}${slotProps} aria-hidden />`,
   ].join('\n');
@@ -438,7 +438,7 @@ const VectorDialogContent = ({
           </CopyButton>
         </div>
         <pre className={classes.code}>
-          <code>{reactSnippet}</code>
+          <code className='language-tsx'>{reactSnippet}</code>
         </pre>
       </Dialog.Block>
     </>

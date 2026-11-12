@@ -1,10 +1,12 @@
 import { mkdir, readFile, rm } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { resolveColorScheme } from '@digdir/design/illustrations';
-import { colors as digdirColors } from '@digdir/design/illustrations/digdir/meta';
-import { PersonSomGarMedSirkel } from '@digdir/design/illustrations/digdir/react';
-import { Laptop } from '@digdir/design/illustrations/ki-norge/react';
+import { colors as digdirColors } from '@digdir/digdir-design/digdir/illustrations/meta';
+import { PersonSomGarMedSirkel } from '@digdir/digdir-design/digdir/illustrations/react';
+import {
+  illustrationLoaders,
+  resolveColorScheme,
+} from '@digdir/digdir-design/illustrations';
 import matter from 'gray-matter';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -36,21 +38,26 @@ const fonts = await Promise.all(
 
 async function getArtwork(profile: Profile): Promise<string | undefined> {
   let source: Buffer;
+  // Only the digdir profile is exported from the package. The others are
+  // reached through the shared illustrations entry, which sits next to them.
   if (profile.slug === 'uutilsynet') {
-    const imagesModule = import.meta.resolve(
-      '@digdir/design/illustrations/uutilsynet/images',
+    const illustrationsModule = import.meta.resolve(
+      '@digdir/digdir-design/illustrations',
     );
     source = await readFile(
-      fileURLToPath(new URL('./dame-holder-nettbrett.png', imagesModule)),
+      fileURLToPath(
+        new URL('./uutilsynet/dame-holder-nettbrett.png', illustrationsModule),
+      ),
     );
-  } else if (profile.slug === 'digdir' || profile.slug === 'ki-norge') {
-    const artwork =
-      profile.slug === 'digdir'
-        ? createElement(PersonSomGarMedSirkel, { sirkel: 'red' })
-        : createElement(Laptop);
+  } else if (profile.slug === 'ki-norge') {
+    const { svgs } = await illustrationLoaders['ki-norge']();
+    source = Buffer.from(svgs.laptop);
+  } else if (profile.slug === 'digdir') {
     const svg = resolveColorScheme(
-      renderToStaticMarkup(artwork),
-      profile.slug === 'digdir' ? digdirColors : [],
+      renderToStaticMarkup(
+        createElement(PersonSomGarMedSirkel, { sirkel: 'red' }),
+      ),
+      digdirColors,
       'light',
       {
         '--design-illustration-digdir-person-som-gar-med-sirkel-sirkel': 'red',

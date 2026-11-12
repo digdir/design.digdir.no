@@ -1,7 +1,3 @@
-import type {
-  IllustrationMeta,
-  IllustrationProfile,
-} from '@digdir/design/illustrations';
 import {
   Alert,
   Chip,
@@ -12,6 +8,10 @@ import {
   Search,
   Spinner,
 } from '@digdir/designsystemet-react';
+import type {
+  IllustrationMeta,
+  IllustrationProfile,
+} from '@digdir/digdir-design/illustrations';
 import cl from 'clsx/lite';
 import { Suspense, use, useState } from 'react';
 import { useParams } from 'react-router';

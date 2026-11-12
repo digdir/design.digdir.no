@@ -1,0 +1,89 @@
+---
+title: Search
+sidebar_title: Search
+description: Search lar brukeren søke etter innhold, med søkeikon, tømmeknapp og søkeknapp.
+category: Komponenter
+order: 10
+published: true
+---
+
+<Alert>
+Designsystemet [fjerner Search (designsystemet.no)](https://designsystemet.no/no/blog/search-is-being-removed-what-should-you-do) i neste major.
+Dette er vår egen Search, men er lik slik den var.
+</Alert>
+
+<ComponentPreview html={`
+  <form class="dd-search">
+    <input class="ds-input" type="search" placeholder=" " aria-label="Søk" />
+    <button type="reset" aria-label="Tøm"></button>
+    <button class="ds-button" type="submit">Søk</button>
+  </form>
+`} />
+
+## Slik bruker vi Search
+
+- Gi søkefeltet et navn. En synlig ledetekst er best, men `aria-label` holder når det er tydelig hva feltet er til, for eksempel i en header.
+- Bruk søkeknapp når søket sendes inn og viser en resultatside.
+- Dropp søkeknappen når resultatene oppdateres mens brukeren skriver.
+
+## React
+
+```jsx
+import { Search } from '@digdir/digdir-design/digdir/react';
+
+<form>
+  <Search>
+    <Search.Input aria-label='Søk' />
+    <Search.Clear />
+    <Search.Button />
+  </Search>
+</form>
+```
+
+## Uten rammeverk
+
+Legg klassen `dd-search` på en `<form>` eller `<div>` rundt søkefeltet og knappene.
+
+- `type="search"` på feltet viser søkeikonet.
+- `<button type="reset">` er tømmeknappen. Den vises når feltet har innhold, og trenger at feltet har en `placeholder`. Bruk `placeholder=" "` hvis du ikke vil ha plassholdertekst.
+- Alle andre knapper blir søkeknapp.
+
+Tømmeknappen er en vanlig reset-knapp. Den virker bare inne i en `<form>`, og tilbakestiller alle feltene i skjemaet.
+
+## Med søkeikon
+
+Uten søkeknapp står søkefeltet alene med ikon og tømmeknapp.
+
+<ComponentPreview html={`
+  <form class="dd-search">
+    <input class="ds-input" type="search" placeholder=" " aria-label="Søk" />
+    <button type="reset" aria-label="Tøm"></button>
+  </form>
+`} />
+
+## Med synlig ledetekst
+
+Legg Search i et Field for å gi feltet en synlig ledetekst.
+
+<ComponentPreview html={`
+  <ds-field class="ds-field">
+    <label class="ds-label">Søk i dokumentasjonen</label>
+    <form class="dd-search">
+      <input class="ds-input" type="search" placeholder=" " />
+      <button type="reset" aria-label="Tøm"></button>
+      <button class="ds-button" type="submit">Søk</button>
+    </form>
+  </ds-field>
+`} />
+
+## Med sekundær søkeknapp
+
+Bruk `data-variant="secondary"` på søkeknappen når søket ikke er hovedhandlingen på siden.
+
+<ComponentPreview html={`
+  <form class="dd-search">
+    <input class="ds-input" type="search" placeholder=" " aria-label="Søk" />
+    <button type="reset" aria-label="Tøm"></button>
+    <button class="ds-button" type="submit" data-variant="secondary">Søk</button>
+  </form>
+`} />

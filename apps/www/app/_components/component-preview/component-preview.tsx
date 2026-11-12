@@ -36,6 +36,8 @@ export const ComponentPreview = ({ html, hideCode }: ComponentPreviewProps) => {
         className={classes.canvas}
         // Web components (e.g. `<ds-tabs>`) add attributes before hydration.
         suppressHydrationWarning
+        // Forms in examples should not navigate away from the docs.
+        onSubmit={(event) => event.preventDefault()}
         // biome-ignore lint/security/noDangerouslySetInnerHtml: author-written docs examples
         dangerouslySetInnerHTML={{ __html: code }}
       />

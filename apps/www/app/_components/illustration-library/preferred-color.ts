@@ -3,7 +3,7 @@ import {
   type IllustrationLibrary,
   slotColorInFamily,
   type VectorIllustrationMeta,
-} from '@digdir/design/illustrations';
+} from '@digdir/digdir-design/illustrations';
 import type { CSSProperties } from 'react';
 
 /**

@@ -2,15 +2,15 @@
  * Shared types and runtime helpers for the illustration library. The build
  * script copies this file into `generated/illustrations/index.ts` and appends
  * the generated profile list and loaders, so it ships as
- * `@digdir/design/illustrations`.
+ * `@digdir/digdir-design/illustrations`.
  */
 
 type IllustrationMetaBase = {
   /** Folder name, kebab-case. Also the file name for downloads. */
   name: string;
   /**
-   * Named export in `@digdir/design/illustrations/<profile>/svg` (vector) or
-   * `@digdir/design/illustrations/<profile>/images` (raster).
+   * Named export in `@digdir/digdir-design/<profile>/illustrations/svg` (vector) or
+   * `@digdir/digdir-design/<profile>/illustrations/images` (raster).
    */
   exportName: string;
   title: string;
@@ -23,7 +23,7 @@ type IllustrationMetaBase = {
 /** An SVG illustration, from its `meta.json` and layer names. */
 export type VectorIllustrationMeta = IllustrationMetaBase & {
   format: 'svg';
-  /** Named export in `@digdir/design/illustrations/<profile>/react`. */
+  /** Named export in `@digdir/digdir-design/<profile>/illustrations/react`. */
   componentName: string;
   viewBox?: string;
   /** Recolourable parts, from layers named `Name [colour,…]`. */
@@ -102,7 +102,7 @@ export const colorFamily = (color: string) => color.replace(/-\d+$/, '');
 export const slotColorInFamily = (slot: IllustrationSlot, family: string) =>
   slot.colors.find((color) => colorFamily(color) === family);
 
-/** Shape of `@digdir/design/illustrations/<profile>/meta`. */
+/** Shape of `@digdir/digdir-design/<profile>/illustrations/meta`. */
 export type IllustrationProfileMeta = {
   profile: string;
   /**

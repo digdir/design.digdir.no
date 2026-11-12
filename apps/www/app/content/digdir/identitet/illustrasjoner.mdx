@@ -20,14 +20,14 @@ Klikk på en illustrasjon for å se detaljer, kopiere SVG-koden eller laste den 
 
 ## Bruk i kode
 
-Illustrasjonene er tilgjengelige som React-komponenter og som rene SVG-strenger i pakken `@digdir/design`.
+Illustrasjonene er tilgjengelige som React-komponenter og som rene SVG-strenger i pakken `@digdir/digdir-design`.
 
 ```bash
-npm install @digdir/design
+npm install @digdir/digdir-design
 ```
 
 ```tsx
-import { PersonMedJojo } from '@digdir/design/illustrations/digdir/react';
+import { PersonMedJojo } from '@digdir/digdir-design/digdir/illustrations/react';
 
 <PersonMedJojo aria-hidden />
 ```
@@ -35,7 +35,7 @@ import { PersonMedJojo } from '@digdir/design/illustrations/digdir/react';
 For at illustrasjonene skal følge mørk modus, må du også laste inn stilarket:
 
 ```ts
-import '@digdir/design/illustrations/digdir.css';
+import '@digdir/digdir-design/digdir/illustrations/css';
 ```
 
 Illustrasjonene er dekorative. Legg på `aria-hidden` når de ikke gir informasjon, eller gi dem en `title` når de gjør det.

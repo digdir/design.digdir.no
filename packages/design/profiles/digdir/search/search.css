@@ -1,0 +1,132 @@
+/*
+ * Search for the digdir profile (`.dd-search`).
+ *
+ * See: https://designsystemet.no/no/blog/search-is-being-removed-what-should-you-do
+ */
+@layer ds.theme, ds.base, ds.components, dd.components;
+
+@layer dd.components {
+  .dd-search {
+    --ddc-search-icon-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M10.5 3.25a7.25 7.25 0 1 0 4.57 12.88l5.41 5.41a.75.75 0 1 0 1.06-1.06l-5.41-5.41A7.25 7.25 0 0 0 10.5 3.25M4.75 10.5a5.75 5.75 0 1 1 11.5 0 5.75 5.75 0 0 1-11.5 0'/%3E%3C/svg%3E");
+    --ddc-search-icon-size: var(--ds-icon-size);
+    --ddc-search-icon-spacing: var(--ds-size-3);
+    --ddc-search-clear-icon-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M6.53 5.47a.75.75 0 0 0-1.06 1.06L10.94 12l-5.47 5.47a.75.75 0 1 0 1.06 1.06L12 13.06l5.47 5.47a.75.75 0 1 0 1.06-1.06L13.06 12l5.47-5.47a.75.75 0 0 0-1.06-1.06L12 10.94z'/%3E%3C/svg%3E");
+    --ddc-search-clear-size: var(--ds-size-9);
+    --ddc-search-clear-gap: var(--ds-size-2);
+    --ddc-search-clear-padding: var(--ds-size-1);
+    --ddc-search-clear-border-radius: var(--ds-border-radius-md);
+    --ddc-search-clear-background--hover: var(--ds-color-surface-hover);
+    --ddc-search-clear-background--active: var(--ds-color-surface-active);
+
+    align-items: center;
+    box-sizing: border-box;
+    grid-template: 'input submit' auto / 1fr auto;
+
+    &:not([hidden]) {
+      display: grid;
+    }
+
+    & > input {
+      grid-area: input;
+    }
+
+    /* Magnifying glass, drawn on top of the start of the search field. */
+    & > input[type='search'] {
+      padding-inline-start: calc(
+        var(--ddc-search-icon-spacing) +
+        var(--ddc-search-icon-size) +
+        var(--ddc-search-clear-gap)
+      );
+
+      /* The browser's own clear button – ours replaces it. */
+      &::-webkit-search-cancel-button {
+        display: none;
+      }
+    }
+
+    &:has(> input[type='search'])::after {
+      content: '';
+      grid-area: input;
+      width: var(--ddc-search-icon-size);
+      height: var(--ddc-search-icon-size);
+      margin-inline-start: var(--ddc-search-icon-spacing);
+      background: currentcolor;
+      mask: var(--ddc-search-icon-url) center / contain no-repeat;
+      forced-color-adjust: none;
+      pointer-events: none;
+    }
+
+    /* Clear button, on top of the end of the search field. */
+    &:has(> button[type='reset']) > input {
+      padding-inline-end: calc(
+        var(--ddc-search-clear-size) +
+        var(--ddc-search-clear-gap)
+      );
+    }
+
+    & > button[type='reset'] {
+      grid-area: input;
+      justify-self: end;
+      box-sizing: border-box;
+      width: var(--ddc-search-clear-size);
+      height: var(--ddc-search-clear-size);
+      margin: 0;
+      margin-inline-end: var(--ddc-search-clear-gap);
+      padding: var(--ddc-search-clear-padding);
+      border: 0;
+      border-radius: var(--ddc-search-clear-border-radius);
+      background: none;
+      color: inherit;
+      cursor: pointer;
+      scale: 0.75;
+
+      &::before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: currentcolor;
+        mask: var(--ddc-search-clear-icon-url) center / contain no-repeat;
+        forced-color-adjust: none;
+      }
+
+      &:hover {
+        background: var(--ddc-search-clear-background--hover);
+      }
+
+      &:active {
+        background: var(--ddc-search-clear-background--active);
+      }
+
+      &:focus-visible {
+        outline: var(--dsc-focus-outline);
+        outline-offset: var(--ds-border-width-focus);
+        box-shadow: var(--dsc-focus-boxShadow);
+      }
+    }
+
+    /* Nothing to clear in an empty field, or in one that cannot be edited. */
+    & > input:placeholder-shown ~ button[type='reset'],
+    &
+      > input:is(:read-only, :disabled, [aria-disabled='true'])
+      ~ button[type='reset'] {
+      display: none;
+    }
+
+    /* Search button, joined to the end of the search field. */
+    & > button:not([type='reset']) {
+      grid-area: submit;
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+
+      &:not(:focus-visible) {
+        border-inline-start: 0;
+      }
+    }
+
+    &:has(> button:not([type='reset'])) > input {
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+  }
+}

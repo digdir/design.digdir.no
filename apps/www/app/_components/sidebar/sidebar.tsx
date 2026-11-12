@@ -15,14 +15,26 @@ export type SidebarProps = {
   groups: SidebarGroups;
   /** Hide category headings when content isn't grouped into named categories. */
   hideGroupTitle?: boolean;
+  /** Categories that start closed, unless they hold the current page. */
+  collapsed?: string[];
 };
 
-export const Sidebar = ({ profile, groups, hideGroupTitle }: SidebarProps) => (
+export const Sidebar = ({
+  profile,
+  groups,
+  hideGroupTitle,
+  collapsed,
+}: SidebarProps) => (
   <aside className={cl(classes.sidebar, 'l-sidebar-left')}>
     <nav aria-label={profile.name} data-color='neutral'>
       {Object.entries(groups).map(([category, links]) =>
         !hideGroupTitle && category ? (
-          <CollapsibleGroup key={category} title={category} links={links} />
+          <CollapsibleGroup
+            key={category}
+            title={category}
+            links={links}
+            defaultOpen={!collapsed?.includes(category)}
+          />
         ) : (
           <div key={category} className={classes.group}>
             <LinkList links={links} />
@@ -36,14 +48,18 @@ export const Sidebar = ({ profile, groups, hideGroupTitle }: SidebarProps) => (
 const CollapsibleGroup = ({
   title,
   links,
+  defaultOpen,
 }: {
   title: string;
   links: SidebarLink[];
+  defaultOpen: boolean;
 }) => {
-  const [open, setOpen] = useState(true);
   const { pathname } = useLocation();
   const listId = useId();
-  const containsActive = links.some((link) => link.url === pathname);
+  // Prerendered pages are requested with a trailing slash.
+  const currentPath = pathname.replace(/\/+$/, '');
+  const containsActive = links.some((link) => link.url === currentPath);
+  const [open, setOpen] = useState(defaultOpen || containsActive);
 
   // Make sure the group with the current page is visible after navigating.
   useEffect(() => {

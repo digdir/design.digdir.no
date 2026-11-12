@@ -1,0 +1,84 @@
+---
+title: Kom i gang med komponenter
+sidebar_title: Kom i gang
+description: Slik tar du i bruk komponentene fra Designsystemet og profilens egne komponenter.
+category: Komponenter
+order: 1
+published: true
+---
+
+Komponentene våre er [designsystemet.no](https://designsystemet.no) sine komponenter.
+Pakken `@digdir/digdir-design` gir deg alle sammen fra ett sted, sammen med komponentene som er laget for denne profilen.
+
+Hver profil har sin egen inngang i pakken: `@digdir/digdir-design/{{profile}}/…`.
+Da får du bare med det profilen din bruker.
+
+## Installer
+
+```bash
+pnpm add @digdir/digdir-design
+```
+
+Stilene og komponentene fra Designsystemet følger med, så du trenger ikke å installere pakkene derfra selv.
+
+## Importer
+
+### CSS og tema
+
+```js
+import '@digdir/digdir-design/{{profile}}/theme';
+import '@digdir/digdir-design/{{profile}}/css';
+```
+
+- `@digdir/digdir-design/{{profile}}/theme` gir temaet til profilen: farger, typografi og størrelser.
+- `@digdir/digdir-design/{{profile}}/css` gir stilene til komponentene fra Designsystemet og til profilens egne komponenter og varianter.
+
+<Alert data-color="info">
+Dersom du allerede har ditt eige tema kan du importere dette etter `@digdir/digdir-design/{{profile}}/theme`.
+Da overskriver du like farger, og nye farger vil eksistere.
+</Alert>
+
+#### Font og tekstskalering
+Legg i `<head>`:
+```html
+<meta name="text-scale" content="scale" />
+<link
+  rel="stylesheet"
+  href="https://altinncdn.no/fonts/inter/v4.1/inter.css"
+  integrity="sha384-OcHzc/By/OPw9uJREawUCjP2inbOGKtKb4A/I2iXxmknUfog2H8Adx71tWVZRscD"
+  crossorigin="anonymous"
+/>
+```
+
+<ds-tabs className="ds-tabs">
+    <ds-tablist>
+        <ds-tab>React</ds-tab>
+        <ds-tab>Uten rammeverk</ds-tab>
+    </ds-tablist>
+    <ds-tabpanel>
+        ```jsx
+        import { Button } from '@digdir/digdir-design/{{profile}}/react';
+        ```
+
+        Her finner du alle komponentene fra `@digdir/designsystemet-react`, i tillegg til profilens egne.
+    </ds-tabpanel>
+    <ds-tabpanel>
+        ```js
+        import '@digdir/digdir-design/{{profile}}/web';
+        ```
+
+        Dette gir oppførsel til web-komponentene fra `@digdir/designsystemet-web`, for eksempel `<ds-tabs>`.
+    </ds-tabpanel>
+</ds-tabs>
+
+
+## Dokumentasjon
+
+Komponentene fra Designsystemet er dokumentert hos Designsystemet.
+Der finner du retningslinjer, kode og krav til tilgjengelighet for hver komponent.
+
+- [Alle komponentene](https://designsystemet.no/no/components)
+- [Mønstre](https://designsystemet.no/no/patterns)
+- [Oppsett](https://designsystemet.no/no/fundamentals/code/setup)
+
+Komponentene som er laget for denne profilen, finner du i menyen under Komponenter.

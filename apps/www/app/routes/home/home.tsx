@@ -1,15 +1,16 @@
-import { ToPersonerVedDatamaskin } from '@digdir/design/illustrations/altinn/react';
-import { PersonSomGarMedSirkel } from '@digdir/design/illustrations/digdir/react';
-import { PersonSomTroster } from '@digdir/design/illustrations/dodsfall-og-arv/react';
-import { Laptop } from '@digdir/design/illustrations/ki-norge/react';
-import { dameHolderNettbrett } from '@digdir/design/illustrations/uutilsynet/images';
 import { Heading, Link, Paragraph } from '@digdir/designsystemet-react';
+import { PersonSomGarMedSirkel } from '@digdir/digdir-design/digdir/illustrations/react';
 import { ArrowRightIcon } from '@navikt/aksel-icons';
 import cl from 'clsx/lite';
 import type { CSSProperties, ReactNode } from 'react';
 import { Link as RRLink } from 'react-router';
 import { profiles } from '~/_config/profiles';
 import { generateMetadata } from '~/_utils/metadata';
+// Profiles the package does not export yet – read from its build output.
+import { ToPersonerVedDatamaskin } from '~package/illustrations/altinn/react/index.js';
+import { PersonSomTroster } from '~package/illustrations/dodsfall-og-arv/react/index.js';
+import { Laptop } from '~package/illustrations/ki-norge/react/index.js';
+import { dameHolderNettbrett } from '~package/illustrations/uutilsynet/images.js';
 import classes from './home.module.css';
 
 export const meta = () =>

@@ -3,6 +3,9 @@ import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig } from 'vite';
 
 const appDir = fileURLToPath(new URL('./app', import.meta.url));
+const packageDir = fileURLToPath(
+  new URL('../../packages/design/dist', import.meta.url),
+);
 
 // MDX is bundled at request time with mdx-bundler (not imported as modules),
 // so Vite doesn't know about `.mdx` changes – trigger a full reload manually.
@@ -28,9 +31,18 @@ export default defineConfig({
     host: '127.0.0.1',
   },
   resolve: {
-    alias: [{ find: /^~\//, replacement: `${appDir}/` }],
+    alias: [
+      { find: /^~\//, replacement: `${appDir}/` },
+      { find: /^~package\//, replacement: `${packageDir}/` },
+    ],
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router'],
+    exclude: ['microlighter'],
+  },
+  build: {
+    dynamicImportVarsOptions: {
+      exclude: [/node_modules\/(?!.*microlighter\/)/],
+    },
   },
 });

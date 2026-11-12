@@ -124,12 +124,16 @@ export const getProfileContentFiles = (
 /**
  * Read a profile's page, falling back to the shared page with the same path.
  * Returns an empty string when neither exists.
+ *
+ * `{{profile}}` in the page is replaced with the profile's slug, so shared
+ * pages can show the right import path for whichever profile they're shown
+ * in, e.g. `@digdir/digdir-design/{{profile}}/react`.
  */
 export const getProfilePage = (profile: string, relativePath: string) => {
   for (const dir of [profile, SHARED_CONTENT_DIR]) {
     const path = join(dir, relativePath);
     if (existsSync(join(CONTENT_BASE_PATH, path))) {
-      return getFileFromContentDir(path);
+      return getFileFromContentDir(path).replaceAll('{{profile}}', profile);
     }
   }
   return '';

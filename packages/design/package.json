@@ -1,7 +1,7 @@
 {
-  "name": "@digdir/design",
+  "name": "@digdir/digdir-design",
   "version": "0.0.1",
-  "description": "Illustrations and component styles for Digdir's visual profiles, built on Designsystemet.",
+  "description": "Components, styles and illustrations for Digdir's visual profiles, built on Designsystemet.",
   "type": "module",
   "license": "ISC",
   "author": "digdir",
@@ -11,6 +11,8 @@
     "directory": "packages/design"
   },
   "keywords": [
+    "designsystemet",
+    "components",
     "svg",
     "illustrations",
     "dark-mode",
@@ -18,60 +20,92 @@
     "digdir"
   ],
   "sideEffects": [
-    "*.css"
+    "*.css",
+    "./dist/*/index.web.js"
   ],
   "files": [
     "dist",
     "README.md"
   ],
   "exports": {
+    "./digdir/react": {
+      "types": "./dist/digdir/index.react.d.ts",
+      "default": "./dist/digdir/index.react.js"
+    },
+    "./digdir/web": {
+      "types": "./dist/digdir/index.web.d.ts",
+      "default": "./dist/digdir/index.web.js"
+    },
+    "./digdir/css": "./dist/digdir/css/index.css",
+    "./digdir/css/*.css": "./dist/digdir/css/*.css",
+    "./digdir/theme": "./dist/digdir/theme/index.css",
+    "./digdir/theme/*.css": "./dist/digdir/theme/*.css",
+    "./digdir/illustrations/react": {
+      "types": "./dist/illustrations/digdir/react/index.d.ts",
+      "default": "./dist/illustrations/digdir/react/index.js"
+    },
+    "./digdir/illustrations/svg": {
+      "types": "./dist/illustrations/digdir/svg.d.ts",
+      "default": "./dist/illustrations/digdir/svg.js"
+    },
+    "./digdir/illustrations/meta": {
+      "types": "./dist/illustrations/digdir/meta.d.ts",
+      "default": "./dist/illustrations/digdir/meta.js"
+    },
+    "./digdir/illustrations/images": {
+      "types": "./dist/illustrations/digdir/images.d.ts",
+      "default": "./dist/illustrations/digdir/images.js"
+    },
+    "./digdir/illustrations/css": "./dist/illustrations/digdir.css",
+    "./altinn/theme": "./dist/altinn/theme/index.css",
+    "./altinn/theme/*.css": "./dist/altinn/theme/*.css",
+    "./dodsfall-og-arv/theme": "./dist/dodsfall-og-arv/theme/index.css",
+    "./dodsfall-og-arv/theme/*.css": "./dist/dodsfall-og-arv/theme/*.css",
+    "./ki-norge/theme": "./dist/ki-norge/theme/index.css",
+    "./ki-norge/theme/*.css": "./dist/ki-norge/theme/*.css",
+    "./norge-no/theme": "./dist/norge-no/theme/index.css",
+    "./norge-no/theme/*.css": "./dist/norge-no/theme/*.css",
+    "./uutilsynet/theme": "./dist/uutilsynet/theme/index.css",
+    "./uutilsynet/theme/*.css": "./dist/uutilsynet/theme/*.css",
     "./illustrations": {
       "types": "./dist/illustrations/index.d.ts",
       "default": "./dist/illustrations/index.js"
     },
-    "./illustrations.css": "./dist/illustrations/index.css",
-    "./illustrations/*/react": {
-      "types": "./dist/illustrations/*/react/index.d.ts",
-      "default": "./dist/illustrations/*/react/index.js"
-    },
-    "./illustrations/*/svg": {
-      "types": "./dist/illustrations/*/svg.d.ts",
-      "default": "./dist/illustrations/*/svg.js"
-    },
-    "./illustrations/*/meta": {
-      "types": "./dist/illustrations/*/meta.d.ts",
-      "default": "./dist/illustrations/*/meta.js"
-    },
-    "./illustrations/*/images": {
-      "types": "./dist/illustrations/*/images.d.ts",
-      "default": "./dist/illustrations/*/images.js"
-    },
-    "./illustrations/*.css": "./dist/illustrations/*.css",
-    "./components.css": "./dist/components/index.css",
-    "./components/*.css": "./dist/components/*.css"
+    "./illustrations.css": "./dist/illustrations/index.css"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "pnpm clean && node scripts/build-illustrations.ts && node scripts/build-components.ts && tsc -p tsconfig.build.json",
+    "build": "pnpm clean && node scripts/build-illustrations.ts && node scripts/build-profiles.ts && tsc -p tsconfig.build.json && tsc -p tsconfig.profiles.json",
     "clean": "rm -rf dist generated",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.profiles.json --noEmit",
+    "exports": "node scripts/write-exports.ts"
+  },
+  "dependencies": {
+    "@digdir/designsystemet-react": "1.23.0",
+    "@digdir/designsystemet-web": "1.23.0"
   },
   "peerDependencies": {
-    "react": ">=19.3.1"
+    "react": ">=19.3.1",
+    "react-dom": ">=19.3.1"
   },
   "peerDependenciesMeta": {
     "react": {
       "optional": true
+    },
+    "react-dom": {
+      "optional": true
     }
   },
   "devDependencies": {
+    "@digdir/designsystemet-css": "1.23.0",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "svgo": "^4.1.0",
     "typescript": "^5.9.3"
   }

@@ -1,24 +1,136 @@
-# `@digdir/design`
+# `@digdir/digdir-design`
 
-Illustrations for Digdir's visual profiles, with light and dark mode support.
-Icons and components will be added to the same package later.
+Components, styles and illustrations for Digdir's visual profiles, built on
+[Designsystemet](https://designsystemet.no).
 
-Every profile (`digdir`, `uutilsynet`, …) has its own set of illustrations,
-published as React components, as framework-agnostic SVG strings and with
-metadata (title, description, tags) for building galleries.
+Every profile (`digdir`, `altinn`, `uutilsynet`, …) has its own entry points,
+so a service only gets what its profile uses. For now only `digdir` exports
+every scope; the other profiles export their `theme`:
 
-## Installation
-
-```bash
-npm install @digdir/design
+```
+@digdir/digdir-design/<profile>/<scope>
 ```
 
-## Usage
+| Scope           | What                                                             |
+| --------------- | ---------------------------------------------------------------- |
+| `theme`         | The profile's Designsystemet theme (design tokens)               |
+| `css`           | Designsystemet's CSS + the profile's own components              |
+| `react`         | Designsystemet's React components + the profile's own            |
+| `web`           | Designsystemet's web components + the profile's own              |
+| `illustrations` | The profile's illustrations, see [Illustrations](#illustrations) |
+
+`digdir` is the main profile. Designsystemet comes with the package – there is
+nothing else to install.
+
+## Components
+
+```bash
+npm install @digdir/digdir-design
+```
+
+```ts
+import '@digdir/digdir-design/digdir/theme';
+import '@digdir/digdir-design/digdir/css';
+```
+
+`theme` is the profile's design tokens and `css` is Designsystemet's CSS
+followed by the profile's own components. The theme does not load the font –
+see [Designsystemet's setup](https://designsystemet.no/en/fundamentals/code/setup).
+
+| Import                          | What                                                                       |
+| ------------------------------- | -------------------------------------------------------------------------- |
+| `<profile>/theme`               | The profile's default theme                                                |
+| `<profile>/theme/<theme>.css`   | One of its themes, e.g. `norge-no/theme/norge-business.css`                |
+| `<profile>/css`                 | Designsystemet's CSS + the profile's components                            |
+| `<profile>/css/components.css`  | Only the profile's components, when you load Designsystemet's CSS yourself |
+| `<profile>/css/<component>.css` | One component, e.g. `digdir/css/search.css`                                |
+
+React:
+
+```tsx
+import { Button, Search } from '@digdir/digdir-design/digdir/react';
+```
+
+Without a framework:
+
+```ts
+import '@digdir/digdir-design/digdir/web';
+```
+
+The components from Designsystemet are documented at
+[designsystemet.no](https://designsystemet.no/en/components). A profile's own
+components are documented at [design.digdir.no](https://design.digdir.no). An
+own component with the same name as one from Designsystemet replaces it – the
+digdir profile's `Search` replaces Designsystemet's deprecated one.
+
+### Adding a component
+
+Components live in `profiles/<profile>/<component>/`, and each profile has one
+index file per scope that lists what it exports:
+
+```
+profiles/
+  digdir/
+    index.react.ts         @digdir/digdir-design/digdir/react
+    index.web.ts           @digdir/digdir-design/digdir/web
+    search/
+      search.tsx
+      search.css           part of @digdir/digdir-design/digdir/css
+```
+
+1. Create `profiles/<profile>/<component>/` with the component's files.
+2. Export React components from the profile's `index.react.ts`, and web
+   components from `index.web.ts`.
+3. Any `.css` file in the folder is added to the profile's stylesheet. Put the
+   rules in a layer ordered after Designsystemet's. The digdir profile uses
+   `@layer dd.components`, the class prefix `dd-` and `--ddc-` for custom
+   properties.
+
+A component every profile should get goes in `profiles/_shared/<component>/`.
+Its styles are included in every profile's stylesheet, and a profile overrides
+one by adding a file with the same name.
+
+### Themes
+
+Themes are built at the repository root (`pnpm tokens`) into
+`design-tokens-build/`, and copied into the package by the build. A profile
+ships the theme with its own name. To ship others, list them in
+`profiles/<profile>/themes.json` with the default first:
+
+```json
+["norge-private", "norge-business"]
+```
+
+A profile without a theme of its own gets the main profile's.
+
+### Designsystemet's version
+
+`@digdir/designsystemet-react`, `-web` and `-css` are pinned to the same exact
+version, because the CSS is copied into each profile's `css` at build time.
+Bump all three together – the build fails if they differ.
+
+### Adding and publishing a profile
+
+Create `profiles/<profile>/` with an `index.react.ts` and an `index.web.ts`
+(copy another profile's). Every profile is built, and its theme is exported.
+To export the rest of it, add the profile to `PUBLISHED_PROFILES` in
+`scripts/exports.ts`.
+
+Run `pnpm run exports` afterwards to write `exports` in `package.json`. The
+build fails with a message if an index file is missing or the exports are out
+of date.
+
+## Illustrations
+
+Every profile has its own set of illustrations, published as React components,
+as framework-agnostic SVG strings and with metadata (title, description, tags)
+for building galleries, under `@digdir/digdir-design/<profile>/illustrations/`.
+Shared types and helpers are in `@digdir/digdir-design/illustrations`.
 
 React components, one profile at a time:
 
 ```tsx
-import { TelefonMedVarsel } from '@digdir/design/illustrations/digdir/react';
+import { TelefonMedVarsel } from '@digdir/digdir-design/digdir/illustrations/react';
 
 <TelefonMedVarsel aria-hidden />;
 ```
@@ -29,7 +141,7 @@ information, or pass `title="…"` when they do.
 Framework-agnostic SVG strings:
 
 ```ts
-import { telefonMedVarsel } from '@digdir/design/illustrations/digdir/svg';
+import { telefonMedVarsel } from '@digdir/digdir-design/digdir/illustrations/svg';
 
 element.innerHTML = telefonMedVarsel;
 ```
@@ -40,8 +152,8 @@ Metadata (for galleries, search and filtering):
 import {
   colors,
   illustrations,
-} from '@digdir/design/illustrations/digdir/meta';
-import type { IllustrationMeta } from '@digdir/design/illustrations';
+} from '@digdir/digdir-design/digdir/illustrations/meta';
+import type { IllustrationMeta } from '@digdir/digdir-design/illustrations';
 ```
 
 ### Dark mode
@@ -53,12 +165,12 @@ correctly in light mode without any CSS. To follow `data-color-scheme="dark"`
 all profiles:
 
 ```ts
-import '@digdir/design/illustrations/digdir.css';
+import '@digdir/digdir-design/digdir/illustrations/css';
 // or
-import '@digdir/design/illustrations.css';
+import '@digdir/digdir-design/illustrations.css';
 ```
 
-## Adding an illustration
+### Adding an illustration
 
 Illustrations live in `illustrations/<profile>/<name>/`:
 
@@ -96,7 +208,8 @@ or slots) and exposed as URLs rather than inlined as base64, so they stay
 cacheable and out of your JavaScript bundle:
 
 ```tsx
-import { mangeMennesker } from '@digdir/design/illustrations/uutilsynet/images';
+// Once the uutilsynet profile is published:
+import { mangeMennesker } from '@digdir/digdir-design/uutilsynet/illustrations/images';
 
 <img src={mangeMennesker} alt='' />;
 ```
@@ -108,7 +221,7 @@ well as in the browser. It needs a bundler; plain Node cannot import `.png`.
 To add a new profile, create `illustrations/<profile>/` with at least one
 illustration folder (and a `colors.json` if it should support dark mode or
 colour slots). The build picks it up and adds it to
-`illustrationProfiles` and `illustrationLoaders` in `@digdir/design/illustrations`.
+`illustrationProfiles` and `illustrationLoaders` in `@digdir/digdir-design/illustrations`.
 
 ### Recolourable parts (colour slots)
 
@@ -220,9 +333,11 @@ colours they were drawn in: there is no dark mode and no colour slots, and
 
 ```bash
 pnpm build       # generate + compile to dist/
-pnpm typecheck   # type-check the build script
+pnpm typecheck   # type-check the build scripts and the profiles
 ```
 
 `scripts/build-illustrations.ts` generates TypeScript into `generated/`
 (React components via SVGR, SVG strings, metadata) and CSS into `dist/`; `tsc`
-then compiles `generated/` into `dist/`. Both folders are git-ignored.
+then compiles `generated/` into `dist/`. `scripts/build-profiles.ts` writes
+each profile's CSS and themes to `dist/<profile>/`, and `tsc` compiles `profiles/`
+into `dist/<profile>/`. Both folders are git-ignored.
