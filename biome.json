@@ -17,7 +17,8 @@
       "!.changeset",
       "!**/design-tokens/*",
       "!**/design-tokens-build/*",
-      "!**/*.svg"
+      "!**/*.svg",
+      "!**/SKILL.md"
     ]
   },
   "formatter": {

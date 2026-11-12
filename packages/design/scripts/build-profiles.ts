@@ -154,7 +154,6 @@ const collectLayerOrder = (statements: Set<string>): Plugin => ({
   },
 });
 
-
 const processCss = async (css: string, from: string) => {
   const statements = new Set<string>();
   const result = await postcss([
