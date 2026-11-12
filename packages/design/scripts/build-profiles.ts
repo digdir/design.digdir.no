@@ -1,6 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
+import postcss, { type Plugin } from 'postcss';
+import postcssNesting from 'postcss-nesting';
 import {
   buildExports,
   listProfiles,
@@ -70,9 +74,7 @@ const readDesignsystemetCss = () => {
     }
   }
 
-  return [
-    fs.readFileSync(file, 'utf8').trimEnd(),
-  ].join('\n');
+  return [fs.readFileSync(file, 'utf8').trimEnd()].join('\n');
 };
 
 /** The `.css` files in a profile's component folders, by file name. */
@@ -132,7 +134,43 @@ const listThemes = (profile: string) => {
   return themes as string[];
 };
 
-const buildStylesheets = (
+/**
+ * PostCSS plugin that takes the layer order statements (`@layer a, b;`) out of
+ * a stylesheet and adds them to `statements`, each one once. The build writes
+ * them back at the very top of every file, so the order of the layers is set
+ * before any of them is used – however many components repeat the statement,
+ * and whatever the minifier does with the rest.
+ */
+const collectLayerOrder = (statements: Set<string>): Plugin => ({
+  postcssPlugin: 'collect-layer-order',
+  Once(root) {
+    root.each((node) => {
+      // A statement has no block; `@layer a { … }` does and stays put.
+      if (node.type === 'atrule' && node.name === 'layer' && !node.nodes) {
+        statements.add(`@layer ${node.params.replace(/\s*,\s*/g, ', ')};`);
+        node.remove();
+      }
+    });
+  },
+});
+
+
+const processCss = async (css: string, from: string) => {
+  const statements = new Set<string>();
+  const result = await postcss([
+    postcssNesting(),
+    autoprefixer(),
+    collectLayerOrder(statements),
+    cssnano({ preset: 'default' }),
+  ]).process(css, { from, to: undefined, map: false });
+
+  for (const warning of result.warnings()) {
+    console.warn(`  ⚠ ${relative(from)}: ${warning.text}`);
+  }
+  return { layerOrder: [...statements].join('\n'), css: result.css.trim() };
+};
+
+const buildStylesheets = async (
   profile: string,
   designsystemetCss: string,
   sharedStylesheets: Map<string, string>,
@@ -145,30 +183,43 @@ const buildStylesheets = (
   const outDir = path.join(distDir, profile, 'css');
   fs.mkdirSync(outDir, { recursive: true });
 
+  // Each file starts with a note, then the layer order, then the styles.
+  const write = (name: string, description: string, parts: string[]) =>
+    fs.writeFileSync(
+      path.join(outDir, name),
+      `${[GENERATED, `/* ${description} */`, ...parts].filter(Boolean).join('\n')}\n`,
+    );
+
   const names = [...stylesheets.keys()].sort();
-  const chunks: string[] = [];
+  const sources: string[] = [];
   for (const name of names) {
     const source = stylesheets.get(name) as string;
-    fs.copyFileSync(source, path.join(outDir, name));
-    chunks.push(fs.readFileSync(source, 'utf8').trimEnd());
+    const css = fs.readFileSync(source, 'utf8');
+    sources.push(css);
+
+    const component = await processCss(css, source);
+    write(name, `Built from ${relative(source)}.`, [
+      component.layerOrder,
+      component.css,
+    ]);
   }
 
   // Combined rather than `@import`ed, so the files also work when they are
   // loaded straight from a `<link>` without a bundler.
-  const write = (name: string, description: string, parts: string[]) =>
-    fs.writeFileSync(
-      path.join(outDir, name),
-      [GENERATED, `/* ${description} */`, ...parts, ''].join('\n\n'),
-    );
+  const components = await processCss(
+    sources.join('\n'),
+    path.join(profilesDir, profile, 'components.css'),
+  );
   write(
     'components.css',
     `The "${profile}" profile's own components in @digdir/digdir-design. Needs Designsystemet's CSS – use index.css to get both.`,
-    chunks,
+    [components.layerOrder, components.css],
   );
+  // Designsystemet's CSS is already built, and goes in as it is.
   write(
     'index.css',
     `Styles for the "${profile}" profile in @digdir/digdir-design: Designsystemet's CSS, then the profile's own components.`,
-    [designsystemetCss, ...chunks],
+    [components.layerOrder, designsystemetCss, components.css],
   );
 
   return names.length;
@@ -193,7 +244,7 @@ const buildThemes = (profile: string) => {
   return themes;
 };
 
-const build = () => {
+const build = async () => {
   const profiles = listProfiles();
   const sharedStylesheets = listStylesheets(SHARED_PROFILE);
   const designsystemetCss = readDesignsystemetCss();
@@ -230,7 +281,7 @@ const build = () => {
       }
     }
 
-    const stylesheets = buildStylesheets(
+    const stylesheets = await buildStylesheets(
       profile,
       designsystemetCss,
       sharedStylesheets,
@@ -254,9 +305,7 @@ const build = () => {
   }
 };
 
-try {
-  build();
-} catch (error) {
+build().catch((error) => {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);
-}
+});

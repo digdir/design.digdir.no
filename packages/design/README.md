@@ -338,6 +338,7 @@ pnpm typecheck   # type-check the build scripts and the profiles
 
 `scripts/build-illustrations.ts` generates TypeScript into `generated/`
 (React components via SVGR, SVG strings, metadata) and CSS into `dist/`; `tsc`
-then compiles `generated/` into `dist/`. `scripts/build-profiles.ts` writes
-each profile's CSS and themes to `dist/<profile>/`, and `tsc` compiles `profiles/`
+then compiles `generated/` into `dist/`. `scripts/build-profiles.ts` runs
+each profile's CSS through PostCSS (nesting, prefixes for the browsers in
+`browserslist`, minifying) and writes it and the themes to `dist/<profile>/`, and `tsc` compiles `profiles/`
 into `dist/<profile>/`. Both folders are git-ignored.
