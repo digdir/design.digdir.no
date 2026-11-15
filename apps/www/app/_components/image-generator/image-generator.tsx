@@ -7,19 +7,24 @@ import {
 } from '@digdir/designsystemet-react';
 import cl from 'clsx/lite';
 import { useEffect, useState } from 'react';
-import {
-  imageChoiceIds,
-  imageChoices,
-  imageTemplates,
-} from '~/_assets/templates';
+import { mockupSource } from '~/_assets/mockups';
+import { imageSource } from '~/_assets/templates';
 import { Editor } from './editor';
 import classes from './image-generator.module.css';
 import { SetEditor } from './set-editor';
 
+/** Where the templates come from: a folder in `app/_assets/`. */
+const sources = {
+  templates: imageSource,
+  mockups: mockupSource,
+};
+
 interface ImageGeneratorProps {
+  /** Which templates to offer. Defaults to `templates`. */
+  source?: keyof typeof sources;
   /**
-   * Template or template set selected initially (see `imageChoices`).
-   * Defaults to the first one.
+   * Template or template set selected initially (see the source's
+   * `choices`). Defaults to the first one.
    */
   template?: string;
   className?: string;
@@ -33,11 +38,14 @@ interface ImageGeneratorProps {
  * download each image or all of them as a zip.
  */
 export const ImageGenerator = ({
+  source = 'templates',
   template,
   className,
 }: ImageGeneratorProps) => {
+  const { templates, choices } = sources[source] ?? sources.templates;
+  const choiceIds = Object.keys(choices);
   const [choiceId, setChoiceId] = useState(
-    template && template in imageChoices ? template : imageChoiceIds[0],
+    template && template in choices ? template : choiceIds[0],
   );
   // Designsystemet form fields set ids and sizing on the client, so render the
   // editor after mount to avoid hydration mismatches (as the signature
@@ -45,7 +53,7 @@ export const ImageGenerator = ({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const choice = imageChoices[choiceId];
+  const choice = choices[choiceId];
 
   // Template markup is loaded on demand (exports can be megabytes). A set
   // loads all its templates up front, as the last step shows them all.
@@ -60,7 +68,7 @@ export const ImageGenerator = ({
     setLoadError(false);
     if (!choice) return;
     Promise.all(
-      choice.steps.map((step) => imageTemplates[step.template].load()),
+      choice.steps.map((step) => templates[step.template].load()),
     ).then(
       (svgs) => !cancelled && setLoaded({ id: choiceId, svgs }),
       () => !cancelled && setLoadError(true),
@@ -68,7 +76,7 @@ export const ImageGenerator = ({
     return () => {
       cancelled = true;
     };
-  }, [choice, choiceId]);
+  }, [choice, choiceId, templates]);
   const svgs = loaded?.id === choiceId ? loaded.svgs : null;
 
   if (!choice) {
@@ -84,15 +92,15 @@ export const ImageGenerator = ({
 
   return (
     <div className={cl(classes.generator, className)}>
-      {imageChoiceIds.length > 1 && (
+      {choiceIds.length > 1 && (
         <Field className={classes.templatePicker}>
           <Label>Mal</Label>
           <Select
             value={choiceId}
             onChange={(event) => setChoiceId(event.target.value)}
           >
-            {imageChoiceIds.map((id) => {
-              const { name, steps } = imageChoices[id];
+            {choiceIds.map((id) => {
+              const { name, steps } = choices[id];
               return (
                 <Select.Option key={id} value={id}>
                   {steps.length > 1 ? `${name} (${steps.length} bilder)` : name}
@@ -116,7 +124,7 @@ export const ImageGenerator = ({
       ) : (
         <Editor
           key={choiceId}
-          name={imageTemplates[choice.steps[0].template].name}
+          name={templates[choice.steps[0].template].name}
           svg={svgs[0]}
           exportable
         />

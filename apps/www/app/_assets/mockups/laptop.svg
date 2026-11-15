@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Laptop" data-name="Laptop" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1125">
+  <rect data-name="Bakgrunn" width="2000" height="1125" fill="#1e2b3c"/>
+  <g data-name="Laptop">
+    <path data-name="Lokk" d="M362,141h1276a28,28,0,0,1,28,28v772H334V169a28,28,0,0,1,28-28Z" fill="#718297"/>
+    <path data-name="Ramme" d="M365,150h1270a22,22,0,0,1,22,22v746H343V172a22,22,0,0,1,22-22Z" fill="#5a6a7d"/>
+    <rect data-name="Skjermbilde [image]" x="366" y="188" width="1268" height="713" fill="#f4f5f6"/>
+    <path data-name="Underside" d="M195,964h1610c0,12-40,21-100,21H295c-60,0-100-9-100-21Z" fill="#5a6a7d"/>
+    <rect data-name="Base" x="195" y="941" width="1610" height="23" fill="#9ba7b6"/>
+  </g>
+</svg>

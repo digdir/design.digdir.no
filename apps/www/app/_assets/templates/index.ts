@@ -26,7 +26,7 @@ export type ImageTemplate = {
   load: () => Promise<string>;
 };
 
-const raw = (loader: () => Promise<{ default: string }>) => () =>
+export const raw = (loader: () => Promise<{ default: string }>) => () =>
   loader().then((module) => module.default);
 
 export const imageTemplates = {
@@ -86,16 +86,12 @@ export const imageTemplates = {
 
 export type ImageTemplateId = keyof typeof imageTemplates;
 
-export const imageTemplateIds = Object.keys(
-  imageTemplates,
-) as ImageTemplateId[];
-
-export type ImageTemplateSet = {
+export type ImageTemplateSet<Id extends string = string> = {
   /** Shown in the template chooser and used as the zip file name. */
   name: string;
   /** One step per template, in order. `label` names the step. */
   steps: {
-    template: ImageTemplateId;
+    template: Id;
     label: string;
     repeatable?: boolean;
     /** Most copies of a repeatable step. */
@@ -130,31 +126,41 @@ export const imageTemplateSets = {
       },
     ],
   },
-} satisfies Record<string, ImageTemplateSet>;
+} satisfies Record<string, ImageTemplateSet<ImageTemplateId>>;
 
-const templatesInSets = new Set<ImageTemplateId>(
-  Object.values(imageTemplateSets).flatMap((set) =>
-    set.steps.map((step) => step.template),
-  ),
-);
-
-/**
- * What the template chooser offers: every set, plus each template that is not
- * part of a set as a set of one.
- */
-export const imageChoices: Record<string, ImageTemplateSet> = {
-  ...imageTemplateSets,
-  ...Object.fromEntries(
-    imageTemplateIds
-      .filter((id) => !templatesInSets.has(id))
-      .map((id) => [
-        id,
-        {
-          name: imageTemplates[id].name,
-          steps: [{ template: id, label: imageTemplates[id].name }],
-        },
-      ]),
-  ),
+/** The templates one `<ImageGenerator />` offers, e.g. these or the mockups. */
+export type ImageTemplateSource = {
+  templates: Record<string, ImageTemplate>;
+  /**
+   * What the template chooser offers: every set, plus each template that is
+   * not part of a set as a set of one.
+   */
+  choices: Record<string, ImageTemplateSet>;
 };
 
-export const imageChoiceIds = Object.keys(imageChoices);
+export const toSource = (
+  templates: Record<string, ImageTemplate>,
+  sets: Record<string, ImageTemplateSet> = {},
+): ImageTemplateSource => {
+  const inSets = new Set(
+    Object.values(sets).flatMap((set) =>
+      set.steps.map((step) => step.template),
+    ),
+  );
+  return {
+    templates,
+    choices: {
+      ...sets,
+      ...Object.fromEntries(
+        Object.entries(templates)
+          .filter(([id]) => !inSets.has(id))
+          .map(([id, { name }]) => [
+            id,
+            { name, steps: [{ template: id, label: name }] },
+          ]),
+      ),
+    },
+  };
+};
+
+export const imageSource = toSource(imageTemplates, imageTemplateSets);
