@@ -17,7 +17,13 @@ import {
 
 const distDir = path.join(packageRoot, 'dist');
 /** Themes built by `pnpm tokens` at the repository root. */
-const themesDir = path.resolve(packageRoot, '..', '..', 'design-tokens-build');
+const themesDir = path.resolve(
+  packageRoot,
+  '..',
+  '..',
+  'designsystemet',
+  'css',
+);
 
 /** Scopes compiled from `index.<scope>.ts`. */
 const CODE_SCOPES = ['react', 'web'];
@@ -124,7 +130,7 @@ const listThemes = (profile: string) => {
   for (const theme of themes as string[]) {
     if (!hasTheme(theme)) {
       throw new Error(
-        `${relative(file)}: there is no design-tokens-build/${theme}.css. Run \`pnpm tokens\` at the repository root, or fix the name.`,
+        `${relative(file)}: there is no designsystemet/css/${theme}.css. Run \`pnpm tokens\` at the repository root, or fix the name.`,
       );
     }
     if (theme === 'index') {

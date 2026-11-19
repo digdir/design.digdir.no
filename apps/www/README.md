@@ -81,7 +81,7 @@ Make sure to deploy the output of `npm run build`
 
 ## Styling
 
-Styling uses [Designsystemet](https://designsystemet.no/) (`@digdir/designsystemet-css` + `@digdir/designsystemet-react`) with a theme from `design-tokens-build/`, plus plain CSS Modules (`*.module.css`) for layout. Global styles live in `app/app.css`.
+Styling uses [Designsystemet](https://designsystemet.no/) (`@digdir/designsystemet-css` + `@digdir/designsystemet-react`) with a theme from `designsystemet/css/`, plus plain CSS Modules (`*.module.css`) for layout. Global styles live in `app/app.css`.
 
 ---
 

@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - 'designsystemet.config.json'
+      - 'designsystemet/designsystemet.config*.json'
 
 jobs:
   generate-tokens:

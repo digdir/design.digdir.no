@@ -6,7 +6,7 @@ on:
     paths:
       - 'apps/www/**'
       - 'packages/**'
-      - 'design-tokens-build/**'
+      - 'designsystemet/css/**'
       - 'Dockerfile'
       - '.dockerignore'
       - 'pnpm-lock.yaml'

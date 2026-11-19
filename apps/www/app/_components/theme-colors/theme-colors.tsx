@@ -1,4 +1,5 @@
 import { Paragraph } from '@digdir/designsystemet-react';
+import cl from 'clsx/lite';
 import { useParams } from 'react-router';
 import { getProfile } from '~/_config/profiles';
 import { getThemeColors } from '~/_config/themes';
@@ -28,16 +29,15 @@ const TOKEN_GROUPS: Record<string, string[]> = {
 };
 
 /**
- * Every colour scale in the current profile's Designsystemet theme. Each row
- * sets `data-color` and paints the unnamed tokens, so it always matches the
- * generated CSS, in both light and dark mode.
+ * Every colour scale in the current profile's Designsystemet theme. Each
+ * swatch sets `data-color` and paints the unnamed tokens, so it always matches
+ * the generated CSS, in both light and dark mode. Profiles without dark mode
+ * always show the light colours.
  */
 export const ThemeColors = () => {
-  const { profile } = useParams();
-  const colors = [
-    ...getThemeColors(getProfile(profile)?.theme),
-    ...SEVERITY_COLORS,
-  ];
+  const profile = getProfile(useParams().profile);
+  const colors = [...getThemeColors(profile?.theme), ...SEVERITY_COLORS];
+  const colorScheme = profile?.darkMode === false ? 'light' : undefined;
 
   return (
     <div className={classes.wrapper}>
@@ -60,7 +60,7 @@ export const ThemeColors = () => {
         </thead>
         <tbody>
           {colors.map((color) => (
-            <tr key={color} data-color={color}>
+            <tr key={color} focusgroup='toolbar'>
               <Paragraph data-size='sm' asChild>
                 <th className={classes.name} scope='row'>
                   <code>{color}</code>
@@ -71,9 +71,13 @@ export const ThemeColors = () => {
                 .map((token) => (
                   <td
                     key={token}
-                    className={classes.swatch}
+                    className={cl(classes.swatch, 'ds-focus')}
+                    data-color={color}
+                    data-color-scheme={colorScheme}
                     style={{ background: `var(--ds-color-${token})` }}
-                    title={`--ds-color-${color}-${token}`}
+                    data-tooltip={`--ds-color-${color}-${token}`}
+                    tabIndex={0}
+                    suppressHydrationWarning
                   >
                     <span className='ds-sr-only'>{token}</span>
                   </td>

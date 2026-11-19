@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tokens": "designsystemet tokens create && designsystemet tokens build",
+    "tokens": "designsystemet --config designsystemet/designsystemet.config.json && designsystemet --config designsystemet/designsystemet.config.ki-norge.json",
     "tokens-midlertidig": "cd _midlertidig && designsystemet tokens create --config './designsystemet.config.midlertidig.json' && designsystemet tokens build",
     "lint": "biome lint",
     "lint:write": "biome check --write",
@@ -21,6 +21,6 @@
   "packageManager": "pnpm@12.18.0",
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
-    "@digdir/designsystemet": "1.23.0"
+    "@digdir/designsystemet": "1.24.0"
   }
 }

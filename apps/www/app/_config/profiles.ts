@@ -2,7 +2,7 @@
  * Identities are the top-level sections of the site (shown as cards on the
  * landing page). Each identity owns a folder under `app/content/<slug>/`
  * containing its `.mdx` docs pages, and maps to a Designsystemet theme built
- * into `design-tokens-build/<theme>.css`.
+ * into `designsystemet/css/<theme>.css`.
  *
  * This module is safe to import on both the client and the server – it must not
  * pull in any Node-only APIs.
@@ -34,9 +34,11 @@ export type Profile = {
   mainColor: string;
   /**
    * Designsystemet theme this identity maps to. A matching
-   * `design-tokens-build/<theme>.css` should exist (run `pnpm tokens`).
+   * `designsystemet/css/<theme>.css` should exist (run `pnpm tokens`).
    */
   theme: string;
+  /** Set to `false` when the identity has no dark mode. */
+  darkMode?: boolean;
 };
 
 export const profiles: Profile[] = [
@@ -68,6 +70,7 @@ export const profiles: Profile[] = [
     card: { color: '#FBE8ED' },
     mainColor: 'brand1',
     theme: 'ki-norge',
+    darkMode: false,
   },
   {
     slug: 'dodsfall-og-arv',

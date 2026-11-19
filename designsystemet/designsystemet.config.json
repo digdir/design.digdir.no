@@ -1,0 +1,48 @@
+{
+  "$schema": "https://designsystemet.no/schemas/config/1.24.0.json",
+  "output": [
+    {
+      "type": "design-tokens",
+      "dir": "./design-tokens",
+      "cleanDir": true
+    },
+    {
+      "type": "css",
+      "dir": "./css",
+      "tokensDir": "./design-tokens"
+    },
+    {
+      "type": "types",
+      "dir": "./css",
+      "tokensDir": "./design-tokens"
+    }
+  ],
+  "themes": {
+    "digdir": {
+      "colors": {
+        "accent": "#0062BA",
+        "brand1": "#F45F63",
+        "brand2": "#E5AA20",
+        "brand3": "#1E98F5",
+        "neutral": "#1E2B3C"
+      },
+      "borderRadius": 4,
+      "typography": {
+        "fontFamily": "Inter"
+      }
+    },
+    "uutilsynet": {
+      "colors": {
+        "accent": "#0062BA",
+        "brand1": "#5B60D1",
+        "brand2": "#FEA769",
+        "brand3": "#5DA290",
+        "neutral": "#1E2B3C"
+      },
+      "borderRadius": 4,
+      "typography": {
+        "fontFamily": "Inter"
+      }
+    }
+  }
+}

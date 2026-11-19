@@ -31,6 +31,11 @@
 .swatch {
   height: var(--ds-size-10);
   padding: 0;
+  position: relative;
+
+  &:focus-visible {
+    z-index: 1;
+  }
 
   .name + & {
     border-start-start-radius: var(--ds-border-radius-md);

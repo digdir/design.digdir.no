@@ -15,8 +15,8 @@
       "!.vscode",
       "!.github",
       "!.changeset",
-      "!**/design-tokens/*",
-      "!**/design-tokens-build/*",
+      "!designsystemet/*",
+      "!_midlertidig/*",
       "!**/*.svg",
       "!**/SKILL.md"
     ]
