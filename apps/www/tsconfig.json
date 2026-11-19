@@ -7,7 +7,11 @@
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["node", "vite/client", "@digdir/designsystemet-react/react-types"],
+    "types": [
+      "node",
+      "vite/client",
+      "@digdir/designsystemet-react/react-types"
+    ],
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
