@@ -1,0 +1,80 @@
+/* Always dark, as on designsystemet.no (`data-color-scheme='dark'`). */
+.footer {
+  background: var(--ds-color-neutral-background-tinted);
+  color: var(--ds-color-neutral-text-default);
+  border-block-start: 1px solid var(--ds-color-neutral-border-subtle);
+}
+
+.container {
+  width: 100%;
+  max-width: calc(
+    var(--max-content-width, 1300px) +
+    (var(--content-inline-padding, 1rem) * 2)
+  );
+  margin: 0 auto;
+  padding-inline: var(--content-inline-padding, 1rem);
+}
+
+.top {
+  padding-block: var(--ds-size-12);
+}
+
+.top > .container {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--ds-size-10);
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-4);
+}
+
+.logo {
+  /* Single-colour logo used as a mask, so it follows the text colour. */
+  height: 24px;
+  aspect-ratio: 159 / 23;
+  display: block;
+  align-self: flex-start;
+  background-color: currentColor;
+  mask: url('/digdir-design-logo.svg') no-repeat center / contain;
+}
+
+.description {
+  max-width: 45ch;
+  color: var(--ds-color-neutral-text-subtle);
+}
+
+.title {
+  margin-bottom: var(--ds-size-4);
+}
+
+.links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-size-4);
+
+  & li {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-size-2);
+  }
+
+  & svg {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+  }
+}
+
+.bottom {
+  padding-block: var(--ds-size-4);
+  background: var(--ds-color-neutral-background-default);
+}

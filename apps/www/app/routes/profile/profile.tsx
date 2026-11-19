@@ -1,4 +1,5 @@
 import { Heading, Paragraph } from '@digdir/designsystemet-react';
+import cl from 'clsx/lite';
 import { Link as RRLink, useRouteLoaderData } from 'react-router';
 import { getProfile } from '~/_config/profiles';
 import { generateMetadata } from '~/_utils/metadata';
@@ -40,7 +41,7 @@ export default function ProfileIndex() {
           <ul className={classes.grid} data-color={profile.mainColor}>
             {links.map((link) => (
               <li key={link.url}>
-                <RRLink to={link.url} className={classes.card}>
+                <RRLink to={link.url} className={cl(classes.card, 'ds-focus')}>
                   <Heading level={3} data-size='xs'>
                     {link.title}
                   </Heading>

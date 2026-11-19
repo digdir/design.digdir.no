@@ -1,6 +1,7 @@
 import { Button } from '@digdir/designsystemet-react';
 import cl from 'clsx/lite';
 import { Outlet, Link as RRLink, useParams } from 'react-router';
+import { Footer } from '~/_components/footer/footer';
 import { ProfileSwitcher } from '~/_components/profile-switcher/profile-switcher';
 import { ThemeToggle } from '~/_components/theme-toggle/theme-toggle';
 import { getProfile } from '~/_config/profiles';
@@ -34,6 +35,7 @@ export default function RootLayout() {
       <main id='main' className={classes.main}>
         <Outlet />
       </main>
+      <Footer />
     </>
   );
 }
