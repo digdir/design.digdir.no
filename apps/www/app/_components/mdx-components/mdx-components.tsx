@@ -46,6 +46,7 @@ import ExpandableImage from '../expandable-image/expandable-image';
 import { IllustrationLibrary } from '../illustration-library/illustration-library';
 import { ImageGenerator } from '../image-generator/image-generator';
 import { Kitchensink } from '../kitchensink/kitchensink';
+import { StorySnapshot } from '../story-snapshot/story-snapshot';
 import SvgEmbed from '../svg-embed/svg-embed';
 import { ThemeColors } from '../theme-colors/theme-colors';
 import classes from './mdx-components.module.css';
@@ -98,6 +99,7 @@ const defaultComponents = {
   TabsList,
   TabsTab,
   TabsPanel,
+  StorySnapshot,
   SvgEmbed,
   ThemeColors,
   h1: (props: HeadingProps) => (

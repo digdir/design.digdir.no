@@ -1,0 +1,40 @@
+---
+title: Farger
+sidebar_title: Farger
+description: "Altinn bruker Altinn-temaet i Designsystemet. Fargene på denne siden kommer rett fra temaet."
+category: Identitet
+order: 2
+published: true
+---
+
+Fargene kommer fra Altinn-temaet i Designsystemet (`designsystemet/css/altinn.css`). Hover- og active-farger følger automatisk av komponentene i Designsystemet.
+
+<ThemeColors />
+
+## Fargene vi bruker mest
+
+<ColorCards>
+  <ColorCard name="Bakgrunn lysblå" hex="#EEF4FA" values={{ Token: '--ds-color-accent-background-tinted', Bruk: 'Bakgrunn på oversiktssider' }} />
+  <ColorCard name="Overflate hvit" hex="#FFFFFF" values={{ Token: '--ds-color-accent-surface-default', Bruk: 'Modaler, tabeller og kort' }} />
+  <ColorCard name="Overflate aktiv" hex="#AFCEE9" values={{ Token: '--ds-color-accent-surface-active', Bruk: 'Hover i komponenter og konfigurasjon' }} />
+  <ColorCard name="Kantlinje grå" hex="#B8BCC1" values={{ Token: '--ds-color-neutral-border-subtle', Bruk: 'Skillelinjer og rammer' }} />
+  <ColorCard name="Tekst" hex="#002C54" values={{ Token: '--ds-color-accent-text-default', Bruk: 'Tekst og ikoner' }} />
+  <ColorCard name="Primærknapp" hex="#0062BA" values={{ Token: '--ds-color-accent-base-default', Bruk: 'Primærknapp' }} />
+  <ColorCard name="Primærknapp nøytral" hex="#1E2B3C" values={{ Token: '--ds-color-neutral-base-default', Bruk: 'Primærknapp nøytral' }} />
+</ColorCards>
+
+Bruk tokens i koden, ikke hex-verdier. Tokens følger temaet og fargemodus.
+
+## Person og virksomhet i Innboks
+
+Komponentbiblioteket [altinn-components (github.com)](https://github.com/Altinn/altinn-components) har to egne fargeroller som viser hvem du handler på vegne av. Bruk `data-color="person"` når du handler for deg selv, og `data-color="company"` når du handler for en virksomhet.
+
+### Person
+
+<ColorScale colors={{ 'Bakgrunn tonet': '#EAF7EF', 'Overflate tonet': '#A8F3D0', 'Overflate aktiv': '#34D399', 'Kantlinje': '#56826B', 'Tekst': '#06331B', 'Base': '#084826' }} />
+
+### Virksomhet (company)
+
+<ColorScale colors={{ 'Bakgrunn tonet': '#E9F5FF', 'Overflate tonet': '#D3EAFD', 'Overflate aktiv': '#78C1F9', 'Kantlinje': '#717891', 'Tekst': '#1E2950', 'Base': '#111D46' }} />
+
+Verdiene er fra `lib/css/tokens/design-tokens-build/theme.css` i altinn-components, lys fargemodus.

@@ -17,6 +17,7 @@
       "!.changeset",
       "!designsystemet/*",
       "!_midlertidig/*",
+      "!apps/www/public/altinn-snapshots",
       "!**/*.svg",
       "!**/SKILL.md"
     ]

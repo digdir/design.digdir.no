@@ -1,0 +1,40 @@
+---
+title: "Om Altinns profil"
+sidebar_title: "Om profilen"
+description: "Altinn er en fellesløsning fra Digdir. Profilen bygger på Designsystemet og Altinn-temaet, og gjelder for alle Altinn-produktene."
+category: Identitet
+order: 0
+published: true
+---
+
+## Hva profilen dekker
+
+Profilen gir felles regler for logo, farger, typografi og avstander i Altinn. Den bygger på [Designsystemet (designsystemet.no)](https://designsystemet.no) og Altinn-temaet, og gjelder for alle produktene under.
+
+| Produkt | Hvem bruker det | Størrelsesmodus |
+| --- | --- | --- |
+| [Altinn Studio](../studio) | Tjenesteeiere som lager skjemaer og tjenester | Small i verktøyet, medium på oversiktssider |
+| [Skjemaer og tjenester](../skjemaer-og-tjenester) | Innbyggere og virksomheter | Medium |
+| [Innboks](../innboks) | Innbyggere, organisasjoner og næringsdrivende | Medium |
+| [Infoportal](../infoportal) | Innbyggere, næringsliv og tjenesteeiere | Medium |
+
+## Prinsipper
+
+- **Tokens, ikke hex.** Bruk `--ds-*`-variablene i all kode. Hex-verdiene i profilen er bare til referanse.
+- **Komponenter fra Designsystemet.** Bruk komponentene som finnes. Mangler en komponent, meld det inn før du lager en egen.
+- **Én font.** Inter i all tekst. NB International Pro bare i logoen.
+- **Riktig størrelsesmodus.** Small i arbeidsverktøy, medium på oversiktssider og sider for innbyggere.
+
+## Oppsett
+
+```html
+<link rel="stylesheet" href="https://altinncdn.no/fonts/inter/v4.1/inter.css">
+<link rel="stylesheet" href="@digdir/designsystemet-css/index.css">
+<link rel="stylesheet" href="altinn-theme.css">
+
+<!-- Verktøy: small -->
+<body data-size="sm">
+
+<!-- Oversiktsside: medium -->
+<main data-size="md">
+```

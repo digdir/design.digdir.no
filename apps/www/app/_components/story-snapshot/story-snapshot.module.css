@@ -1,0 +1,35 @@
+.snapshot {
+  border: 1px solid var(--ds-color-neutral-border-subtle);
+  border-radius: var(--ds-border-radius-lg);
+  overflow: hidden;
+  margin-block: var(--ds-size-4);
+}
+
+.frame {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: #ffffff;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-size-3);
+  padding: var(--ds-size-2) var(--ds-size-4);
+  border-top: 1px solid var(--ds-color-neutral-border-subtle);
+  background: var(--ds-color-neutral-surface-tinted);
+}
+
+.toggle {
+  font: inherit;
+  font-size: var(--ds-body-sm-font-size);
+  color: var(--ds-color-accent-text-subtle);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
