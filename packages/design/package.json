@@ -103,7 +103,7 @@
     "@digdir/designsystemet-css": "1.24.1",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
-    "@types/node": "^24.19.2",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "autoprefixer": "^10.7.0",
     "cssnano": "^9.9.0",
