@@ -1,0 +1,66 @@
+---
+title: Typografi
+sidebar_title: Typografi
+description: "Altinn bruker Inter i all tekst, både overskrifter og brødtekst."
+category: Identitet
+order: 3
+published: true
+---
+
+## Inter
+
+Inter brukes til overskrifter, brødtekst og alt i grensesnittet. Slå alltid på varianten med hale på liten l, så den ikke forveksles med stor I:
+
+```css
+font-family: "Inter", sans-serif;
+font-feature-settings: "cv05" 1;
+```
+
+| Vekt | Bruk |
+| --- | --- |
+| Regular 400 | Vanlig tekst |
+| Medium 500 | Titler og ledetekster (label) over innhold |
+
+## Font i produktene
+
+Inter er fonten for alle Altinn-produktene, men det finnes fortsatt eldre fonter i deler av koden.
+
+| Produkt | Font i dag | Hvor det står |
+| --- | --- | --- |
+| Altinn Studio | Inter i Studio-komponentene. Sidegrunnlaget (`body`) har fortsatt Roboto som standard, og både Inter og Roboto lastes fra altinncdn.no. | [app-development/layout/App.css (github.com)](https://github.com/Altinn/altinn-studio/blob/main/src/Designer/frontend/app-development/layout/App.css) |
+| Skjemaer og tjenester | Inter. Altinn DIN kan prøves ut i utviklerverktøyet, men er ikke standard. | [devtools/utils/devFont.ts (github.com)](https://github.com/Altinn/altinn-studio/blob/main/src/App/frontend/src/features/devtools/utils/devFont.ts) |
+| Innboks | Inter, satt i temaet (`--ds-font-family: Inter`). | [theme.css i altinn-components (github.com)](https://github.com/Altinn/altinn-components/blob/main/lib/css/tokens/design-tokens-build/theme.css) |
+| Infoportal | Inter fra altinncdn.no. Eldre sider bruker fortsatt DIN. | [legacy-pages.scss (github.com)](https://github.com/Altinn/info.altinn.no/blob/main/astro-infoportal/src/styles/legacy-pages.scss) |
+
+Roboto i Studio og DIN på de eldre sidene i Infoportal er rester fra tidligere profiler. Nye flater skal bruke Inter.
+
+## Størrelsesmodus
+
+All typografi i Studio-verktøyet bruker small (`data-size="sm"`): konfigurasjon, innstillinger, paneler, knapper og hjelpetekster. Oversiktssider på organisasjonsnivå bruker medium (`data-size="md"`), fordi de fungerer mer som en forside enn som et arbeidsverktøy.
+
+## Overskrifter
+
+| Størrelse | Klasse | Small | Medium | Bokstavavstand |
+| --- | --- | --- | --- | --- |
+| XXlarge | `data-size="2xl"` | 48px | 60px | -1 % |
+| Xlarge | `data-size="xl"` | 36px | 48px | -1 % |
+| Large | `data-size="lg"` | 30px | 36px | -0,5 % |
+| Medium | `data-size="md"` | 24px | 30px | -0,25 % |
+| Small | `data-size="sm"` | 21px | 24px | 0 % |
+| Xsmall | `data-size="xs"` | 18px | 21px | 0,15 % |
+| XXsmall | `data-size="2xs"` | 16px | 18px | 0,15 % |
+
+## Brødtekst
+
+| Størrelse | Klasse | Small | Medium | Bokstavavstand |
+| --- | --- | --- | --- | --- |
+| Xlarge | `data-size="xl"` | 21px | 24px | -1 % |
+| Large | `data-size="lg"` | 18px | 21px | -0,5 % |
+| Medium | `data-size="md"` | 16px | 18px | -0,25 % |
+| Small | `data-size="sm"` | 14px | 16px | 0 % |
+| Xsmall | `data-size="xs"` | 13px | 14px | 0,15 % |
+
+## Lang og kort tekst
+
+- `data-variant="long"` har linjehøyde 170 % og brukes til artikler og brødtekst.
+- `data-variant="short"` har linjehøyde 130 % og brukes i komponenter.
