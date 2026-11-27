@@ -21,6 +21,11 @@
   @media screen and (max-width: 600px) {
     --header-height: 68px;
   }
+
+  /* Keep the page from shifting when the search dialog locks scrolling. */
+  &:has(.search-dialog:open) {
+    scrollbar-gutter: stable;
+  }
 }
 
 /*

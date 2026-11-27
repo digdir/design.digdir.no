@@ -38,8 +38,12 @@
   background-color: currentColor;
   mask: url('/digdir-design-logo.svg') no-repeat center / contain;
 
+  /* Only the "D" on small screens, to make room for the rest of the header. */
   @media (max-width: 600px) {
-    height: 20px;
+    height: 24px;
+    aspect-ratio: 21 / 23;
+    mask-position: left;
+    mask-size: auto 100%;
   }
 }
 

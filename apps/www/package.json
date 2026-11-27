@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "files": [
-    "build"
+    "build",
+    "app/content"
   ],
   "scripts": {
     "build": "pnpm build:meta-images && react-router build",

@@ -7,6 +7,7 @@ import {
 } from '@react-router/dev/routes';
 
 export default [
+  route('/api/search', 'routes/search.ts', { id: 'api-search' }),
   layout('layouts/root/layout.tsx', [
     // "/" – choose a profile
     index('routes/home/home.tsx'),
